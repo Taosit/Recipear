@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react"
+import React, {useState, useRef, useEffect, useMemo} from "react"
 import Recipes from "../components/Recipes";
 import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import searchIcon from "../assets/search.png";
@@ -9,11 +9,11 @@ import {getDocs, collection, query, where} from "firebase/firestore";
 import {useLocation} from "react-router-dom";
 
 function Home() {
-  const {tags, recipes, loading, setLoading, setLastVisitedPage} = useRecipeContext()
+  const {tags, recipes, loading, setLastVisitedPage} = useRecipeContext()
   const [tagOnHover, setTagOnHover] = useState(null)
-  const [filteredRecipes, setFilteredRecipes] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
-  const [searchValue, setSearchValue] = useState("")
+  const [searchInputValue, setSearchInputValue] = useState("")
+  const [filterValue, setFilterValue] = useState([])
   const [showSort, setShowSort] = useState(false)
   const [sortValue, setSortValue] = useState("")
 
@@ -24,16 +24,34 @@ function Home() {
   const currentRoute = useLocation()
   setLastVisitedPage(currentRoute.pathname)
 
-  useEffect(() => {
-    if (!sortValue) return;
-    setLoading(true);
-    if (filteredRecipes) {
-      setFilteredRecipes(prev => sortRecipes(prev))
+  const filterRecipes = ({key, value}) => {
+    if (key === "name") return recipes.filter(recipe => recipe.name === value);
+    return recipes.filter(recipe => recipe[key].includes(value));
+  }
+
+  const sortRecipes = (recipes) => {
+    if (sortValue === "top") {
+      recipes.sort((a, b) => b.likes - a.likes)
     } else {
-      setFilteredRecipes(sortRecipes(recipes))
+      recipes.sort((a, b) => b.date - a.date)
     }
-    setLoading(false)
-  }, [sortValue])
+    return recipes;
+  }
+
+
+  let filteredAndSortedRecipes = useMemo(() => {
+    if (filterValue.length === 0 && !sortValue) return recipes;
+    let filteredRecipes = recipes;
+    if (filterValue.length !== 0) {
+      filteredRecipes = filterValue.reduce((resultingRecipes, filterTerm) => {
+        return [...resultingRecipes, ...filterRecipes(filterTerm)]
+      }, [])
+    }
+    if (!sortValue) return filteredRecipes;
+    return sortRecipes(filteredRecipes)
+  }, [filterValue, sortValue, recipes])
+
+  console.log({filteredAndSortedRecipes});
 
   const capitalize = (str) => {
     return str.replace(str[0], str[0].toUpperCase())
@@ -51,28 +69,6 @@ function Home() {
     setTagOnHover(null)
   }
 
-  const sortRecipes = (recipes) => {
-    if (!sortValue) return recipes;
-    if (sortValue === "top") {
-      recipes.sort((a, b) => b.likes - a.likes)
-    } else {
-      recipes.sort((a, b) => b.date - a.date)
-    }
-    return recipes;
-  }
-
-  const filterRecipeByTag = async (tag) => {
-    setLoading(true);
-    const q = query(collection(db, "recipes"), where("tags", "array-contains", tag));
-    const querySnapshot = await getDocs(q);
-    const tempRecipes = []
-    querySnapshot.forEach((doc) => {
-      tempRecipes.push(doc.data())
-    });
-    setFilteredRecipes(sortRecipes(tempRecipes))
-    setLoading(false)
-  }
-
   const handleHoverSearch = () => {
     if (!showSearch) {
       searchBarRef.current.classList.add("search-bar-full-width");
@@ -81,37 +77,24 @@ function Home() {
   }
 
   const handleLeaveSearch = () => {
-    if (!searchValue) {
+    if (!searchInputValue) {
       setShowSearch(false)
       searchBarRef.current.classList.remove("search-bar-full-width");
     }
   }
 
-  const singleSearch = async (field, op, value) => {
-    const q = query(collection(db, "recipes"), where(field, op, value));
-    console.log("searching")
-    const querySnapshot1 = await getDocs(q);
-    let results = [];
-    querySnapshot1.forEach((doc) => {
-      results.push(doc.data())
-    });
-    return results;
+  const filterRecipeByTag = async (tag) => {
+    console.log("filtering")
+    setFilterValue([{key: "tags", value: tag}])
   }
 
   const search = async () => {
-    if (!searchValue) return;
-    setLoading(true);
-    const formattedSearchValue = searchValue.toLowerCase().trim();
-    const matchName = await singleSearch("name", "==", formattedSearchValue)
-    if (matchName.length > 0) {
-      setFilteredRecipes(sortRecipes(matchName));
-      return
-    }
+    if (!searchInputValue) return;
+    console.log("searching")
+    const formattedSearchValue = searchInputValue.toLowerCase().trim();
     const singularValue = formattedSearchValue.replaceAll(/([^\s]+?)(es|e|s)\b$/g, '$1');
-    let recipesContainingIngredient = await singleSearch("ingredients", "array-contains", singularValue);
-    setFilteredRecipes(sortRecipes(recipesContainingIngredient));
-    setLoading(false)
-    setSearchValue("")
+    setFilterValue([{key: "name", value: formattedSearchValue}, {key: "ingredients", value: singularValue}])
+    setSearchInputValue("")
   }
 
   const searchByEnter = async (e) => {
@@ -137,12 +120,11 @@ function Home() {
   }
 
   const viewAllRecipes = () => {
-    setFilteredRecipes(null);
+    setFilterValue([])
+    setSortValue("")
     setShowSearch(false);
-    setSearchValue("")
+    setSearchInputValue("")
   }
-
-  console.log({filteredRecipes, recipes})
 
   if (loading) return <h1>Loading...</h1>
 
@@ -181,10 +163,10 @@ function Home() {
                       </div>
                       {showSearch &&
                         <>
-                          <input className="search-input" type="text" value={searchValue}
+                          <input className="search-input" type="text" value={searchInputValue}
                                  placeholder="Search recipe or ingredient"
                                  onKeyDown={(e) => searchByEnter(e)}
-                                 onChange={(e) => setSearchValue(e.target.value)}
+                                 onChange={(e) => setSearchInputValue(e.target.value)}
                           />
                           <div className="send-image-container">
                             <img src={sendIcon} className="send-icon" alt="send" onClick={search}/>
@@ -209,7 +191,7 @@ function Home() {
                       }
                     </div>
                   </div>}
-                  {filteredRecipes &&
+                  {(filterValue.length > 0 || sortValue) &&
                     <div className="all-recipes" onClick={viewAllRecipes}>All Recipes</div>}
                 </div>
               }
@@ -220,7 +202,7 @@ function Home() {
       <div className="main-container">
         <div className="container">
           <div className="main">
-            <Recipes recipes={filteredRecipes || recipes} />
+            <Recipes recipes={filteredAndSortedRecipes} />
           </div>
         </div>
       </div>
