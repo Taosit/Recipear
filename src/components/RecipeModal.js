@@ -72,6 +72,7 @@ function RecipeModal({showModal, setShowModal}) {
     });
     const resultsWithUnits = results.map(result => result.trim().toLowerCase())
     return resultsWithUnits.map(result => {
+      result = result.replaceAll(/([^\s]+?)(es|e|s)\b$/g, '$1')
       if (result.split("a ")[0] === "") return result.slice(2);
       if (result.split("an ")[0] === "") return result.slice(3);
       if (result.split(" of ").length === 2) return result.split(" of ")[1];

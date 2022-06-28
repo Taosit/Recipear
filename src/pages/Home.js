@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect} from "react"
 import Recipes from "../components/Recipes";
-import RecipeModal from "../components/RecipeModal";
 import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import searchIcon from "../assets/search.png";
 import sortIcon from "../assets/sort.png"
@@ -90,6 +89,7 @@ function Home() {
 
   const singleSearch = async (field, op, value) => {
     const q = query(collection(db, "recipes"), where(field, op, value));
+    console.log("searching")
     const querySnapshot1 = await getDocs(q);
     let results = [];
     querySnapshot1.forEach((doc) => {
@@ -107,33 +107,9 @@ function Home() {
       setFilteredRecipes(sortRecipes(matchName));
       return
     }
-    if (formattedSearchValue.slice(-1) === "s") {
-      const searchPlural = await singleSearch("ingredients", "array-contains", formattedSearchValue);
-      if (searchPlural.length > 0) {
-        setFilteredRecipes(sortRecipes(searchPlural));
-        return;
-      }
-      const searchSingular = await singleSearch("ingredients", "array-contains", formattedSearchValue.slice(0, -1));
-      if (searchSingular.length > 0) {
-        setFilteredRecipes(sortRecipes(searchSingular))
-        return;
-      }
-      const searchEsSingular = await singleSearch("ingredients", "array-contains", formattedSearchValue.slice(0, -2));
-      setFilteredRecipes(sortRecipes(searchEsSingular))
-    } else {
-      const searchSingular = await singleSearch("ingredients", "array-contains", formattedSearchValue);
-      if (searchSingular.length > 0) {
-        setFilteredRecipes(sortRecipes(searchSingular))
-        return;
-      }
-      const searchPlural = await singleSearch("ingredients", "array-contains", `${formattedSearchValue}s`);
-      if (searchPlural.length > 0) {
-        setFilteredRecipes(sortRecipes(searchPlural));
-        return;
-      }
-      const searchEsPlural = await singleSearch("ingredients", "array-contains", `${formattedSearchValue}es`);
-      setFilteredRecipes(sortRecipes(searchEsPlural))
-    }
+    const singularValue = formattedSearchValue.replaceAll(/([^\s]+?)(es|e|s)\b$/g, '$1');
+    let recipesContainingIngredient = await singleSearch("ingredients", "array-contains", singularValue);
+    setFilteredRecipes(sortRecipes(recipesContainingIngredient));
     setLoading(false)
     setSearchValue("")
   }
@@ -165,6 +141,8 @@ function Home() {
     setShowSearch(false);
     setSearchValue("")
   }
+
+  console.log({filteredRecipes, recipes})
 
   if (loading) return <h1>Loading...</h1>
 
