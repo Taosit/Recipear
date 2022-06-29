@@ -64,11 +64,12 @@ function RecipeModal({showModal, setShowModal}) {
     })
   }
 
-  const getImageUrl = async (img) => {
+  const getImage = async (img) => {
     const id = uuid();
     const imgRef = ref(storage, `images/${id}`);
     await uploadBytes(imgRef, img);
-    return await getDownloadURL(imgRef);
+    const url = await getDownloadURL(imgRef);
+    return {storageId: id, url}
   }
 
   const getIngredients = (ingredientStr) => {
@@ -91,24 +92,29 @@ function RecipeModal({showModal, setShowModal}) {
 
   const createRecipe = async (e) => {
     e.preventDefault()
-    prevBtnRef.current.disabled = true;
-    nextBtnRef.current.disabled = true
     console.log(newRecipe)
     if (newRecipe.name === "" || newRecipe.ingredients === "" || newRecipe.seasonings === "" ||
-      newRecipe.steps[0] === "" || !newRecipe.image) return
+      newRecipe.steps[0] === "" || !newRecipe.image) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
+    prevBtnRef.current.disabled = true;
+    nextBtnRef.current.disabled = true
 
-    const finalImage = await getImageUrl(newRecipe.image);
+    const finalImage = await getImage(newRecipe.image);
+    console.log("got final image")
 
     const validSteps = newRecipe.steps.filter(step => step.instruction && step.instruction.length !== 0);
 
     const stepsWithImagesPromise = validSteps.map(async step =>{
       if (!step.image) return step
-      const url = await getImageUrl(step.image);
-      return {...step, image: url}
+      const image = await getImage(step.image);
+      return {...step, image}
     })
 
     Promise.all(stepsWithImagesPromise)
       .then(async stepsWithImages => {
+        console.log("in promise.all")
         const recipeId = uuid()
         const finalRecipe = {...newRecipe, steps: stepsWithImages, name: newRecipe.name.toLowerCase().trim(),
           ingredientStr: newRecipe.ingredients, ingredients: getIngredients(newRecipe.ingredients),
@@ -116,7 +122,9 @@ function RecipeModal({showModal, setShowModal}) {
         console.log(finalRecipe)
         setRecipes(prev => [...prev, finalRecipe])
         await setDoc(doc(db, "recipes", recipeId), finalRecipe)
+        console.log("setDoc")
         await addRecipeRefToUser(recipeId)
+        console.log("addRecipeRefToUser")
         toast.success("Successfully added a new recipe")
       })
     closeModal()

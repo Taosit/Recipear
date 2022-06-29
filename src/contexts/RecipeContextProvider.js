@@ -36,14 +36,14 @@ const RecipeContextProvider = ({children}) => {
     });
   }, [recipeModified])
 
-  const deleteRecipe = async (id) => {
-    setRecipes(prevRecipes => {
-      const newRecipes = prevRecipes.filter(r => r.id !== id);
-      return newRecipes
-    })
-    await deleteDoc(doc(db, "recipes", id));
-    await deleteObject(ref(storage, `images/${id}`));
-  }
+  // const deleteRecipe = async (id) => {
+  //   setRecipes(prevRecipes => {
+  //     const newRecipes = prevRecipes.filter(r => r.id !== id);
+  //     return newRecipes
+  //   })
+  //   await deleteDoc(doc(db, "recipes", id));
+  //   await deleteObject(ref(storage, `images/${id}`));
+  // }
 
   return <RecipeContext.Provider
     value={{
@@ -56,7 +56,6 @@ const RecipeContextProvider = ({children}) => {
       setRecipeModified,
       lastVisitedPage,
       setLastVisitedPage,
-      deleteRecipe
     }}
   >
     {children}

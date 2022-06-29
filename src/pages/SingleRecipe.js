@@ -6,12 +6,13 @@ import filledHeartIcon from "../assets/filledHeart.png"
 import emptyHeartIcon from "../assets/emptyHeart.png"
 import {useAuthStatus} from "../hooks/useAuthStatus";
 import {getAuth} from "firebase/auth";
-import {db} from "../firebase.config";
-import {doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment} from "firebase/firestore";
+import {db, storage} from "../firebase.config";
+import {doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment, deleteDoc} from "firebase/firestore";
+import {deleteObject, ref} from "firebase/storage";
 
 
 function SingleRecipe() {
-  const {recipes, deleteRecipe, setRecipeModified, lastVisitedPage} = useRecipeContext()
+  const {recipes, setRecipes, setRecipeModified, lastVisitedPage} = useRecipeContext()
   const [currentUserData, setCurrentUserData] = useState(null)
   const [likedByCurrentUser, setLikedByCurrentUser] = useState(null)
   const [likeCount, setLikeCount] = useState(null)
@@ -43,6 +44,8 @@ function SingleRecipe() {
     }
     getUserData()
   }, [loggedIn])
+
+  console.log(recipe?.ingredientStr.length)
 
   useEffect(() => {
     if (likedByCurrentUser === null) return;
@@ -81,9 +84,27 @@ function SingleRecipe() {
     setLikedByCurrentUser(like);
   }
 
+  const deleteRecipe = async (id) => {
+    setRecipes(prevRecipes => {
+      const newRecipes = prevRecipes.filter(r => r.id !== id);
+      return newRecipes
+    })
+    const recipeRef = doc(db, "recipes", id)
+    const docSnapshot = await getDoc(recipeRef);
+    if (docSnapshot.exists()) {
+      const finishedImage = docSnapshot.data().image;
+      await deleteObject(ref(storage, `images/${finishedImage.storageId}`));
+      const stepImagePromises = docSnapshot.data().steps
+        .filter(step => step.image)
+        .map(async step => await deleteObject(ref(storage, `images/${step.image.storageId}`)))
+      await Promise.all(stepImagePromises)
+    }
+    await deleteDoc(recipeRef);
+  }
+
   const deleteARecipe = async (id) => {
     if (!currentUserData?.createdRecipes.includes(recipe.id)) return;
-    deleteRecipe(id)
+    await deleteRecipe(id)
     await updateDoc(doc(db, "users", currentUserData.id), {
       createdRecipes: arrayRemove(recipe.id)
     });
@@ -111,7 +132,7 @@ function SingleRecipe() {
             }
           </div>
           <div className="big-image-container">
-            <img className="big-image" src={recipe.image} alt="recipe"/>
+            <img className="big-image" src={recipe.image.url} alt="recipe"/>
           </div>
           <div className="recipe-description">
             <p>Ingredients: {recipe.ingredientStr}</p>
@@ -126,7 +147,7 @@ function SingleRecipe() {
                     {step.time && <span className="time-tag">{step.time} mins</span>}
                   </div>
                   {step.image && <div className="image-col">
-                    <img className="step-image" src={step.image} alt="step"/>
+                    <img className="step-image" src={step.image.url} alt="step"/>
                   </div>}
                 </li>
               ))}

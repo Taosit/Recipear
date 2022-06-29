@@ -457,13 +457,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .recipe-container {
   margin: 0.5em;
   width: 300px;
+  height: 325px;
   background-color: white;
   border-radius: 0.3em;
   border: 2px solid var(--orange-light);
-  /*box-shadow: inset -3px -5px 15px #ffe064;*/
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .recipe {
@@ -471,6 +471,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 .recipe-image-container {
+  margin-top: 0.5em;
   position: relative;
   width: 250px;
   height: 150px;
@@ -479,6 +480,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .title-link {
   font-style: normal;
   font-size: larger;
+  margin-bottom: 0.5em;
 }
 
 .like-count-container {
@@ -532,6 +534,17 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   background-color: white;
   border: 2px solid #fd075d;
   color: #fd075d;
+}
+
+.margin-div {
+  width: 100px;
+  height: 1px;
+  margin: 0;
+}
+
+.card-ingredients {
+  width: 250px;
+  margin-bottom: 0.5em;
 }
 
 /* Add Recipe */

@@ -45,6 +45,13 @@ function Navbar({auth}) {
     if (e.clientX < leftEdge || e.clientX > rightEdge) setShowDropdownOptions(false)
   }
 
+  const navigateTo = (url) => {
+    navigate(url);
+    setShowDropdownOptions(false)
+  }
+
+  console.log(showDropdownOptions)
+
   return (
     <div className="nav-container">
       <div className="container">
@@ -58,21 +65,21 @@ function Navbar({auth}) {
             <div className="nav-item-container profile-name-container" ref={profileNameRef}
                  onMouseLeave={(e) => checkLeaveProfileName(e)}
             >
-              <h3 className="user" onClick={() => navigate("/profile")}
-                  onMouseEnter={() => setShowDropdownOptions(true)}
+              <h3 className="user" onMouseEnter={() => setShowDropdownOptions(true)}
+                  onClick={() => showDropdownOptions ? navigateTo("/profile") : setShowDropdownOptions(true)}
               >{user.name}</h3>
             </div>
             <div className={showDropdownOptions? "show-dropdown" : "hide-dropdown"}
                  onMouseLeave={() => setShowDropdownOptions(false)}
             >
               <div className="dropdown-option-container">
-                <span className="dropdown-option" onClick={() => navigate("/profile")}>Profile</span>
+                <span className="dropdown-option" onClick={() => navigateTo("/profile")}>Profile</span>
               </div>
               <div className="dropdown-option-container">
-                <span className="dropdown-option" onClick={() => navigate("/my-recipes")}>My Recipes</span>
+                <span className="dropdown-option" onClick={() => navigateTo("/my-recipes")}>My Recipes</span>
               </div>
               <div className="dropdown-option-container">
-                <span className="dropdown-option" onClick={() => navigate("/liked-recipes")}>Liked Recipes</span>
+                <span className="dropdown-option" onClick={() => navigateTo("/liked-recipes")}>Liked Recipes</span>
               </div>
             </div>
           </div>
