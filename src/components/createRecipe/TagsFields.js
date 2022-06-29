@@ -1,17 +1,8 @@
 import React, {useState, useEffect} from "react";
 import {useRecipeContext} from "../../contexts/RecipeContextProvider";
 
-export default function TagsField({handleChange}) {
+export default function TagsField({handleChange, tags, setTags}) {
   const {tags: specifiedTags} = useRecipeContext()
-
-  const initialTags = {
-    type: null,
-    nutrition: null,
-    meal: null,
-    region: null,
-    flavor: null
-  }
-  const [tags, setTags] = useState(initialTags);
 
   useEffect(() => {
     handleChange(Object.values(tags), "tags")
@@ -27,7 +18,7 @@ export default function TagsField({handleChange}) {
     e.preventDefault();
     setTags(prev => ({
       ...prev,
-      [group]: attribute
+      [group]: prev[group] === attribute? null : attribute
     }))
   }
 

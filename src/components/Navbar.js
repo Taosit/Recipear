@@ -66,6 +66,9 @@ function Navbar({auth}) {
                  onMouseLeave={() => setShowDropdownOptions(false)}
             >
               <div className="dropdown-option-container">
+                <span className="dropdown-option" onClick={() => navigate("/profile")}>Profile</span>
+              </div>
+              <div className="dropdown-option-container">
                 <span className="dropdown-option" onClick={() => navigate("/my-recipes")}>My Recipes</span>
               </div>
               <div className="dropdown-option-container">

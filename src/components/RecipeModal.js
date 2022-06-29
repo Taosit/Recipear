@@ -17,6 +17,14 @@ function RecipeModal({showModal, setShowModal}) {
   const emptyRecipe = {name: "", tags: [], ingredientStr: "", ingredients: [], date: null, likes: 0, seasonings: "", steps: [""]};
   const [newRecipe, setNewRecipe] = useState(emptyRecipe)
   const {setRecipes} = useRecipeContext()
+  const initialTags = {
+    type: null,
+    nutrition: null,
+    meal: null,
+    region: null,
+    flavor: null
+  }
+  const [tags, setTags] = useState(initialTags);
   const [step, setStep] = useState(0)
 
   const prevBtnRef = useRef()
@@ -115,6 +123,7 @@ function RecipeModal({showModal, setShowModal}) {
   }
 
   const closeModal = () => {
+    setTags(initialTags)
     setStep(0)
     setShowModal(false)
     setNewRecipe(emptyRecipe)
@@ -125,7 +134,7 @@ function RecipeModal({showModal, setShowModal}) {
       case 0:
         return <NameField recipe={newRecipe} handleChange={handleChange}/>
       case 1:
-        return <TagsField handleChange={handleChange}/>
+        return <TagsField tags={tags} setTags={setTags} handleChange={handleChange}/>
       case 2:
         return <IngredientsField recipe={newRecipe} handleChange={handleChange}/>
       case 3:

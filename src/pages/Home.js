@@ -1,11 +1,9 @@
-import React, {useState, useRef, useEffect, useMemo} from "react"
+import React, {useState, useRef, useMemo} from "react"
 import Recipes from "../components/Recipes";
 import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import searchIcon from "../assets/search.png";
 import sortIcon from "../assets/sort.png"
 import sendIcon from "../assets/send.png"
-import {db} from "../firebase.config";
-import {getDocs, collection, query, where} from "firebase/firestore";
 import {useLocation} from "react-router-dom";
 
 function Home() {
@@ -26,7 +24,8 @@ function Home() {
 
   const filterRecipes = ({key, value}) => {
     if (key === "name") return recipes.filter(recipe => recipe.name === value);
-    return recipes.filter(recipe => recipe[key].includes(value));
+    if (key === "tags") recipes.filter(recipe => recipe.tags.includes(value));
+    if (key === "ingredients") recipes.filter(recipe => recipe.ingredients.some(ingredient => ingredient.includes(value)));
   }
 
   const sortRecipes = (recipes) => {
@@ -50,8 +49,6 @@ function Home() {
     if (!sortValue) return filteredRecipes;
     return sortRecipes(filteredRecipes)
   }, [filterValue, sortValue, recipes])
-
-  console.log({filteredAndSortedRecipes});
 
   const capitalize = (str) => {
     return str.replace(str[0], str[0].toUpperCase())
@@ -84,13 +81,11 @@ function Home() {
   }
 
   const filterRecipeByTag = async (tag) => {
-    console.log("filtering")
     setFilterValue([{key: "tags", value: tag}])
   }
 
   const search = async () => {
     if (!searchInputValue) return;
-    console.log("searching")
     const formattedSearchValue = searchInputValue.toLowerCase().trim();
     const singularValue = formattedSearchValue.replaceAll(/([^\s]+?)(es|e|s)\b$/g, '$1');
     setFilterValue([{key: "name", value: formattedSearchValue}, {key: "ingredients", value: singularValue}])
@@ -199,7 +194,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="main-container">
+      <div className="main-container" onTouchStart={() => setTagOnHover(null)}>
         <div className="container">
           <div className="main">
             <Recipes recipes={filteredAndSortedRecipes} />

@@ -37,4 +37,16 @@ function Recipes({recipes}) {
   );
 }
 
-export default Recipes;
+const areEqual = (prevProps, currentProps) => {
+  const {recipes: prevRecipes} = prevProps;
+  const {recipes: currentRecipes} = currentProps;
+  if (prevRecipes.length !== currentRecipes.length) return false;
+  prevRecipes.forEach((prevRecipe, i) => {
+    if (prevRecipe.id !== currentRecipes[i].id || prevRecipe.likes !== currentRecipes[i].likes) return false;
+  })
+  return true;
+}
+
+const memoizedRecipes = React.memo(Recipes, areEqual)
+
+export default memoizedRecipes;

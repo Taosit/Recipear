@@ -5,15 +5,14 @@ import CommandHint from "./CommandHint";
 export default function Cover({recipe, nextStep, voiceCommandActive, setVoiceCommandActive}) {
   const [displayHint, setDisplayHint] = useState(false);
   const infoIconRef = useRef();
-
+  const coverPage = useRef();
 
 
   const startCooking = () => {
     nextStep()
   }
 
-  const showHint = (e) => {
-    console.log("show hint")
+  const showHint = () => {
     setDisplayHint(true);
   }
 
@@ -46,11 +45,12 @@ export default function Cover({recipe, nextStep, voiceCommandActive, setVoiceCom
         </div>
         <div className="command-hint">
           <p>What commands can I use? </p>
-          <img ref={infoIconRef} onMouseEnter={e => showHint(e)} src={infoIcon} alt="info"
+          <img ref={infoIconRef} onTouchStart={displayHint? hideHint : showHint}
+               onMouseEnter={showHint} src={infoIcon} alt="info"
           onMouseLeave={hideHint}
           />
         </div>
-        {displayHint && infoIconRef && <CommandHint infoIconX={infoIconRef.current.getBoundingClientRect().left}/>}
+        {displayHint && infoIconRef && <CommandHint infoIconPos={infoIconRef.current.getBoundingClientRect()}/>}
       </div>
       <div>
         <button className="button-orange cover-page-button" onClick={startCooking}>Start Cooking</button>

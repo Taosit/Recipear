@@ -1,11 +1,12 @@
 import React, {useRef} from "react";
 
-export default function CommandHint({infoIconX}) {
+export default function CommandHint({infoIconPos}) {
 
-  const offsetLeft = infoIconX + 250 > window.innerWidth ? window.innerWidth / 2 - 125 : infoIconX + 30;
+  const offsetLeft = infoIconPos.x + 250 > window.innerWidth ? window.innerWidth / 2 - 125 : infoIconPos.x + 30;
+  const offsetHeight = infoIconPos.y - 370;
 
   const styles = {
-    top: `${200}px`,
+    top: `${offsetHeight}px`,
     left: `${offsetLeft}px`
   }
 
