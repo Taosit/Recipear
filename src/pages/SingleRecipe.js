@@ -9,6 +9,7 @@ import {getAuth} from "firebase/auth";
 import {db, storage} from "../firebase.config";
 import {doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment, deleteDoc} from "firebase/firestore";
 import {deleteObject, ref} from "firebase/storage";
+import EditableText from "../components/EditableText";
 
 
 function SingleRecipe() {
@@ -16,6 +17,8 @@ function SingleRecipe() {
   const [currentUserData, setCurrentUserData] = useState(null)
   const [likedByCurrentUser, setLikedByCurrentUser] = useState(null)
   const [likeCount, setLikeCount] = useState(null)
+  const [editing, setEditing] = useState(null)
+  const [editFieldValue, setEditFieldValue] = useState(null)
 
   const {id} = useParams();
   const navigate = useNavigate()
@@ -25,6 +28,11 @@ function SingleRecipe() {
 
   const {loggedIn} = useAuthStatus()
   const auth = getAuth()
+
+  const isAuthor = useMemo(() => {
+    if (!currentUserData || !recipe) return false
+    return currentUserData.createdRecipes.includes(recipe.id)
+  }, [currentUserData, recipe])
 
   useEffect(() => {
     if (!recipe) return;
@@ -44,8 +52,6 @@ function SingleRecipe() {
     }
     getUserData()
   }, [loggedIn])
-
-  console.log(recipe?.ingredientStr.length)
 
   useEffect(() => {
     if (likedByCurrentUser === null) return;
@@ -78,6 +84,13 @@ function SingleRecipe() {
 
   const capitalize = (str) => {
     return str.replace(str[0], str[0].toUpperCase())
+  }
+
+  const addStep = async () => {
+    await updateDoc(recipeRef, {...recipe, steps: [...recipe.steps, {instruction: ""}]})
+    setRecipeModified(true);
+    setEditing(`step-${recipe.steps.length}-instruction`)
+    setEditFieldValue({[`step-${recipe.steps.length}-instruction`]: ""})
   }
 
   const modifyLike = (like) => {
@@ -135,16 +148,24 @@ function SingleRecipe() {
             <img className="big-image" src={recipe.image.url} alt="recipe"/>
           </div>
           <div className="recipe-description">
-            <p>Ingredients: {recipe.ingredientStr}</p>
-            <p>Seasonings: {recipe.seasonings}</p>
-            <p>Steps</p>
+            <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
+                          label="Ingredients" field="ingredientStr" editing={editing} setEditing={setEditing}
+                          editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}
+            />
+            <br/>
+            <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
+                          label="Seasonings" field="seasonings" editing={editing} setEditing={setEditing}
+                          editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}/>
+            <p className="step-text">Steps {isAuthor && <span className="add-step-icon"
+                                                              onClick={addStep}>+</span>}</p>
             <ol className="step-list">
               {recipe.steps.map((step, i) => (
                 <li key={i} className="step-row">
                   <div className="instruction-col">
                     <span className="stem-num">{i + 1}. </span>
-                    <span className="step-instruction">{step.instruction}</span>
-                    {step.time && <span className="time-tag">{step.time} mins</span>}
+                    <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
+                                  label={null} field={`step-${i}-instruction`} editing={editing} setEditing={setEditing}
+                                  editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}/>
                   </div>
                   {step.image && <div className="image-col">
                     <img className="step-image" src={step.image.url} alt="step"/>
@@ -169,8 +190,9 @@ function SingleRecipe() {
             <img src={cookingIcon} alt="cook"/>
             <span className="cook">Cook</span>
           </button>
-          {currentUserData?.createdRecipes.includes(recipe.id) &&
-            <button className="button-red delete-recipe-button" onClick={() => deleteARecipe(recipe.id)}>Delete</button>}
+          {isAuthor &&
+            <button className="button-red delete-recipe-button"
+                    onClick={() => deleteARecipe(recipe.id)}>Delete</button>}
         </div>
       </div>
     </div>

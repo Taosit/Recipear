@@ -10,10 +10,10 @@ import StepsField from "./createRecipe/StepsFields";
 import ImageField from "./createRecipe/ImageField";
 import TagsField from "./createRecipe/TagsFields";
 import {onAuthStateChanged, getAuth} from "firebase/auth";
-import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 
 function RecipeModal({showModal, setShowModal}) {
+  const integerMatch = {a: 1, one: 1, two: 2, three: 3, four: 4, five: 5, ten: 10}
   const emptyRecipe = {name: "", tags: [], ingredientStr: "", ingredients: [], date: null, likes: 0, seasonings: "", steps: [""]};
   const [newRecipe, setNewRecipe] = useState(emptyRecipe)
   const {setRecipes} = useRecipeContext()
@@ -31,7 +31,6 @@ function RecipeModal({showModal, setShowModal}) {
   const nextBtnRef = useRef()
 
   const isMounted = useRef(true)
-  const navigate = useNavigate()
   const auth = getAuth()
 
   useEffect(() => {
@@ -102,19 +101,26 @@ function RecipeModal({showModal, setShowModal}) {
     nextBtnRef.current.disabled = true
 
     const finalImage = await getImage(newRecipe.image);
-    console.log("got final image")
 
     const validSteps = newRecipe.steps.filter(step => step.instruction && step.instruction.length !== 0);
 
     const stepsWithImagesPromise = validSteps.map(async step =>{
-      if (!step.image) return step
+      const timeMatchingResult = step.instruction.match(/(a|one|two|three|four|five|ten|\d*)(?= min)/i)
+      let stepCopy = {...step}
+      if (timeMatchingResult) {
+        if (isNaN(parseInt(timeMatchingResult[0]))) {
+          stepCopy.time = integerMatch[timeMatchingResult[0]]
+        } else {
+          stepCopy.time = +timeMatchingResult[0];
+        }
+      }
+      if (!step.image) return stepCopy
       const image = await getImage(step.image);
-      return {...step, image}
+      return {...stepCopy, image}
     })
 
     Promise.all(stepsWithImagesPromise)
       .then(async stepsWithImages => {
-        console.log("in promise.all")
         const recipeId = uuid()
         const finalRecipe = {...newRecipe, steps: stepsWithImages, name: newRecipe.name.toLowerCase().trim(),
           ingredientStr: newRecipe.ingredients, ingredients: getIngredients(newRecipe.ingredients),
@@ -122,9 +128,7 @@ function RecipeModal({showModal, setShowModal}) {
         console.log(finalRecipe)
         setRecipes(prev => [...prev, finalRecipe])
         await setDoc(doc(db, "recipes", recipeId), finalRecipe)
-        console.log("setDoc")
         await addRecipeRefToUser(recipeId)
-        console.log("addRecipeRefToUser")
         toast.success("Successfully added a new recipe")
       })
     closeModal()

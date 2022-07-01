@@ -25,7 +25,7 @@ export default function Cover({recipe, nextStep, voiceCommandActive, setVoiceCom
       <p className="subtitle">{recipe.name}</p>
       <h2 className="cook-title">Get ready to cook</h2>
       <div className="cook-image-container">
-        <img className="cook-image" src={recipe.image} alt="recipe"/>
+        <img className="cook-image" src={recipe.image.url} alt="recipe"/>
       </div>
       <div className="voice-command-question">
         <p>Would you like to activate voice command? You can activate or stop voice command later.</p>

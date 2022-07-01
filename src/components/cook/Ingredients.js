@@ -1,6 +1,4 @@
 import React from "react";
-import microphoneIcon from "../../assets/microphone.png"
-import blockedMicrophoneIcon from "../../assets/block-microphone.png"
 import VoiceCommand from "./VoiceCommand";
 
 export default function Ingredients({recipe, nextStep, previousStep, voiceCommandActive, setVoiceCommandActive}) {

@@ -20,7 +20,7 @@ export default function Step({
     let time = new Date();
     time.setMinutes(time.getMinutes() + parseInt(timeValue));
     time = time.getTime()
-    setTimers(prev => prev.map((timer, i) => i === stepIndex ? {...timer, endTime: time, task, timerInUse: true, timerHasStarted: true} : timer));
+    setTimers(prev => prev.map((timer, i) => i === stepIndex ? {...timer, endTime: time, task, timerInUse: true, timer: 1} : timer));
   }
 
   return (
@@ -37,7 +37,7 @@ export default function Step({
             <span className="set-timer" onClick={showTimerInput}>Set timer</span>
         </span>
         :
-        !timers[stepIndex].timerHasStarted ?
+        !timers[stepIndex].timer ?
           <span className="timer-input-span">
             <input type="number" ref={timeRef}
                  defaultValue={currentStep.time? currentStep.time : 1} className="timer-input"/> mins
@@ -48,7 +48,7 @@ export default function Step({
       }
       <p className="step-instruction">{currentStep.instruction}</p>
       {currentStep.image && <div className="step-image-container">
-        <img className="step-image" src={currentStep.image} alt="current step"/>
+        <img className="step-image" src={currentStep.image.url} alt="current step"/>
       </div>}
       <div className="navigate-buttons">
         <button className="button-orange" onClick={previousStep}>Prev</button>

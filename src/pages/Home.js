@@ -22,10 +22,13 @@ function Home() {
   const currentRoute = useLocation()
   setLastVisitedPage(currentRoute.pathname)
 
+  const str = "cook for two miute";
+  console.log(str.match(/(a|one|two|three|four|five|ten|\d*)(?= min)/i))
+
   const filterRecipes = ({key, value}) => {
     if (key === "name") return recipes.filter(recipe => recipe.name === value);
-    if (key === "tags") recipes.filter(recipe => recipe.tags.includes(value));
-    if (key === "ingredients") recipes.filter(recipe => recipe.ingredients.some(ingredient => ingredient.includes(value)));
+    if (key === "tags") return recipes.filter(recipe => recipe.tags.includes(value));
+    if (key === "ingredients") return recipes.filter(recipe => recipe.ingredients.some(ingredient => ingredient.includes(value)));
   }
 
   const sortRecipes = (recipes) => {
@@ -53,6 +56,8 @@ function Home() {
   const capitalize = (str) => {
     return str.replace(str[0], str[0].toUpperCase())
   }
+
+  console.log({filteredAndSortedRecipes})
 
   const handleHoverTagCategory = (e, tagCategory) => {
     setTagOnHover([tagCategory, tags[tagCategory]])

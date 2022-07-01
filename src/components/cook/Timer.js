@@ -25,6 +25,7 @@ export default function Timer({timers, setTimers, stepIndex, voiceCommandActive}
   useEffect(() => {
     if (timeInMinutes) return;
     if (!voiceCommandActive) audio.play();
+    setTimers(prev => prev.map((t, i) => i === stepIndex ? {...t, timer: null, timerInUse: false} : t))
     clearInterval(interval)
     return clearInterval(interval)
   }, [timeInMinutes])

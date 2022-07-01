@@ -349,7 +349,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   align-items: center;
   padding: 0 1em;
   cursor: pointer;
-  background-color: rgba(255, 207, 99, 0.5);
+  background-color: rgba(254, 210, 95, 0.85);
   border: 2px solid #f6ae64;
   color: #6b1717;
   font-weight: 600;
@@ -450,13 +450,15 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 .recipes {
-  display: flex;
-  flex-wrap: wrap;
+  width: 100%;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .recipe-container {
-  margin: 0.5em;
-  width: 300px;
+  margin: 0 auto;
+  width: max(300px, 70%);
   height: 325px;
   background-color: white;
   border-radius: 0.3em;
@@ -505,6 +507,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 .recipe-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   cursor: pointer;
 }
 
@@ -737,16 +740,51 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 .big-image-container {
   width: 100%;
+  height: 300px;
   display: flex;
   justify-content: center;
+  margin-bottom: 1em;
 }
 
 .big-image {
   max-width: 100%;
+  max-height: 100%;
 }
 
 .recipe-description {
   align-self: flex-start;
+}
+
+.editable-text-container {
+  display: inline-block;
+}
+
+.edit-field-container {
+  display: flex;
+  align-items: center;
+  margin: 0.5em 0;
+}
+
+.single-recipe label {
+  margin-right: 0.3em;
+}
+
+.edit-field-icon {
+  margin-left: 0.2em;
+  cursor: pointer;
+}
+
+.step-text {
+  display: flex;
+  align-items: center;
+}
+
+.add-step-icon {
+  display: inline-block;
+  margin-left: 0.2em;
+  font-weight: 600;
+  font-size: 2em;
+  cursor: pointer;
 }
 
 .step-row {
@@ -786,10 +824,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   align-self: flex-start;
   display: flex;
   align-items: center;
-}
-
-.mutable {
-  cursor: pointer;
 }
 
 .like-container img {
@@ -901,12 +935,14 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 .cook-image-container {
   width: 50%;
+  height: 150px;
   align-self: center;
   margin-top: 0.3em;
 }
 
 .cook-image {
   max-width: 100%;
+  max-height: 100%;
 }
 
 .radio-button-groups {

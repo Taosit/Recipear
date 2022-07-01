@@ -3,6 +3,7 @@ import { useSpeechSynthesis } from 'react-speech-kit';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import blockedMicrophoneIcon from "../../assets/block-microphone.png";
 import microphoneIcon from "../../assets/microphone.png";
+import {useNavigate, useParams} from "react-router-dom";
 
 export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive, recipe,
                                        startTimer, timers, setTimers, stepIndex, previousStep, nextStep}) {
@@ -17,6 +18,10 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
       callback: (time, task) => setTimer(time, task)
     },
     {
+      command: ["Remove timer"],
+      callback: () => removeTimer()
+    },
+    {
       command: ["Previous", "Previous step", "Previous page"],
       callback: () => goToPreviousPage()
     },
@@ -28,6 +33,10 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
       command: ["Stop listening", "Disable voice command", "Disable speech recognition"],
       callback: () => disableVoiceCommand()
     },
+    {
+      command: ["Finish cooking"],
+      callback: () => cancelCooking()
+    },
   ]
   const {
     listening,
@@ -35,6 +44,16 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
     browserSupportsSpeechRecognition,
     browserSupportsContinuousListening
   } = useSpeechRecognition({ commands });
+
+  const navigate = useNavigate()
+  const {id} = useParams()
+
+  const initialTimers = new Array(recipe.steps.length).fill({
+    timer: null,
+    timerHasStarted: false,
+    endTime: null,
+    task: ""
+  });
 
   useEffect(() => {
     if (!voiceCommandActive) return;
@@ -60,13 +79,11 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
   console.log(transcript)
 
   const setTimer = (time, task = "") => {
-    console.log(time)
     if (isNaN(parseInt(time))) {
-      console.log(time)
       speak({text: `Please say it again`})
       return;
     }
-    if (timers[stepIndex].endTime) {
+    if (timers[stepIndex].timerInUse) {
       speak({text: `There is already a timer for this step`})
       return;
     }
@@ -74,12 +91,15 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
     else speak({text: `Timer set to ${time} minutes`})
     startTimer(time, task)
     const timer = setTimeout(() => {
-      console.log({voiceCommandActive})
-      if (!listening) return;
       speak({text: `Time is up ${task === "" ? "" : `for ${task}`}`})
+      setTimers(prev => prev.map((t, i) => i === stepIndex ? {...t, timer: null, timerInUse: false} : t))
     }, time * 1000 * 60)
-    console.log(timer)
     setTimers(prev => prev.map((t, i) => i === stepIndex ? {...t, timer} : t))
+  }
+
+  const removeTimer = () => {
+    clearTimeout(timers[stepIndex].timer)
+    setTimers(prev => prev.map((t, i) => i === stepIndex ? {...t, timer: null, timerInUse: false} : t))
   }
 
   const goToPreviousPage = () => {
@@ -108,6 +128,13 @@ export default function VoiceCommand({voiceCommandActive, setVoiceCommandActive,
     const instruction = recipe.steps[stepIndex + 1].instruction
     speak({text: instruction})
     nextStep()
+  }
+
+  const cancelCooking = () => {
+    timers.forEach(t => t.timer && clearTimeout(t.timer))
+    disableVoiceCommand()
+    setTimers(initialTimers)
+    navigate(`/recipes/${id}`)
   }
 
   const activateVoiceCommand = () => {
