@@ -117,8 +117,6 @@ function Home() {
     sortBarRef.current.classList.remove("sort-bar-full-width");
   }
 
-  console.log(showSort)
-
   const viewAllRecipes = () => {
     setFilterValue([])
     setSortValue("")
@@ -193,7 +191,7 @@ function Home() {
                       }
                     </div>
                   </div>}
-                  {(filterValue.length > 0 || sortValue) &&
+                  {(filterValue.length > 0 || sortValue) && (!showSearch && !showSort) &&
                     <div className="all-recipes" onClick={viewAllRecipes}>All Recipes</div>}
                 </div>
               }

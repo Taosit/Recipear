@@ -2,4 +2,4 @@
 
 Follow your favorite recipes hand-free
 
-Check [https://quiet-cannoli-89b545.netlify.app/](https://quiet-cannoli-89b545.netlify.app/) to view the website
+Check [https://recipe-app-with-speech-recognition.netlify.app/](https://recipe-app-with-speech-recognition.netlify.app//) to view the website
