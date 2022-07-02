@@ -112,9 +112,12 @@ function Home() {
   }
 
   const sortBy = (sortKey) => {
-    setSortValue(sortKey);
+    setSortValue(sortKey)
     setShowSort(false)
+    sortBarRef.current.classList.remove("sort-bar-full-width");
   }
+
+  console.log(showSort)
 
   const viewAllRecipes = () => {
     setFilterValue([])
