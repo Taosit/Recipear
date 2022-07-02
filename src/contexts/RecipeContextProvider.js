@@ -15,10 +15,10 @@ const RecipeContextProvider = ({children}) => {
   const [recipeModified, setRecipeModified] = useState(true)
 
   const tags = {
-    type: ["For All", "Pescatarian", "Vegetarian", "Vegan"],
+    type: ["For All", "Halal", "Vegetarian", "Vegan"],
     nutrition: ["Low-carb", "High-fiber"],
     meal: ["Breakfast", "Main", "Desert", "Soup"],
-    region: ["Japanese", "Indian", "Chinese", "Arabian", "African"],
+    region: ["Asian", "Arabian", "European", "African"],
     flavor: ["Spicy", "Sour", "Sweet"],
   }
 

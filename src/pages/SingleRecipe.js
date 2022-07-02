@@ -256,7 +256,7 @@ function SingleRecipe() {
               {recipe.steps.map((step, i) => (
                 <li key={i} className="step-row">
                   <div className="instruction-col">
-                    <span className="stem-num">{i + 1}. </span>
+                    <span className="step-num">{i + 1}. </span>
                     <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
                                   label={null} field={`step-${i}-instruction`} editing={editing} setEditing={setEditing}
                                   editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}/>

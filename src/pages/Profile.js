@@ -55,11 +55,11 @@ export default function Profile({}) {
               </div>
             </div>
           </div>
+          <button className="button-orange add-button"
+                  onClick={() => setShowModal(true)}
+          >+ Add Recipe
+          </button>
         </div>
-        <button className="button-orange add-button"
-                onClick={() => setShowModal(true)}
-        >+ Add Recipe
-        </button>
         <div className="profile-bottom">
           <div className="category-card" onClick={() => navigate("/my-recipes")}>
             <h2 className="category-card-title">My Recipes</h2>

@@ -140,8 +140,8 @@ function Home() {
                     <span className="tag-category" key={i}
                           onMouseEnter={(e) => handleHoverTagCategory(e, tagCategory)}
                     >
-                {capitalize(tagCategory)}
-              </span>
+                      {capitalize(tagCategory)}
+                    </span>
                   ))
                 }
               </div>
@@ -191,7 +191,7 @@ function Home() {
                       }
                     </div>
                   </div>}
-                  {(filterValue.length > 0 || sortValue) && (!showSearch && !showSort) &&
+                  {(filteredAndSortedRecipes.length < recipes.length) && (!showSearch && !showSort) &&
                     <div className="all-recipes" onClick={viewAllRecipes}>All Recipes</div>}
                 </div>
               }

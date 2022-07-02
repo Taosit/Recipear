@@ -39,12 +39,6 @@ export default function EditableText({
     updateField()
   }, [editing, editFieldValue])
 
-  const inputStyles = {
-    width: "300px",
-    height: "70px",
-    resize: "none"
-  }
-
   const startEditing = (field) => {
     setEditing(field);
     if (field.includes("step")) {
@@ -64,7 +58,7 @@ export default function EditableText({
       {editing === field ?
         <span className="edit-field-container">
           {label && <label htmlFor="ingredient-edit">{label}: </label>}
-          <textarea className="edit-field" style={inputStyles} value={editFieldValue[field]}
+          <textarea className="edit-field" value={editFieldValue[field]}
                     onChange={(e) => setEditFieldValue({[field]: e.target.value})}
           />
                     <img className="edit-field-icon" src={doneIcon} alt="done"
