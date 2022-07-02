@@ -65,7 +65,7 @@ export default function Step({
         {progress <= recipe.steps.length ?
           <button className="button-orange" onClick={nextStep}>Next</button>
           :
-          <button className="button-orange" onClick={finishCooking}>Finish</button>
+          <button className="button-orange" onClick={finishCooking}>Done</button>
         }
       </div>
     </>

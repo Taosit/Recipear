@@ -22,9 +22,6 @@ function Home() {
   const currentRoute = useLocation()
   setLastVisitedPage(currentRoute.pathname)
 
-  const str = "cook for two miute";
-  console.log(str.match(/(a|one|two|three|four|five|ten|\d*)(?= min)/i))
-
   const filterRecipes = ({key, value}) => {
     if (key === "name") return recipes.filter(recipe => recipe.name === value);
     if (key === "tags") return recipes.filter(recipe => recipe.tags.includes(value));
@@ -126,7 +123,9 @@ function Home() {
     setSearchInputValue("")
   }
 
-  if (loading) return <h1>Loading...</h1>
+  if (loading) return <div className="main-container">
+    <div className="loader"></div>
+  </div>
 
   return (
     <>

@@ -100,12 +100,12 @@ function RecipeModal({showModal, setShowModal}) {
     prevBtnRef.current.disabled = true;
     nextBtnRef.current.disabled = true
 
-    const finalImage = await getImage(newRecipe.image);
+    const finalImage = await getImage(newRecipe.image.file);
 
     const validSteps = newRecipe.steps.filter(step => step.instruction && step.instruction.length !== 0);
 
     const stepsWithImagesPromise = validSteps.map(async step =>{
-      const timeMatchingResult = step.instruction.match(/(a|one|two|three|four|five|ten|\d*)(?= min)/i)
+      const timeMatchingResult = step.instruction.match(/(a|one|two|three|four|five|ten|\d+)(?= min)/i)
       let stepCopy = {...step}
       if (timeMatchingResult) {
         if (isNaN(parseInt(timeMatchingResult[0]))) {
@@ -115,7 +115,7 @@ function RecipeModal({showModal, setShowModal}) {
         }
       }
       if (!step.image) return stepCopy
-      const image = await getImage(step.image);
+      const image = await getImage(step.image.file);
       return {...stepCopy, image}
     })
 
@@ -152,7 +152,7 @@ function RecipeModal({showModal, setShowModal}) {
       case 3:
         return <StepsField recipe={newRecipe} setRecipe={setNewRecipe}/>
       case 4:
-        return <ImageField recipe={newRecipe} handleChange={handleChange}/>
+        return <ImageField recipe={newRecipe} setRecipe={setNewRecipe}/>
     }
   }
 

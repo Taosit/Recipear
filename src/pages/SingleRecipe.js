@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from "react"
+import React, {useState, useEffect, useMemo, useRef} from "react"
 import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import {useParams, useNavigate, Link} from "react-router-dom";
 import cookingIcon from "../assets/cooking.png"
@@ -8,8 +8,11 @@ import {useAuthStatus} from "../hooks/useAuthStatus";
 import {getAuth} from "firebase/auth";
 import {db, storage} from "../firebase.config";
 import {doc, getDoc, updateDoc, arrayUnion, arrayRemove, increment, deleteDoc} from "firebase/firestore";
-import {deleteObject, ref} from "firebase/storage";
+import {deleteObject, getDownloadURL, ref, uploadBytes} from "firebase/storage";
 import EditableText from "../components/EditableText";
+import {toast} from "react-toastify";
+import {v4 as uuid} from "uuid";
+import imageIcon from "../assets/image.png";
 
 
 function SingleRecipe() {
@@ -28,6 +31,8 @@ function SingleRecipe() {
 
   const {loggedIn} = useAuthStatus()
   const auth = getAuth()
+
+  const overlayRef = useRef();
 
   const isAuthor = useMemo(() => {
     if (!currentUserData || !recipe) return false
@@ -48,7 +53,6 @@ function SingleRecipe() {
         setCurrentUserData(userDocSnap.data())
         setLikedByCurrentUser(userDocSnap.data().likedRecipes.includes(id))
       }
-
     }
     getUserData()
   }, [loggedIn])
@@ -87,7 +91,7 @@ function SingleRecipe() {
   }
 
   const addStep = async () => {
-    await updateDoc(recipeRef, {...recipe, steps: [...recipe.steps, {instruction: ""}]})
+    await updateDoc(recipeRef, {steps: [...recipe.steps, {instruction: ""}]})
     setRecipeModified(true);
     setEditing(`step-${recipe.steps.length}-instruction`)
     setEditFieldValue({[`step-${recipe.steps.length}-instruction`]: ""})
@@ -98,21 +102,32 @@ function SingleRecipe() {
   }
 
   const deleteRecipe = async (id) => {
-    setRecipes(prevRecipes => {
-      const newRecipes = prevRecipes.filter(r => r.id !== id);
-      return newRecipes
-    })
-    const recipeRef = doc(db, "recipes", id)
-    const docSnapshot = await getDoc(recipeRef);
-    if (docSnapshot.exists()) {
-      const finishedImage = docSnapshot.data().image;
-      await deleteObject(ref(storage, `images/${finishedImage.storageId}`));
-      const stepImagePromises = docSnapshot.data().steps
-        .filter(step => step.image)
-        .map(async step => await deleteObject(ref(storage, `images/${step.image.storageId}`)))
-      await Promise.all(stepImagePromises)
+    try {
+      setRecipes(prevRecipes => {
+        const newRecipes = prevRecipes.filter(r => r.id !== id);
+        return newRecipes
+      })
+      const recipeRef = doc(db, "recipes", id)
+      const docSnapshot = await getDoc(recipeRef);
+      console.log("gerDoc")
+      if (docSnapshot.exists()) {
+        console.log("recipe from database:", docSnapshot.data())
+        const finishedImage = docSnapshot.data().image;
+        await deleteObject(ref(storage, `images/${finishedImage.storageId}`));
+        console.log("deleted final image from storage")
+        const stepImagePromises = docSnapshot.data().steps
+          .filter(step => step.image)
+          .map(async step => await deleteObject(ref(storage, `images/${step.image.storageId}`)))
+        await Promise.all(stepImagePromises)
+        console.log("deleted step images from storage")
+      } else {
+        console.log("doc doesn't exist")
+      }
+      await deleteDoc(recipeRef);
+    } catch (e) {
+      console.log(e)
     }
-    await deleteDoc(recipeRef);
+
   }
 
   const deleteARecipe = async (id) => {
@@ -128,7 +143,75 @@ function SingleRecipe() {
     navigate(`/recipes/${id}/cook`)
   }
 
-  if (recipes.length === 0 || !recipe) return <h3>Loading</h3>
+  if (recipes.length === 0 || !recipe) return <div className="single-recipe-container">
+    <div className="loader"></div>
+  </div>
+
+  const showImageOverlay = () => {
+    overlayRef.current.classList.add("show-big-image-overlay")
+  }
+
+  const hideImageOverlay = () => {
+    overlayRef.current.classList.remove("show-big-image-overlay")
+  }
+
+  const updateImage = async (e, index) => {
+    const imageFile = e.target.files[0];
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    if (!imageFile || !ALLOWED_TYPES.includes(imageFile.type)) {
+      toast.error("Please upload a png, jpeg or jpg file")
+      return;
+    }
+    const id = uuid();
+    const imgRef = ref(storage, `images/${id}`);
+    await uploadBytes(imgRef, imageFile);
+    const url = await getDownloadURL(imgRef);
+    let imageToDelete;
+    if (!index) {
+      imageToDelete = recipe.image.storageId;
+      await updateDoc(recipeRef, {image: {storageId: id, url}})
+    } else {
+      imageToDelete = recipe.steps[index].image.storageId;
+      const updatedSteps = recipe.steps.map((step, i) => {
+        if (index !== i) return step;
+        return {...step, image: {storageId: id, url}}
+      })
+      await updateDoc(recipeRef, {steps: updatedSteps})
+    }
+    setRecipeModified(true);
+    await deleteObject(ref(storage, `images/${imageToDelete}`))
+  }
+
+  const removeImage = async (index) => {
+    const imageToDelete = recipe.steps[index].image.storageId;
+    const updatedSteps = recipe.steps.map((step, i) => {
+      if (index !== i) return step;
+      return {...step, image: null}
+    })
+    await updateDoc(recipeRef, {steps: updatedSteps});
+    setRecipeModified(true);
+    await deleteObject(ref(storage, `images/${imageToDelete}`))
+  }
+
+  const addImage = async (e, index) => {
+    console.log("add image", {index})
+    const imageFile = e.target.files[0];
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    if (!imageFile || !ALLOWED_TYPES.includes(imageFile.type)) {
+      toast.error("Please upload a png, jpeg or jpg file")
+      return;
+    }
+    const id = uuid();
+    const imgRef = ref(storage, `images/${id}`);
+    await uploadBytes(imgRef, imageFile);
+    const url = await getDownloadURL(imgRef);
+    const updatedSteps = recipe.steps.map((step, i) => {
+      if (index !== i) return step;
+      return {...step, image: {storageId: id, url}}
+    })
+    await updateDoc(recipeRef, {steps: updatedSteps})
+    setRecipeModified(true);
+  }
 
   return (
     <div className="single-recipe-container">
@@ -144,8 +227,17 @@ function SingleRecipe() {
               })
             }
           </div>
-          <div className="big-image-container">
+          <div className="big-image-container"
+               onMouseEnter={showImageOverlay} onMouseLeave={hideImageOverlay}>
+            >
             <img className="big-image" src={recipe.image.url} alt="recipe"/>
+            <div className="big-image-overlay" ref={overlayRef}>
+              <span className="image-button">
+                <label className="image-button-text" htmlFor="image-input">Update Image</label>
+                <input type="file" id="image-input"
+                       onChange={e => updateImage(e, null)}/>
+              </span>
+            </div>
           </div>
           <div className="recipe-description">
             <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
@@ -167,9 +259,28 @@ function SingleRecipe() {
                                   label={null} field={`step-${i}-instruction`} editing={editing} setEditing={setEditing}
                                   editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}/>
                   </div>
-                  {step.image && <div className="image-col">
+                  {step.image ?
+                    <div className="image-col">
                     <img className="step-image" src={step.image.url} alt="step"/>
-                  </div>}
+                    <div className="step-image-button-group">
+                      <span className="image-button">
+                          <label className="image-button-text" htmlFor={`image${i}-input`}>Update</label>
+                        <input type="file" className="image-input" id={`image${i}-input`} onChange={e => updateImage(e, i)}/>
+                      </span>
+                      <span className="image-button">
+                        <label className="image-button-text" onClick={() => removeImage(i)}>Remove</label>
+                      </span>
+                    </div>
+                  </div>
+                  :
+                    <div className="empty-image-col">
+                    <div className="choose-image-container">
+                      <label className="add-image-button" htmlFor={`recipe${recipe.id}image${i}-input`}>Add Image</label>
+                      <input type="file" id={`recipe${recipe.id}image${i}-input`} className="image-input"
+                             onChange={e => addImage(e, i)}/>
+                      <img src={imageIcon} alt="Image"/>
+                    </div>
+                    </div>}
                 </li>
               ))}
             </ol>

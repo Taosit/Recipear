@@ -1,7 +1,6 @@
 import {createContext, useContext, useState, useEffect} from "react";
 import {doc, deleteDoc, getDocs, collection} from "firebase/firestore";
 import {db, storage} from "../firebase.config";
-import { ref, deleteObject } from "firebase/storage";
 
 const RecipeContext = createContext();
 

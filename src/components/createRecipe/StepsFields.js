@@ -1,4 +1,6 @@
 import React from "react";
+import imageIcon from "../../assets/image.png";
+import {toast} from "react-toastify";
 
 export default function StepsField({recipe, setRecipe}) {
 
@@ -9,16 +11,48 @@ export default function StepsField({recipe, setRecipe}) {
     }))
   }
 
-  const handleStepChange = (event, index, type) => {
+  const handleInstructionChange = (e, index) => {
     setRecipe(prevRecipe => {
       const newSteps = prevRecipe.steps.map((step, i) => {
-        if (index === i) {
-          if (type === "time") return {...step, time: event.target.value}
-          if (type === "instruction") return {...step, instruction: event.target.value}
-          console.log("image upload files", event.target.files)
-          if (type === "image") return {...step, image: event.target.files[0]}
-        }
+        if (index === i) return {...step, instruction: e.target.value}
         return step;
+      });
+      return {
+        ...prevRecipe,
+        steps: newSteps
+      }
+    })
+  }
+
+  const handleImageChange = (e, index) => {
+    const imageFile = e.target.files[0];
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+    if (!imageFile || !ALLOWED_TYPES.includes(imageFile.type)) {
+      toast.error("Please upload a png, jpeg or jpg file")
+      return;
+    }
+    let reader = new FileReader();
+    reader.readAsDataURL(imageFile)
+    reader.onloadend = () => {
+      const imagePreview = reader.result;
+      setRecipe(prevRecipe => {
+        const newSteps = prevRecipe.steps.map((step, i) => {
+          if (index !== i) return step
+          return {...step, image: {file: imageFile, preview: imagePreview}};
+        });
+        return {
+          ...prevRecipe,
+          steps: newSteps
+        }
+      })
+    }
+  }
+
+  const removeImage = (index) => {
+    setRecipe(prevRecipe => {
+      const newSteps = prevRecipe.steps.map((step, i) => {
+        if (index !== i) return step
+        return {...step, image: null};
       });
       return {
         ...prevRecipe,
@@ -36,23 +70,32 @@ export default function StepsField({recipe, setRecipe}) {
           <div className="step" key={i}>
             <div className="step-header">
               <span className="step-label">{`Step ${i+1}:`}</span>
-              <span className="cook-time">
-              <label htmlFor="cook-time">Cook time: </label>
-                <span className="cook-time-value">
-                  <input className="cook-time-input" type="text" value={step.time}
-                         onChange={e => handleStepChange(e, i, "time")}
-                  /> mins
-                </span>
-            </span>
             </div>
-            <textarea
-              id={`step${i}`}
-              value={step.instruction}
-              onChange={e => handleStepChange(e, i, "instruction")}
-            />
-            <input type="file" id="image"
-                   onChange={e => handleStepChange(e, i, "image")}/>
-          </div>
+            <div className="step-content">
+              <textarea
+                id={`step${i}`}
+                className="step-instruction-input"
+                value={step.instruction}
+                onChange={e => handleInstructionChange(e, i)}
+              />
+              {
+                step.image ?
+                  <div className="step-image-preview-area">
+                    <div className="step-image-preview-container">
+                      <img src={step.image.preview} alt="Step"/>
+                    </div>
+                    <button className="link" onClick={() => removeImage(i)}>Remove</button>
+                  </div>
+                  :
+                  <div className="choose-image-container">
+                    <label className="add-image-button" htmlFor="image-input">Add Image</label>
+                    <input type="file" id="image-input"
+                           onChange={e => handleImageChange(e, i)}/>
+                    <img src={imageIcon} alt="Image"/>
+                  </div>
+              }
+            </div>
+            </div>
         ))}
         <button type="button" className="add-step-button" onClick={addStep}>Add Step</button>
       </div>

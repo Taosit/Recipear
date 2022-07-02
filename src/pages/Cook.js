@@ -49,7 +49,8 @@ function Cook() {
         return <Ingredients recipe={recipe} nextStep={nextStep} previousStep={previousStep}
                             voiceCommandActive={voiceCommandActive} setVoiceCommandActive={setVoiceCommandActive}/>
       default:
-        return <Step recipe={recipe} progress={progress} timers={timers} setTimers={setTimers} stepsHaveTimer={stepsHaveTimer} setStepsHaveTimer={setStepsHaveTimer}
+        return <Step recipe={recipe} progress={progress} timers={timers} setTimers={setTimers}
+                     stepsHaveTimer={stepsHaveTimer} setStepsHaveTimer={setStepsHaveTimer}
                      nextStep={nextStep} previousStep={previousStep} finishCooking={cancelCooking}
                      voiceCommandActive={voiceCommandActive} setVoiceCommandActive={setVoiceCommandActive}/>
     }
@@ -57,11 +58,9 @@ function Cook() {
 
   return (
     <div className="cook-page-container">
-      <div className="container">
-    <div className="cook-page">
-      <span className="cancel-cooking" onClick={cancelCooking}>Cancel</span>
-      {recipeContent()}
-    </div>
+      <div className="cook-page">
+        <span className="cancel-cooking" onClick={cancelCooking}>Cancel</span>
+        {recipeContent()}
       </div>
     </div>
   );
