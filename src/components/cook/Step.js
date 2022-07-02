@@ -48,7 +48,7 @@ export default function Step({
       }
       <p className="step-instruction">{currentStep.instruction}</p>
       {currentStep.image && <div className="step-image-container">
-        <img className="step-image" src={currentStep.image.url} alt="current step"/>
+        <img className="cook-step-image" src={currentStep.image.url} alt="current step"/>
       </div>}
       <div className="navigate-buttons">
         <button className="button-orange" onClick={previousStep}>Prev</button>

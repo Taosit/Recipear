@@ -148,10 +148,12 @@ function SingleRecipe() {
   </div>
 
   const showImageOverlay = () => {
+    if (!isAuthor) return;
     overlayRef.current.classList.add("show-big-image-overlay")
   }
 
   const hideImageOverlay = () => {
+    if (!isAuthor) return;
     overlayRef.current.classList.remove("show-big-image-overlay")
   }
 
@@ -229,15 +231,15 @@ function SingleRecipe() {
           </div>
           <div className="big-image-container"
                onMouseEnter={showImageOverlay} onMouseLeave={hideImageOverlay}>
-            >
             <img className="big-image" src={recipe.image.url} alt="recipe"/>
-            <div className="big-image-overlay" ref={overlayRef}>
+            {isAuthor &&
+              <div className="big-image-overlay" ref={overlayRef}>
               <span className="image-button">
                 <label className="image-button-text" htmlFor="image-input">Update Image</label>
                 <input type="file" id="image-input"
                        onChange={e => updateImage(e, null)}/>
               </span>
-            </div>
+              </div>}
           </div>
           <div className="recipe-description">
             <EditableText recipe={recipe} setRecipeModified={setRecipeModified} isAuthor={isAuthor}
@@ -259,28 +261,36 @@ function SingleRecipe() {
                                   label={null} field={`step-${i}-instruction`} editing={editing} setEditing={setEditing}
                                   editFieldValue={editFieldValue} setEditFieldValue={setEditFieldValue}/>
                   </div>
-                  {step.image ?
+                  {isAuthor && step.image ?
                     <div className="image-col">
-                    <img className="step-image" src={step.image.url} alt="step"/>
-                    <div className="step-image-button-group">
+                      <img className="step-image" src={step.image.url} alt="step"/>
+                      <div className="step-image-button-group">
                       <span className="image-button">
                           <label className="image-button-text" htmlFor={`image${i}-input`}>Update</label>
-                        <input type="file" className="image-input" id={`image${i}-input`} onChange={e => updateImage(e, i)}/>
+                        <input type="file" className="image-input" id={`image${i}-input`}
+                               onChange={e => updateImage(e, i)}/>
                       </span>
-                      <span className="image-button">
+                        <span className="image-button">
                         <label className="image-button-text" onClick={() => removeImage(i)}>Remove</label>
                       </span>
+                      </div>
                     </div>
-                  </div>
-                  :
-                    <div className="empty-image-col">
-                    <div className="choose-image-container">
-                      <label className="add-image-button" htmlFor={`recipe${recipe.id}image${i}-input`}>Add Image</label>
-                      <input type="file" id={`recipe${recipe.id}image${i}-input`} className="image-input"
-                             onChange={e => addImage(e, i)}/>
-                      <img src={imageIcon} alt="Image"/>
-                    </div>
-                    </div>}
+                    :
+                    isAuthor && !step.image?
+                      <div className="empty-image-col">
+                        <div className="choose-image-container">
+                          <label className="add-image-button" className="image-input-label"
+                                 htmlFor={`recipe${recipe.id}image${i}-input`}>Add Image</label>
+                          <input type="file" id={`recipe${recipe.id}image${i}-input`} className="image-input"
+                                 onChange={e => addImage(e, i)}/>
+                          <img src={imageIcon} alt="Image"/>
+                        </div>
+                      </div>
+                      :
+                      step.image && <div className="image-col">
+                        <img className="step-image" src={step.image.url} alt="step"/>
+                      </div>
+                  }
                 </li>
               ))}
             </ol>

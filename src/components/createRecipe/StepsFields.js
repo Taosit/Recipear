@@ -88,7 +88,7 @@ export default function StepsField({recipe, setRecipe}) {
                   </div>
                   :
                   <div className="choose-image-container">
-                    <label className="add-image-button" htmlFor="image-input">Add Image</label>
+                    <label className="add-image-button"htmlFor="image-input">Add Image</label>
                     <input type="file" id="image-input"
                            onChange={e => handleImageChange(e, i)}/>
                     <img src={imageIcon} alt="Image"/>

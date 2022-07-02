@@ -63,7 +63,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   transition: all 0.05s ease-in-out;
   padding: 0.2em 0.5em;
   margin: 0.5em;
-  font-weight: bold;
+  font-size: 1em;
+  font-weight: 600;
 }
 
 .button-orange {
@@ -703,8 +704,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   display: flex;
 }
 
-.add-image-button {
+.image-input-label {
   cursor: pointer;
+  color: #990000;
+  font-weight: 600;
 }
 
 .input-container .step-instruction-input {
@@ -823,7 +826,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 }
 
 .big-image-container {
-  width: 100%;
+  width: min(500px, 100%);
   aspect-ratio: 5/3;
   display: flex;
   justify-content: center;
@@ -834,8 +837,11 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 
 .big-image {
   position: absolute;
+  bottom: 0;
   width: 100%;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .big-image-overlay {
@@ -992,10 +998,6 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
   margin-left: 0.5em;
   display: inline-block;
   padding-top: 0.2em;
-}
-
-.delete-recipe-button {
-  font-size: larger;
 }
 
 /* -----Cook------ */
@@ -1231,12 +1233,16 @@ input[type="radio"] {
 
 .step-image-container {
   width: 30%;
+  aspect-ratio: 5/3;
   align-self: center;
   margin: 0.2em 0;
 }
 
-.step-image {
-  max-width: 100%;
+.cook-step-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 
@@ -1435,6 +1441,12 @@ input[type="radio"] {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 700px) {
+  .step-row {
+    flex-direction: column;
+  }
 }
 
 @media  (max-width: 400px) {
