@@ -43,6 +43,7 @@ function RecipeModal({ showModal, setShowModal }) {
 	};
 	const [tags, setTags] = useState(initialTags);
 	const [step, setStep] = useState(0);
+	const [loading, setLoading] = useState(false);
 
 	const prevBtnRef = useRef();
 	const nextBtnRef = useRef();
@@ -96,11 +97,8 @@ function RecipeModal({ showModal, setShowModal }) {
 
 	const getImage = async img => {
 		const id = uuid();
-		console.log({ img });
 		if (img.size > 100000) {
-			console.log("compressing");
 			img = await compress(img, { maxWidth: 500 });
-			console.log({ img });
 		}
 		const imgRef = ref(storage, `images/${id}`);
 		await uploadBytes(imgRef, img);
@@ -108,21 +106,32 @@ function RecipeModal({ showModal, setShowModal }) {
 		return { storageId: id, url };
 	};
 
+	const checkEmptyFields = () => {
+		if (!newRecipe.name) {
+			setStep(0);
+			return false;
+		} else if (!newRecipe.ingredients || !newRecipe.seasonings) {
+			setStep(2);
+			return false;
+		} else if (!newRecipe.steps[0].instruction) {
+			setStep(3);
+			return false;
+		} else if (!newRecipe.image) {
+			setStep(4);
+			return false;
+		}
+		return true;
+	};
+
 	const createRecipe = async e => {
 		e.preventDefault();
-		console.log(newRecipe);
-		if (
-			newRecipe.name === "" ||
-			newRecipe.ingredients === "" ||
-			newRecipe.seasonings === "" ||
-			newRecipe.steps[0] === "" ||
-			!newRecipe.image
-		) {
+		if (!checkEmptyFields()) {
 			toast.error("Please fill in all the fields");
 			return;
 		}
 		prevBtnRef.current.disabled = true;
 		nextBtnRef.current.disabled = true;
+		setLoading(true);
 
 		const finalImage = await getImage(newRecipe.image.file);
 
@@ -162,8 +171,9 @@ function RecipeModal({ showModal, setShowModal }) {
 			await setDoc(doc(db, "recipes", recipeId), finalRecipe);
 			await addRecipeRefToUser(recipeId);
 			toast.success("Successfully added a new recipe");
+			setLoading(false);
+			closeModal();
 		});
-		closeModal();
 	};
 
 	const closeModal = () => {
@@ -171,12 +181,20 @@ function RecipeModal({ showModal, setShowModal }) {
 		setStep(0);
 		setShowModal(false);
 		setNewRecipe(emptyRecipe);
+		prevBtnRef.current.disabled = false;
+		nextBtnRef.current.disabled = false;
 	};
 
 	const showField = () => {
 		switch (step) {
 			case 0:
-				return <NameField recipe={newRecipe} handleChange={handleChange} />;
+				return (
+					<NameField
+						recipe={newRecipe}
+						handleChange={handleChange}
+						showModal={showModal}
+					/>
+				);
 			case 1:
 				return (
 					<TagsField
@@ -234,10 +252,16 @@ function RecipeModal({ showModal, setShowModal }) {
 							<button
 								onClick={e => nextStep(e)}
 								disabled={false}
-								className="button-orange"
+								className={`button-orange ${step === 4 ? "submit-button" : ""}`}
 								ref={nextBtnRef}
 							>
-								{step === 4 ? "Submit" : "Next"}
+								{step !== 4 ? (
+									"Next"
+								) : !loading ? (
+									"Submit"
+								) : (
+									<div className="button-loader"></div>
+								)}
 							</button>
 						</div>
 					</form>

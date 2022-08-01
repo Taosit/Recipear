@@ -33,7 +33,6 @@ function Home() {
 		console.log({ recipes });
 		if (key === "ingredients")
 			return recipes.filter(recipe => {
-				console.log("ingredients", recipe.ingredients, "value", value);
 				return recipe.ingredients.toLowerCase().includes(value);
 			});
 	};
