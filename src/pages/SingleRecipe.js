@@ -22,10 +22,11 @@ import {
 	ref,
 	uploadBytes,
 } from "firebase/storage";
-import EditableText from "../components/EditableText";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import imageIcon from "../assets/image.png";
+import trashIcon from "../assets/trash.png";
+import RecipeInfoColumn from "../components/RecipeInfoColumn";
+import RecipeStepColumn from "../components/RecipeStepColumn";
 
 function SingleRecipe() {
 	const { recipes, setRecipes, setRecipeModified, lastVisitedPage } =
@@ -33,8 +34,6 @@ function SingleRecipe() {
 	const [currentUserData, setCurrentUserData] = useState(null);
 	const [likedByCurrentUser, setLikedByCurrentUser] = useState(null);
 	const [likeCount, setLikeCount] = useState(null);
-	const [editing, setEditing] = useState(null);
-	const [editFieldValue, setEditFieldValue] = useState(null);
 
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -109,8 +108,6 @@ function SingleRecipe() {
 			steps: [...recipe.steps, { instruction: "" }],
 		});
 		setRecipeModified(true);
-		setEditing(`step-${recipe.steps.length}-instruction`);
-		setEditFieldValue({ [`step-${recipe.steps.length}-instruction`]: "" });
 	};
 
 	const modifyLike = like => {
@@ -238,201 +235,26 @@ function SingleRecipe() {
 			<div className="container">
 				<div className="single-recipe">
 					<p
-						className=" link back-link"
+						className="link back-link"
 						onClick={() => navigate(lastVisitedPage)}
 					>
 						Back
 					</p>
-					<h1 className="recipe-name">{capitalize(recipe.name)}</h1>
-					<div className="tag-container">
-						{recipe.tags.map((tag, index) => {
-							if (
-								!tag ||
-								tag === "Other" ||
-								tag === "For All" ||
-								tag === "Main"
-							)
-								return;
-							return (
-								<span
-									key={index}
-									className={`recipe-tag tag${(index % 2) + 1}`}
-								>
-									{tag}
-								</span>
-							);
-						})}
-					</div>
-					<div
-						className="big-image-container"
-						onMouseEnter={showImageOverlay}
-						onMouseLeave={hideImageOverlay}
-					>
-						<img className="big-image" src={recipe.image.url} alt="recipe" />
-						{isAuthor && (
-							<div
-								className="big-image-overlay show-big-image-overlay"
-								ref={overlayRef}
-							>
-								<span className="image-button">
-									<label className="image-button-text" htmlFor="image-input">
-										Update Image
-									</label>
-									<input
-										type="file"
-										id="image-input"
-										onChange={e => updateImage(e, null)}
-									/>
-								</span>
-							</div>
-						)}
-					</div>
-					<div className="recipe-description">
-						<EditableText
-							recipe={recipe}
-							setRecipeModified={setRecipeModified}
-							isAuthor={isAuthor}
-							label="Ingredients"
-							field="ingredients"
-							editing={editing}
-							setEditing={setEditing}
-							editFieldValue={editFieldValue}
-							setEditFieldValue={setEditFieldValue}
-						/>
-						<br />
-						<EditableText
-							recipe={recipe}
-							setRecipeModified={setRecipeModified}
-							isAuthor={isAuthor}
-							label="Seasonings"
-							field="seasonings"
-							editing={editing}
-							setEditing={setEditing}
-							editFieldValue={editFieldValue}
-							setEditFieldValue={setEditFieldValue}
-						/>
-						<p className="step-text">
-							<label>Steps</label>{" "}
-							{isAuthor && (
-								<span className="add-step-icon" onClick={addStep}>
-									+
-								</span>
-							)}
-						</p>
-						<ol className="step-list">
-							{recipe.steps.map((step, i) => (
-								<li key={i} className="step-row">
-									<div className="instruction-col">
-										<span className="step-num">{i + 1}. </span>
-										<EditableText
-											recipe={recipe}
-											setRecipeModified={setRecipeModified}
-											isAuthor={isAuthor}
-											label={null}
-											field={`step-${i}-instruction`}
-											editing={editing}
-											setEditing={setEditing}
-											editFieldValue={editFieldValue}
-											setEditFieldValue={setEditFieldValue}
-										/>
-									</div>
-									{isAuthor && step.image ? (
-										<div className="image-col">
-											<img
-												className="step-image"
-												src={step.image.url}
-												alt="step"
-											/>
-											<div className="step-image-button-group">
-												<span className="image-button">
-													<label
-														className="image-button-text"
-														htmlFor={`image${i}-input`}
-													>
-														Update
-													</label>
-													<input
-														type="file"
-														className="image-input"
-														id={`image${i}-input`}
-														onChange={e => updateImage(e, i)}
-													/>
-												</span>
-												<span className="image-button">
-													<label
-														className="image-button-text"
-														onClick={() => removeImage(i)}
-													>
-														Remove
-													</label>
-												</span>
-											</div>
-										</div>
-									) : isAuthor && !step.image ? (
-										<div className="empty-image-col">
-											<div className="add-image-container">
-												<label
-													className="image-input-label"
-													htmlFor={`recipe${recipe.id}image${i}-input`}
-												>
-													Add Image
-												</label>
-												<input
-													type="file"
-													id={`recipe${recipe.id}image${i}-input`}
-													className="image-input"
-													onChange={e => addImage(e, i)}
-												/>
-												<img src={imageIcon} alt="Image" />
-											</div>
-										</div>
-									) : (
-										step.image && (
-											<div className="image-col">
-												<img
-													className="step-image"
-													src={step.image.url}
-													alt="step"
-												/>
-											</div>
-										)
-									)}
-								</li>
-							))}
-						</ol>
-					</div>
-					{likedByCurrentUser === null ? (
-						<span className="like-container">{recipe.likes} likes</span>
-					) : likedByCurrentUser ? (
-						<span
-							className="like-container mutable"
-							onClick={() => modifyLike(false)}
-						>
-							<img src={filledHeartIcon} alt="like" />{" "}
-							{likeCount ?? recipe.likes}
-						</span>
-					) : (
-						<span
-							className="like-container mutable"
-							onClick={() => modifyLike(true)}
-						>
-							<img src={emptyHeartIcon} alt="like" /> like
-						</span>
-					)}
-					<button className="button-orange cook-button" onClick={cook}>
-						<div className="cook-icon-container">
-							<img className="cook-icon" src={cookingIcon} alt="cook" />
+					<div className="recipe-header-container">
+						<div className="recipe-name-container">
+							<h1 className="recipe-name">{capitalize(recipe.name)}</h1>
 						</div>
-						<span className="cook">Cook</span>
-					</button>
-					{isAuthor && (
-						<button
-							className="button-red"
-							onClick={() => deleteARecipe(recipe.id)}
-						>
-							Delete
+						<button className="icon-button delete-button">
+							<div className="trash-icon-container">
+								<img src={trashIcon} alt="trash icon" />
+							</div>
+							<p className="delete-text">Delete Recipe</p>
 						</button>
-					)}
+					</div>
+					<div className="recipe-body">
+						<RecipeInfoColumn recipe={recipe} />
+						<RecipeStepColumn recipe={recipe} />
+					</div>
 				</div>
 			</div>
 		</div>

@@ -25,7 +25,7 @@ export default function Cover({
 	};
 
 	return (
-		<>
+		<div className="cover-page-body">
 			<p className="subtitle">{recipe.name}</p>
 			<h2 className="cook-title">Get ready to cook</h2>
 			<div className="cook-image-container">
@@ -90,6 +90,6 @@ export default function Cover({
 					Start Cooking
 				</button>
 			</div>
-		</>
+		</div>
 	);
 }

@@ -4,13 +4,21 @@ import { Link, useNavigate } from "react-router-dom";
 import heartIcon from "../assets/heart.png";
 
 function Recipes({ recipes }) {
-	console.log(recipes);
 
 	const navigate = useNavigate();
 
 	const capitalize = str => {
 		return str.replace(str[0], str[0].toUpperCase());
 	};
+
+	const getIngredients = ingredients => {
+		const ingredientNames =  ingredients.map(ingredient => {
+			return ingredient.ingredient;
+		});
+		return ingredientNames.reduce((ingredientsStr, ingredient, index) => {
+			return index? `${ingredientsStr}, ${ingredient}` : ingredient;
+		}, "");
+	}
 
 	return (
 		<div className="recipes">
@@ -40,7 +48,7 @@ function Recipes({ recipes }) {
 									recipe.tags[0] !== "For All" &&
 									recipe.tags[0] !== "Other" && (
 										<span className="recipe-tag">{recipe?.tags[0]}</span>
-									)}
+								)}
 								{recipe.tags[1] && recipe.tags[1] !== "Other" && (
 									<span className="recipe-tag">{recipe?.tags[1]}</span>
 								)}
@@ -51,7 +59,7 @@ function Recipes({ recipes }) {
 										<div className="margin-div"></div>
 									)}
 								<p className="card-ingredients">
-									<b>Ingredients</b>: {recipe.ingredients}
+									{capitalize(getIngredients(recipe.ingredients))}
 								</p>
 							</div>
 						</div>

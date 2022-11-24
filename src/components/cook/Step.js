@@ -24,7 +24,8 @@ export default function Step({
   }
 
   return (
-    <>
+    <div className="card-grid">
+    <div className="cook-card-body">
       <p className="subtitle">{recipe.name}</p>
       <h2 className="cook-title">Step <span className="step-number">{stepIndex + 1}
       </span> of <span className="step-number">{recipe.steps.length}</span></h2>
@@ -50,6 +51,7 @@ export default function Step({
       {currentStep.image && <div className="step-image-container">
         <img className="cook-step-image" src={currentStep.image.url} alt="current step"/>
       </div>}
+      </div>
       <div className="navigate-buttons">
         <button className="button-orange" onClick={previousStep}>Prev</button>
         <VoiceCommand voiceCommandActive={voiceCommandActive}
@@ -68,6 +70,6 @@ export default function Step({
           <button className="button-orange" onClick={finishCooking}>Done</button>
         }
       </div>
-    </>
+    </div>
   )
 }

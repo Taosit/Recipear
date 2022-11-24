@@ -1,7 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Arima+Madurai:wght@400;500;700&display=swap');
 
 :root {
+	--darkest-gray: #3E3E3E;
+	--dark-gray: #636363;
+	--dark-red: #8D0C0C;
+	--red: #C14D4D;
+	--lightest-orange: #FFF3E8;
+	--lightest-yellow: #FAF8E1; 
+	--dark-orange: #B15500;
 	--orange-light: rgba(255, 243, 103, 1);
 	--orange-lighter: rgb(255, 208, 47);
 	--orange: orange;
@@ -56,6 +64,7 @@ textarea:focus {
 	font-family: Montserrat;
 	cursor: pointer;
 	background-color: rgba(0, 0, 0, 0);
+	margin-bottom: 0;
 }
 
 .button-red {
@@ -134,9 +143,9 @@ textarea:focus {
 	width: 100%;
 	background: rgb(139, 0, 0);
 	background: linear-gradient(
-		0deg,
-		rgba(139, 0, 0, 0.7) 0%,
-		rgba(139, 0, 0, 1) 37%
+		to bottom,
+		rgba(139, 0, 0, 1) 37%,
+		var(--red)
 	);
 	position: fixed;
 }
@@ -879,236 +888,306 @@ textarea {
 .single-recipe-container {
 	overflow-y: auto;
 	min-height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }
 
 .single-recipe {
-	padding-top: 40px;
+	padding-top: 32px;
 	padding-bottom: 1em;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+}
+
+.recipe-header-container {
+	position: relative;
+	width: 100%;
+}
+
+.recipe-name-container {
+	width: 50%;
+	margin: 0 auto;
 }
 
 .recipe-name {
-	margin-top: 1.5em;
+	color: var(--darkest-gray);
+	font-size: 24px;
+	margin-top: 0;
+	margin-bottom: 24px;
 }
 
-.link:hover {
-	text-decoration: underline;
+.recipe-body {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 32px;
 }
 
-.back-link {
+.recipe-body > * {
+	margin-bottom: 24px;
+}
+
+/* Info Column */
+
+.recipe-info-column {
+	container-type: inline-size;
+}
+
+.icon-button {
+	background-color: white;
+	padding: 2px 16px;
+	border: 1px solid transparent;
+	border-radius: 100px;
+	box-shadow: 0px 2px 8px rgba(141, 12, 12, 0.5);
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	cursor: pointer;
+}
+
+.icon-button p {
+	margin: 0;
+	color: var(--dark-red)
+}
+
+.icon-button img {
+	width: 24px;
+	height: 24px;
+}
+
+.delete-button {
 	position: absolute;
-	top: 40px;
-	left: 0;
+	bottom: 0;
+	right: 0;
 }
 
 .big-image-container {
-	width: min(500px, 100%);
-	aspect-ratio: 5/3;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 1em;
-	position: relative;
-	overflow-y: hidden;
-}
-
-.big-image {
-	position: absolute;
-	bottom: 0;
 	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center;
-}
-
-.big-image-overlay {
-	position: absolute;
-	bottom: 0;
-	background-color: rgba(255, 106, 0, 0.2);
-	height: 50px;
-	width: 100%;
-	transform: translateY(50px);
-	transition: 0.2s;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.show-big-image-overlay {
-	transform: translateY(0);
-}
-
-.image-button {
-	background-color: rgba(255, 255, 255, 0.7);
-	padding: 0.2em 0.5em;
-	border-radius: 1em;
-	margin: 0.5em;
-}
-
-.image-button-text {
-	font-weight: bold;
-	cursor: pointer;
-	color: #990000;
-}
-
-.recipe-description {
-	width: 100%;
-	align-self: flex-start;
-}
-
-.recipe-description > * {
-	margin: 0.5em 0;
-}
-
-.editable-text-container {
-	width: 100%;
-	display: inline-block;
-}
-
-.edit-field-container {
-	width: 100%;
-	display: flex;
-	align-items: flex-start;
-}
-
-.edit-field-container label {
-	font-weight: 600;
-}
-
-.edit-field {
-	width: 100%;
-	max-width: 300px;
-	height: 70px;
-	resize: none;
-}
-
-.single-recipe label,
-.step-num {
-	margin-right: 0.3em;
-}
-
-.edit-field-icon {
-	margin-left: 0.2em;
-	cursor: pointer;
-}
-
-.step-text {
-	display: flex;
-	align-items: center;
-}
-
-.step-text label {
-	font-weight: 600;
-}
-
-.add-step-icon {
-	display: inline-block;
-	margin-left: 0.2em;
-	font-weight: 600;
-	font-size: 2em;
-	cursor: pointer;
-}
-
-.step-row {
-	display: flex;
-	margin: 1em 0;
-}
-
-.instruction-col {
-	display: flex;
-	padding-right: 1em;
-	flex-basis: 60%;
-	flex-grow: 1;
-}
-
-.time-tag {
-	display: inline-block;
-	margin-left: 0.5em;
-	padding: 0.2em 0.5em;
-	border-radius: 0.5em;
-	background-color: var(--orange-dark);
-	color: white;
-}
-
-.image-col {
-	flex-basis: 40%;
-	position: relative;
 	aspect-ratio: 16/9;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-}
-
-.empty-image-col {
-	flex-basis: 40%;
 	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
 }
 
-.step-image {
+.big-image-container img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	position: absolute;
 }
 
-.step-image-button-group {
+.star-count-container {
+	background-color: white;
+	padding: 4px 16px;
+	color: var(--dark-orange);
+	font-size: 24px;
 	position: absolute;
-	bottom: 0;
-	height: 40px;
-	width: 100%;
-	background-color: rgba(255, 106, 0, 0.2);
+	top: 8px;
+	right: 8px;
+	border-radius: 100px;
 	display: flex;
+	gap: 8px;
 	align-items: center;
+	cursor: pointer;
+}
+
+.star-count-container img {
+	width: 26px;
+	height: 26px;
+}
+
+.recipe-info-card {
+	background-color: white;
+	padding: 24px 32px;
+	border: 1px solid #C6C6C6;
+	border-radius: 8px;
+	margin-top: 16px;
+}
+
+.underlined-heading {
+	font-family: 'Arima Madurai', cursive;
+	margin: 0;
+	text-align: start;
+	text-decoration: underline;
+	color: var(--dark-gray);
+	font-size: 20px;
+}
+
+.time-and-difficulty {
+	color: var(--dark-gray);
+	margin: 0 0 16px;
+	font-size: 14px;
+}
+
+.tags-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+
+.recipe-tag-container .tag-label {
+	margin: 0;
+	font-size: 14px;
+}
+
+.recipe-tag-container .tag {
+	margin: 0;
+	font-size: 18px;
+	color: var(--dark-orange);
+	font-weight: 500;
+}
+
+.ingredients-and-seasonings {
+	margin-top: 20px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+@container (max-width: 400px) {
+	.ingredients-and-seasonings {
+		grid-template-columns: 1fr;
+	}
+  }
+
+.ingredient-items-container {
+	margin-top: 8px;
+}
+
+.ingredients-and-seasonings h3 {
+	text-align: center;
+}
+
+.ingredients-and-seasonings .ingredient-list {
+	padding: 16px;
+	position: relative;
+}
+
+.paperclip-image {
+	position: absolute;
+	top: -13px;
+	right: 20px;
+}
+
+.ingredients-and-seasonings .ingredient-list:nth-of-type(1) {
+	background-color: var(--lightest-orange);
+}
+
+.ingredients-and-seasonings .ingredient-list:nth-of-type(2) {
+	background-color: var(--lightest-yellow);
+}
+
+.ingredient-item {
+	display: flex;
 	justify-content: space-between;
 }
 
-.step-image-button {
+.ingredient-item + .ingredient-item {
+	border-top: 1px solid white;
 }
 
-.cook-button {
-	padding: 0.3em 1.5em;
+.ingredient-item p {
+	margin: 12px 0;
+}
+
+/* Step column */
+
+.recipe-steps-header {
 	display: flex;
-	align-items: center;
+	align-items: baseline;
 }
 
-.cook-icon-container {
-	width: 32px;
-	aspect-ratio: 1/1;
-	margin-bottom: 0.2em;
-}
-.cook-icon {
-	height: 100%;
-	width: 100%;
+.pencil-image {
+	width: 24px;
+	height: 24px;
+	margin-left: 8px;
+	margin-right: auto;
+	cursor: pointer;
 }
 
-.like-container {
-	align-self: flex-start;
+.icon-button .cook-text {
+	color: var(--dark-orange);
+}
+
+.steps-list {
+	margin-top: 16px;
+	padding-left: 36px;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	gap: 24px;
+	counter-reset: section;
 }
 
-.like-container img {
-	width: 30px;
-	aspect-ratio: 1 / 1;
-	margin-right: 0.3em;
-	transition: all 0.3s ease-in-out;
+.step-container {
+	position: relative;
+	counter-increment: section;
 }
 
-.like-container img:hover {
-	transform: scale(1.2);
+.step-container::before {
+	position: absolute;
+	top: -4px;
+	left: -36px;
+	content: counter(section);
+	font-size: 32px;
+	font-family: 'Arima Madurai', cursive;
+	color: var(--dark-red);
 }
 
-.cook {
-	margin-left: 0.5em;
+.step-header-container {
+	display: grid;
+	grid-template-columns: 5fr 1fr;
+	gap: 8px;
+}
+
+.step-time {
+	font-family: 'Arima Madurai', cursive;
+	color: var(--red);
 	display: inline-block;
-	padding-top: 0.2em;
+	justify-self: end;
+	font-size: 14px;
+}
+
+.step-time span {
+	font-size: 20px;
+}
+
+.steps-list .step-image-container {
+	width: 70%;
+	aspect-ratio: 16/9;
+	margin-top: 16px;
+}
+
+.step-image-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@media (max-width: 1023px) {
+	.recipe-body {
+		grid-template-columns: 1fr;
+	}
+	.recipe-name-container {
+		width: 100%;
+	}
+	.recipe-name {
+		margin-bottom: 16px;
+	}
+	.delete-button {
+		position: relative;
+		margin-left: auto;
+		margin-bottom: 16px;
+	}
+	.ingredients-and-seasonings {
+		margin-bottom: 16px;
+	}
+}
+
+@media (width < 500px) {
+	.recipe-info-card {
+		padding: 16px;
+	}
+	.step-header-container {
+		grid-template-columns: 1fr;
+	}
+	.step-time {
+		display: none;
+	}
+	.step-instruction-container {
+		padding-right: 4px;
+	}
 }
 
 /* -----Cook------ */
@@ -1137,6 +1216,7 @@ textarea {
 
 .cook-page {
 	margin: 0 auto;
+	min-height: 50vh;
 	background-color: rgb(255, 254, 247);
 	padding: 1em;
 	width: min(500px, 90%);
@@ -1144,8 +1224,20 @@ textarea {
 	box-shadow: 0 0 15px 5px rgba(255, 165, 0, 0.6);
 	position: relative;
 	display: flex;
-	flex-direction: column;
 	text-align: center;
+}
+
+.cook-card-body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex-grow: 1;
+}
+
+.card-grid {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
 .cancel-cooking {
@@ -1206,15 +1298,17 @@ textarea {
 }
 
 .cook-image-container {
-	width: 50%;
-	height: 150px;
+	width: 70%;
+	aspect-ratio: 5 / 3;
 	align-self: center;
+	margin: 0 auto;
 	margin-top: 0.3em;
 }
 
 .cook-image {
-	max-width: 100%;
-	max-height: 100%;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .radio-button-groups {
@@ -1292,7 +1386,7 @@ input[type="radio"] {
 
 /* Prepare page */
 
-.ingredient-list h3 {
+.recipe-container .ingredient-list h3 {
 	color: #990000;
 	text-shadow: 0 1px 2px rgba(128, 0, 0, 0.42);
 }
