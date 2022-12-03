@@ -1,5 +1,5 @@
 import React from 'react'
-import starIcon from "../assets/star.png";
+import starIcon from "../assets/star.svg";
 import IngredientList from './IngredientList';
 
 const RecipeInfoColumn = ({recipe}) => {

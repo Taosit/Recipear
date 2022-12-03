@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Link, useNavigate } from "react-router-dom";
-import heartIcon from "../assets/heart.png";
+import starIcon from "../assets/star.svg";
 
 function Recipes({ recipes }) {
 
@@ -29,7 +29,7 @@ function Recipes({ recipes }) {
 							<div className="recipe">
 								<div className="recipe-image-container">
 									<span className="like-count-container">
-										<img src={heartIcon} alt="like" /> {recipe.likes}
+										<img src={starIcon} alt="like" /> {recipe.likes}
 									</span>
 									<img
 										className="recipe-image"

@@ -4,10 +4,10 @@ import { toast } from "react-toastify";
 import { getAuth, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
-import editIcon from "../assets/edit.png";
-import doneIcon from "../assets/done.png";
-import cookBookIcon from "../assets/recipe-book.png";
-import mealIcon from "../assets/meal.png";
+import editIcon from "../assets/edit.svg";
+import doneIcon from "../assets/done.svg";
+import cookBookIcon from "../assets/cookbook.svg";
+import mealIcon from "../assets/meal.svg";
 import RecipeModal from "../components/RecipeModal";
 
 export default function Profile({}) {
@@ -59,7 +59,7 @@ export default function Profile({}) {
 								<img
 									src={changeName ? doneIcon : editIcon}
 									alt={changeName ? "Done" : "Edit"}
-									className="name-icon"
+									className="edit-name-icon"
 									onClick={handleChangeName}
 								/>
 							</div>

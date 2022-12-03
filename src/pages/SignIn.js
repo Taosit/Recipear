@@ -4,8 +4,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import {signInWithEmailAndPassword, getAuth} from "firebase/auth";
-import showIcon from "../assets/show.png";
-import hideIcon from "../assets/hide.png";
+import showIcon from "../assets/show.svg";
+import hideIcon from "../assets/hide.svg";
 
 function SignIn() {
   const {signUp} = useRecipeContext()

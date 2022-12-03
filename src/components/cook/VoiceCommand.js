@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import SpeechRecognition, {
 	useSpeechRecognition,
 } from "react-speech-recognition";
-import blockedMicrophoneIcon from "../../assets/block-microphone.png";
-import microphoneIcon from "../../assets/microphone.png";
+import blockedMicrophoneIcon from "../../assets/microphone-block.svg";
+import microphoneIcon from "../../assets/microphone.svg";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function VoiceCommand({

@@ -3,9 +3,9 @@ import { useLocation } from "react-router-dom";
 import Recipes from "../components/Recipes";
 import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import { useProgressiveImage } from "../hooks/useProgressiveImage";
-import searchIcon from "../assets/search.png";
-import sortIcon from "../assets/sort.png";
-import sendIcon from "../assets/send.png";
+import searchIcon from "../assets/search.svg";
+import sortIcon from "../assets/sort.svg";
+import sendIcon from "../assets/send.svg";
 import backgroundImage from "../assets/background.png";
 import backgroundImageMin from "../assets/background-min.png";
 

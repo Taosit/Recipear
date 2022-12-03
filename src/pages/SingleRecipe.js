@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import cookingIcon from "../assets/cooking.png";
-import filledHeartIcon from "../assets/filledHeart.png";
-import emptyHeartIcon from "../assets/emptyHeart.png";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import { getAuth } from "firebase/auth";
 import { db, storage } from "../firebase.config";
@@ -24,7 +21,7 @@ import {
 } from "firebase/storage";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
-import trashIcon from "../assets/trash.png";
+import trashIcon from "../assets/trash.svg";
 import RecipeInfoColumn from "../components/RecipeInfoColumn";
 import RecipeStepColumn from "../components/RecipeStepColumn";
 

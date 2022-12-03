@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import infoIcon from "../../assets/info.png";
+import infoIcon from "../../assets/info.svg";
 import CommandHint from "./CommandHint";
 
 export default function Cover({

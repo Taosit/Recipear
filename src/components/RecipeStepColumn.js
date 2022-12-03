@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, useNavigate, Link } from "react-router-dom";
-import pencilIcon from "../assets/pencil.png";
-import cookIcon from "../assets/cook.png";
+import pencilIcon from "../assets/edit.svg";
+import cookIcon from "../assets/cook.svg";
 
 const RecipeStepColumn = ({recipe}) => {
   const { id } = useParams();

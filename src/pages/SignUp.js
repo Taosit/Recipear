@@ -6,8 +6,8 @@ import {useRecipeContext} from "../contexts/RecipeContextProvider";
 import {createUserWithEmailAndPassword, getAuth, updateProfile} from "firebase/auth";
 import {doc, setDoc} from "firebase/firestore";
 import {db} from "../firebase.config";
-import showIcon from "../assets/show.png"
-import hideIcon from "../assets/hide.png"
+import showIcon from "../assets/show.svg"
+import hideIcon from "../assets/hide.svg"
 
 function SignUp() {
   const {signUp} = useRecipeContext()
