@@ -5,11 +5,12 @@ import { v4 as uuid } from "uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { storage, db } from "../firebase.config";
-import NameField from "./createRecipe/NameField";
+import OverviewField from "./createRecipe/OverviewField";
 import IngredientsField from "./createRecipe/IngredientsField";
 import StepsField from "./createRecipe/StepsFields";
-import ImageField from "./createRecipe/ImageField";
 import TagsField from "./createRecipe/TagsFields";
+import ProgressBar from "./createRecipe/ProgressBar";
+import StepButtons from "./createRecipe/StepButtons";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
 
@@ -25,17 +26,19 @@ function RecipeModal({ showModal, setShowModal }) {
 	};
 	const emptyRecipe = {
 		name: "",
+		time: "",
+		difficulty: "",
+		seasonings: [""],
+		ingredients: [""],
+		steps: [""],
 		tags: [],
-		ingredients: "",
 		date: null,
 		likes: 0,
-		seasonings: "",
-		steps: [""],
 	};
 	const [newRecipe, setNewRecipe] = useState(emptyRecipe);
 	const { setRecipes } = useRecipeContext();
 	const initialTags = {
-		type: null,
+		protein: null,
 		nutrition: null,
 		meal: null,
 		region: null,
@@ -44,9 +47,7 @@ function RecipeModal({ showModal, setShowModal }) {
 	const [tags, setTags] = useState(initialTags);
 	const [step, setStep] = useState(0);
 	const [loading, setLoading] = useState(false);
-
-	const prevBtnRef = useRef();
-	const nextBtnRef = useRef();
+	const [shouldButtonDisable, setShouldButtonDisable] = useState([false, false]);
 
 	const isMounted = useRef(true);
 	const auth = getAuth();
@@ -129,8 +130,7 @@ function RecipeModal({ showModal, setShowModal }) {
 			toast.error("Please fill in all the fields");
 			return;
 		}
-		prevBtnRef.current.disabled = true;
-		nextBtnRef.current.disabled = true;
+		setShouldButtonDisable([true, true]);
 		setLoading(true);
 
 		const finalImage = await getImage(newRecipe.image.file);
@@ -181,15 +181,14 @@ function RecipeModal({ showModal, setShowModal }) {
 		setStep(0);
 		setShowModal(false);
 		setNewRecipe(emptyRecipe);
-		prevBtnRef.current.disabled = false;
-		nextBtnRef.current.disabled = false;
+		setShouldButtonDisable([false, false]);
 	};
 
 	const showField = () => {
 		switch (step) {
 			case 0:
 				return (
-					<NameField
+					<OverviewField
 						recipe={newRecipe}
 						handleChange={handleChange}
 						showModal={showModal}
@@ -197,20 +196,28 @@ function RecipeModal({ showModal, setShowModal }) {
 				);
 			case 1:
 				return (
-					<TagsField
-						tags={tags}
+					<IngredientsField
+						type="seasonings"
+						recipe={newRecipe}
 						setTags={setTags}
 						handleChange={handleChange}
 					/>
 				);
 			case 2:
 				return (
-					<IngredientsField recipe={newRecipe} handleChange={handleChange} />
+					<IngredientsField
+						type="ingredients"
+						recipe={newRecipe}
+						setTags={setTags}
+						handleChange={handleChange}
+					/>
 				);
 			case 3:
-				return <StepsField recipe={newRecipe} setRecipe={setNewRecipe} />;
+				return (
+					<TagsField tags={tags} setTags={setTags} handleChange={handleChange} />
+				);
 			case 4:
-				return <ImageField recipe={newRecipe} setRecipe={setNewRecipe} />;
+				return <StepsField recipe={newRecipe} setRecipe={setNewRecipe} />;
 		}
 	};
 
@@ -233,37 +240,9 @@ function RecipeModal({ showModal, setShowModal }) {
 						&times;
 					</span>
 					<form className="recipe-form">
-						<div className="progress-bar-container">
-							<div
-								className="progress-bar"
-								style={{ width: `${step * 20 + 20}%` }}
-							></div>
-						</div>
-						<div className="input-container">{showField()}</div>
-						<div className="step-button-group">
-							<button
-								onClick={e => prevStep(e)}
-								disabled={step === 0}
-								className="button-orange"
-								ref={prevBtnRef}
-							>
-								Prev
-							</button>
-							<button
-								onClick={e => nextStep(e)}
-								disabled={false}
-								className={`button-orange ${step === 4 ? "submit-button" : ""}`}
-								ref={nextBtnRef}
-							>
-								{step !== 4 ? (
-									"Next"
-								) : !loading ? (
-									"Submit"
-								) : (
-									<div className="button-loader"></div>
-								)}
-							</button>
-						</div>
+						<ProgressBar step={step} />
+						<div className="create-recipe-container">{showField()}</div>
+						<StepButtons step={step} prevStep={prevStep} nextStep={nextStep} shouldButtonDisable={shouldButtonDisable} loading={loading}/>
 					</form>
 				</div>
 			</div>
