@@ -50,6 +50,7 @@ p {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="password"],
 textarea {
 	border: 1px solid var(--dark-orange);
@@ -58,7 +59,7 @@ textarea {
 	font-size: 16px;
 }
 
-input, textarea, button {
+input, textarea, button, label {
 	outline-color: orange;
 }
 
@@ -655,12 +656,8 @@ input, textarea, button {
 }
 
 .create-recipe-container::-webkit-scrollbar-thumb {
-	background-color: darkgrey;
+	background-color: rgb(0 0 0 / 0.15);
 	border-radius: 3px;
-}
-
-.create-recipe-container::-webkit-scrollbar-button {
-	background-color: rgba(0, 0, 0, 0);
 }
 
 .close-modal {
@@ -715,7 +712,7 @@ input, textarea, button {
 	color: var(--darkest-yellow);
 	padding: 4px 0;
 	font-size: 16px;
-	width: 30%;
+	width: max(30%, 120px);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -748,13 +745,13 @@ input, textarea, button {
 
 .upload-image-input-container {
 	display: grid;
-	grid-template-columns: 3fr 1fr;
+	grid-template-columns: 1fr 3fr;
 }
 
 .upload-image-text-holder {
 	border: 1px solid var(--dark-orange);
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 .upload-image-column input {
@@ -765,13 +762,13 @@ input, textarea, button {
 	padding: 4px 12px;
 	font-size: 15px;
 	border: 1px solid var(--dark-orange);
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 	color: var(--darkest-orange);
 	background-color: var(--light-orange);
 }
 
-.choose-image-container {
+.image-preview-area {
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	border: 1px dashed var(--dark-orange);
@@ -781,9 +778,15 @@ input, textarea, button {
 	align-items: flex-end;
 }
 
-.choose-image-container p {
+.image-preview-area p {
 	color: var(--dark-gray);
 	margin: 4px;
+}
+
+.image-preview-area img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /* Add Recipe Form */
@@ -803,6 +806,8 @@ input, textarea, button {
 	flex-direction: column;
 }
 
+/* Overview */
+
 .recipe-overview {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -815,6 +820,19 @@ input, textarea, button {
 	justify-content: space-between;
 	gap: 16px;
 	margin-bottom: 24px;
+}
+
+@media (max-width: 580px) {
+	.recipe-overview {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+	.column-left {
+		margin-bottom: 0;
+	}
+	.recipe-modal {
+		height: 80%;
+	}
 }
 
 .recipe-input-group {

@@ -20,7 +20,10 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
         return {[Object.keys(prevOption)[0]]: false}
       }
     }))
+    handleChange(option, "difficulty");
   }
+
+  console.log(recipe)
 
 	return (
 		<>
@@ -35,11 +38,15 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
               value={recipe.name}
               required={true}
               ref={nameRef}
+              onChange={(e) => handleChange(e.target.value, "name")}
             />
           </div>
           <div className="recipe-input-group">
             <label htmlFor="recipe-time">Time Estimate</label>
-            <input type="text" id="recipe-time" value={recipe.time}/>
+            <input type="text"
+            id="recipe-time" 
+            value={recipe.time}
+            onChange={(e) => handleChange(e.target.value, "time")}/>
           </div>
           <SingleSelect 
             label="Difficulty" 
@@ -48,7 +55,7 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
           />
 				</div>
         <div className="column-right">
-          <ImageField recipe={recipe} setRecipe={() => {}}/>
+          <ImageField recipe={recipe} handleChange={handleChange}/>
         </div>
 			</div>
 		</>

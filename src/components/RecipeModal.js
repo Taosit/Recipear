@@ -27,7 +27,7 @@ function RecipeModal({ showModal, setShowModal }) {
 	const emptyRecipe = {
 		name: "",
 		time: "",
-		difficulty: "",
+		difficulty: "Easy",
 		seasonings: [""],
 		ingredients: [""],
 		steps: [""],
