@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react";
 import {useRecipeContext} from "../../contexts/RecipeContextProvider";
 
-export default function TagsField({handleChange, tags, setTags}) {
+export default function TagsField({updateRecipe, tags, setTags}) {
   const {tags: specifiedTags} = useRecipeContext()
 
   useEffect(() => {
-    handleChange(Object.values(tags), "tags")
+    updateRecipe(Object.values(tags), "tags")
   }, [tags])
 
   const tagCategories = Object.keys(specifiedTags)

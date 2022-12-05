@@ -28,8 +28,8 @@ function RecipeModal({ showModal, setShowModal }) {
 		name: "",
 		time: "",
 		difficulty: "Easy",
-		seasonings: [""],
-		ingredients: [""],
+		seasonings: [{ name: "", amount: "" }, { name: "", amount: "" }],
+		ingredients: [{ name: "", amount: "" }, { name: "", amount: "" }],
 		steps: [""],
 		tags: [],
 		date: null,
@@ -67,7 +67,7 @@ function RecipeModal({ showModal, setShowModal }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isMounted]);
 
-	const handleChange = (inputValue, field) => {
+	const updateRecipe = (inputValue, field) => {
 		setNewRecipe(prevRecipe => ({
 			...prevRecipe,
 			[field]: inputValue,
@@ -190,7 +190,7 @@ function RecipeModal({ showModal, setShowModal }) {
 				return (
 					<OverviewField
 						recipe={newRecipe}
-						handleChange={handleChange}
+						updateRecipe={updateRecipe}
 						showModal={showModal}
 					/>
 				);
@@ -199,8 +199,7 @@ function RecipeModal({ showModal, setShowModal }) {
 					<IngredientsField
 						type="seasonings"
 						recipe={newRecipe}
-						setTags={setTags}
-						handleChange={handleChange}
+						updateRecipe={updateRecipe}
 					/>
 				);
 			case 2:
@@ -208,13 +207,12 @@ function RecipeModal({ showModal, setShowModal }) {
 					<IngredientsField
 						type="ingredients"
 						recipe={newRecipe}
-						setTags={setTags}
-						handleChange={handleChange}
+						updateRecipe={updateRecipe}
 					/>
 				);
 			case 3:
 				return (
-					<TagsField tags={tags} setTags={setTags} handleChange={handleChange} />
+					<TagsField tags={tags} setTags={setTags} updateRecipe={updateRecipe} />
 				);
 			case 4:
 				return <StepsField recipe={newRecipe} setRecipe={setNewRecipe} />;

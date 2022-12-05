@@ -14,7 +14,7 @@ function SignIn() {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const updateRecipe = (e) => {
     setFormData(prev => ({
       ...formData,
       [e.target.id]: e.target.value
@@ -47,12 +47,12 @@ function SignIn() {
       <div className="fields">
         <div className="auth-input-group">
           <label htmlFor="email">Email:</label>
-          <input type="text" id="email" onChange={(e) => handleChange(e)}/>
+          <input type="text" id="email" onChange={(e) => updateRecipe(e)}/>
         </div>
         <div className="auth-input-group">
           <label htmlFor="password">Password:</label>
           <div className="password-input-div">
-            <input type={showPassword ? "text" : "password"} id="password" onChange={(e) => handleChange(e)}/>
+            <input type={showPassword ? "text" : "password"} id="password" onChange={(e) => updateRecipe(e)}/>
             <img src={showPassword ? showIcon : hideIcon} alt={showPassword ? "Password visible" : "Password invisible"}
                  onClick={() => setShowPassword(prev => !prev)} className="password-icon"
             />

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import ImageField from "./ImageField";
 import SingleSelect from "./SingleSelect";
 
-export default function OverviewField({ recipe, handleChange, showModal }) {
+export default function OverviewField({ recipe, updateRecipe, showModal }) {
 	const nameRef = useRef();
   const [options, setOptions] = useState([{Easy: true}, {Medium: false}, {Hard: false}]);
 
@@ -10,7 +10,7 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
 		if (showModal && !recipe.name) {
 			nameRef.current.focus();
 		}
-	}, [showModal]);
+	}, [showModal, recipe.name]);
 
   const selectDifficulty = (option) => {
     setOptions(prev => prev.map(prevOption => {
@@ -20,10 +20,8 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
         return {[Object.keys(prevOption)[0]]: false}
       }
     }))
-    handleChange(option, "difficulty");
+    updateRecipe(option, "difficulty");
   }
-
-  console.log(recipe)
 
 	return (
 		<>
@@ -38,7 +36,7 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
               value={recipe.name}
               required={true}
               ref={nameRef}
-              onChange={(e) => handleChange(e.target.value, "name")}
+              onChange={(e) => updateRecipe(e.target.value, "name")}
             />
           </div>
           <div className="recipe-input-group">
@@ -46,7 +44,7 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
             <input type="text"
             id="recipe-time" 
             value={recipe.time}
-            onChange={(e) => handleChange(e.target.value, "time")}/>
+            onChange={(e) => updateRecipe(e.target.value, "time")}/>
           </div>
           <SingleSelect 
             label="Difficulty" 
@@ -55,7 +53,7 @@ export default function OverviewField({ recipe, handleChange, showModal }) {
           />
 				</div>
         <div className="column-right">
-          <ImageField recipe={recipe} handleChange={handleChange}/>
+          <ImageField recipe={recipe} updateRecipe={updateRecipe}/>
         </div>
 			</div>
 		</>

@@ -1,7 +1,7 @@
 import React, {useRef, useId} from "react";
 import {toast} from "react-toastify";
 
-export default function ImageField({recipe, handleChange}) {
+export default function ImageField({recipe, updateRecipe}) {
 
   const photoId = useId()
 
@@ -16,7 +16,7 @@ export default function ImageField({recipe, handleChange}) {
     reader.readAsDataURL(imageFile)
     reader.onloadend = () => {
       const imagePreview = reader.result;
-      handleChange({file: imageFile, preview: imagePreview}, "image");
+      updateRecipe({file: imageFile, preview: imagePreview}, "image");
     }
   }
 

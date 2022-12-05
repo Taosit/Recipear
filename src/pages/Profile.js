@@ -19,7 +19,7 @@ export default function Profile({}) {
 	const [nameField, setNameField] = useState(auth.currentUser.displayName);
 	const [showModal, setShowModal] = useState(false);
 
-	const handleChangeName = () => {
+	const updateRecipeName = () => {
 		if (changeName) {
 			updateProfile(auth.currentUser, {
 				displayName: nameField,
@@ -60,7 +60,7 @@ export default function Profile({}) {
 									src={changeName ? doneIcon : editIcon}
 									alt={changeName ? "Done" : "Edit"}
 									className="edit-name-icon"
-									onClick={handleChangeName}
+									onClick={updateRecipeName}
 								/>
 							</div>
 							<div className="account-input-group">

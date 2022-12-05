@@ -634,7 +634,7 @@ input, textarea, button, label {
 	font-weight: 600;
 }
 
-/* Add Recipe */
+/* --------------Add Recipe--------------- */
 
 .recipe-modal {
 	z-index: 10;
@@ -736,6 +736,8 @@ input, textarea, button, label {
 	filter: grayscale(50%);
 }
 
+/* Upload Image */
+
 .upload-image-column {
 	width: 100%;
 	display: flex;
@@ -766,6 +768,8 @@ input, textarea, button, label {
 	border-bottom-left-radius: 4px;
 	color: var(--darkest-orange);
 	background-color: var(--light-orange);
+	user-select: none;
+	cursor: pointer;
 }
 
 .image-preview-area {
@@ -781,12 +785,50 @@ input, textarea, button, label {
 .image-preview-area p {
 	color: var(--dark-gray);
 	margin: 4px;
+	user-select: none;
 }
 
 .image-preview-area img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+}
+
+/* Single Select */
+
+.radio-button {
+	border: 1px solid var(--dark-orange);
+	background-color: var(--light-orange);
+	color: var(--darkest-orange);
+	font-size: 15px;
+	padding: 4px;
+	cursor: pointer;
+	text-align: center;
+	outline-color: orange;
+}
+
+.radio-button label {
+	cursor: pointer;
+}
+
+.radio-button:first-of-type {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.radio-button:last-of-type {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.selected-option {
+	background-color: var(--dark-orange);
+	color: white;
+}
+
+.create-recipe-button {
+	margin: 1em;
+	padding: 0.5em 2em;
 }
 
 /* Add Recipe Form */
@@ -805,6 +847,8 @@ input, textarea, button, label {
 	display: flex;
 	flex-direction: column;
 }
+
+/* ---------Form Content Per Step---------- */
 
 /* Overview */
 
@@ -846,40 +890,9 @@ input, textarea, button, label {
 	grid-template-columns: repeat(3, 1fr);
 }
 
-.radio-button {
-	border: 1px solid var(--dark-orange);
-	background-color: var(--light-orange);
-	color: var(--darkest-orange);
-	font-size: 15px;
-	padding: 4px;
-	cursor: pointer;
-	text-align: center;
-	outline-color: orange;
-}
+/* Ingredients */
 
-.radio-button label {
-	cursor: pointer;
-}
 
-.radio-button:first-of-type {
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;
-}
-
-.radio-button:last-of-type {
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
-}
-
-.selected-option {
-	background-color: var(--dark-orange);
-	color: white;
-}
-
-.create-recipe-button {
-	margin: 1em;
-	padding: 0.5em 2em;
-}
 
 /* Recipe Detail Page */
 
