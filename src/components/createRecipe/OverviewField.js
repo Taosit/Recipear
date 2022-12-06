@@ -50,6 +50,7 @@ export default function OverviewField({ recipe, updateRecipe, showModal }) {
             label="Difficulty" 
             options={options}
             selectOption={selectDifficulty}
+            containerStyles={{width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr 1fr"}}
           />
 				</div>
         <div className="column-right">

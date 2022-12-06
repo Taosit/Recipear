@@ -1,62 +1,70 @@
 import React, {useState, useEffect} from "react";
 import {useRecipeContext} from "../../contexts/RecipeContextProvider";
+import SingleSelect from "./SingleSelect";
 
-export default function TagsField({updateRecipe, tags, setTags}) {
+export default function TagsField({recipe, updateRecipe}) {
   const {tags: specifiedTags} = useRecipeContext()
-
-  useEffect(() => {
-    updateRecipe(Object.values(tags), "tags")
-  }, [tags])
-
   const tagCategories = Object.keys(specifiedTags)
+
+  const initialTags = Object.keys(specifiedTags).reduce((acc, tag) => {
+    return {...acc, [tag]: [...specifiedTags[tag], "Other"].map(tag => ({[tag]: false}))}
+  }, {})
+
+  const [tags, setTags] = useState(initialTags)
 
   const capitalize = (str) => {
     return str.replace(str[0], str[0].toUpperCase())
   }
 
-  const changeTag = (e, group, attribute) => {
-    e.preventDefault();
+  const selectCategory = (category, tag, i) => {
     setTags(prev => ({
       ...prev,
-      [group]: prev[group] === attribute? null : attribute
+      [category]: prev[category].map(prevTag => {
+        if (Object.keys(prevTag)[0] === tag) {
+          return {[tag]: true}
+        } else {
+          return {[Object.keys(prevTag)[0]]: false}
+        }
+      })
     }))
+    const recipeTags = [...recipe.tags]
+    recipeTags[i] = tag === "Other" ? null : tag
+    updateRecipe(recipeTags, "tags")
   }
 
-  const handleType = (e, group) => {
+  const handleType = (e, i) => {
     e.preventDefault()
-    setTags(prev => ({
-      ...prev,
-      [group]: e.target.value
-    }))
+    const recipeTags = [...recipe.tags]
+    recipeTags[i] = e.target.value || null
+    updateRecipe(recipeTags, "tags")
+  }
+
+  const styles = {
+    width: "100%",
+    maxWidth: "500px",
+    display: "grid", 
+    gridTemplateColumns: "1fr 1fr 1fr 1fr"
   }
 
   return (
     <>
-      <h3>Add some tags to your recipe</h3>
-      {
-        tagCategories.map((tagCategory, i) => (
-          <div className="radio-group" key={tagCategory}>
-            <h4 className="group-title">{capitalize(tagCategory)}</h4>
-            {
-              specifiedTags[tagCategory].map((tagAttribute, index) => (
-                <button className={`option ${tags[tagCategory] === tagAttribute ? "selected" : ""}`} key={tagAttribute}
-                        onClick={(e) => changeTag(e,tagCategory, capitalize(tagAttribute))}
-                >
-                  {capitalize(tagAttribute)}
-                </button>
-              ))
-            }
-            <button className={`option ${tags[tagCategory] !== null && !specifiedTags[tagCategory].includes(tags[tagCategory]) ? "selected" : ""}`}
-                    onClick={(e) => changeTag(e,tagCategory, "Other")}>Other</button>
-            {tags[tagCategory] !== null && !specifiedTags[tagCategory].includes(tags[tagCategory]) &&
-              <div>
-                <label className="specify" htmlFor={tagCategory}>Please specify: </label>
-                <input type="text" id={tagCategory} onChange={(e) => handleType(e, tagCategory)}/>
-              </div>
-            }
-          </div>
-        ))
-      }
+      <h1>Tags</h1>
+      <div className="recipe-tags">
+        {tagCategories.map((tagCategory, i) => (
+            <div className="select-tag-container" key={tagCategory}>
+              <SingleSelect
+                label={capitalize(tagCategory)}
+                options={tags[tagCategory]}
+                selectOption={(tag) => selectCategory(tagCategory, tag, i)}
+                containerStyles={styles}
+              />
+              {tags[tagCategory][3].Other &&
+                <div>
+                  <input type="text" placeholder="Please specify" onChange={(e) => handleType(e, i)}/>
+                </div>}
+            </div>
+          ))}
+      </div>
     </>
   )
 }

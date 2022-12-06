@@ -31,20 +31,12 @@ function RecipeModal({ showModal, setShowModal }) {
 		seasonings: [{ name: "", amount: "" }, { name: "", amount: "" }],
 		ingredients: [{ name: "", amount: "" }, { name: "", amount: "" }],
 		steps: [""],
-		tags: [],
+		tags: [null, null, null, null],
 		date: null,
 		likes: 0,
 	};
 	const [newRecipe, setNewRecipe] = useState(emptyRecipe);
 	const { setRecipes } = useRecipeContext();
-	const initialTags = {
-		protein: null,
-		nutrition: null,
-		meal: null,
-		region: null,
-		flavor: null,
-	};
-	const [tags, setTags] = useState(initialTags);
 	const [step, setStep] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [shouldButtonDisable, setShouldButtonDisable] = useState([false, false]);
@@ -177,7 +169,6 @@ function RecipeModal({ showModal, setShowModal }) {
 	};
 
 	const closeModal = () => {
-		setTags(initialTags);
 		setStep(0);
 		setShowModal(false);
 		setNewRecipe(emptyRecipe);
@@ -212,7 +203,7 @@ function RecipeModal({ showModal, setShowModal }) {
 				);
 			case 3:
 				return (
-					<TagsField tags={tags} setTags={setTags} updateRecipe={updateRecipe} />
+					<TagsField recipe={newRecipe} updateRecipe={updateRecipe} />
 				);
 			case 4:
 				return <StepsField recipe={newRecipe} setRecipe={setNewRecipe} />;

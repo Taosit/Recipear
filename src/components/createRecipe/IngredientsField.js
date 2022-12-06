@@ -31,21 +31,24 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 			<div className="recipe-ingredients">
 				{recipe[type].map((ingredient, index) => (
 					<div key={index} className="recipe-ingredient">
-						<input
-							type="text"
-							name="name"
-							value={ingredient.name}
-							onChange={(e) => handleChange(e, index)} />
-						<input
-							type="text"
-							name="amount"
-							value={ingredient.amount}
-							onChange={(e) => handleChange(e, index)} />
-						<button
-							type="button"
-							onClick={() => addIngredient(index)}>
-								+
-						</button>
+						<div className="ingredient-count">{capitalize(type).slice(0, type.length - 1)} {index + 1}</div>
+						<div className="ingredient-inputs-container">
+							<input
+								type="text"
+								name="name"
+								value={ingredient.name}
+								onChange={(e) => handleChange(e, index)} />
+							<input
+								type="text"
+								name="amount"
+								value={ingredient.amount}
+								onChange={(e) => handleChange(e, index)} />
+							<button
+								type="button"
+								onClick={() => addIngredient(index)}>
+									+
+							</button>
+						</div>						
 					</div>
 				))}				
 			</div>
