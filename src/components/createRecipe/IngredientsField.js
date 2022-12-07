@@ -1,14 +1,6 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
 export default function IngredientsField({ type, recipe, updateRecipe }) {
-	const ingredientsRef = useRef();
-
-	useEffect(() => {
-		if (!recipe.ingredients) {
-			ingredientsRef.current.focus();
-		} 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const capitalize = (str) => {	
 		return str.charAt(0).toUpperCase() + str.slice(1);
@@ -31,16 +23,18 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 			<div className="recipe-ingredients">
 				{recipe[type].map((ingredient, index) => (
 					<div key={index} className="recipe-ingredient">
-						<div className="ingredient-count">{capitalize(type).slice(0, type.length - 1)} {index + 1}</div>
+						<div className={`ingredient-count ${index? "" : "required-field"}`}>{capitalize(type).slice(0, type.length - 1)} {index + 1}</div>
 						<div className="ingredient-inputs-container">
 							<input
 								type="text"
 								name="name"
+                placeholder={index? "" : type === "ingredients" ? "chicken" : "salt"}
 								value={ingredient.name}
 								onChange={(e) => handleChange(e, index)} />
 							<input
 								type="text"
 								name="amount"
+                placeholder={index? "" : type === "ingredients" ? "500g" : "1tsp"}
 								value={ingredient.amount}
 								onChange={(e) => handleChange(e, index)} />
 							<button

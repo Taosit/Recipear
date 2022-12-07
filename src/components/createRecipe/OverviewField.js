@@ -1,16 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import ImageField from "./ImageField";
 import SingleSelect from "./SingleSelect";
 
-export default function OverviewField({ recipe, updateRecipe, showModal }) {
-	const nameRef = useRef();
+export default function OverviewField({ recipe, updateRecipe }) {
   const [options, setOptions] = useState([{Easy: true}, {Medium: false}, {Hard: false}]);
-
-	useEffect(() => {
-		if (showModal && !recipe.name) {
-			nameRef.current.focus();
-		}
-	}, [showModal, recipe.name]);
 
   const selectDifficulty = (option) => {
     setOptions(prev => prev.map(prevOption => {
@@ -29,18 +22,17 @@ export default function OverviewField({ recipe, updateRecipe, showModal }) {
 			<div className="recipe-overview">
 				<div className="column-left">
 					<div className="recipe-input-group">
-            <label htmlFor="recipe-name">Recipe Name</label>
+            <label className="required-field" htmlFor="recipe-name">Recipe Name</label>
             <input
               type="text"
               id="recipe-name"
               value={recipe.name}
               required={true}
-              ref={nameRef}
               onChange={(e) => updateRecipe(e.target.value, "name")}
             />
           </div>
           <div className="recipe-input-group">
-            <label htmlFor="recipe-time">Time Estimate</label>
+            <label className="required-field" htmlFor="recipe-time">Time Estimate</label>
             <input type="text"
             id="recipe-time" 
             value={recipe.time}
@@ -50,11 +42,12 @@ export default function OverviewField({ recipe, updateRecipe, showModal }) {
             label="Difficulty" 
             options={options}
             selectOption={selectDifficulty}
+            required={true}
             containerStyles={{width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr 1fr"}}
           />
 				</div>
         <div className="column-right">
-          <ImageField recipe={recipe} updateRecipe={updateRecipe}/>
+          <ImageField image={recipe.image} updateImage={img => updateRecipe(img, "image")} required={true}/>
         </div>
 			</div>
 		</>

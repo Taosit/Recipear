@@ -28,9 +28,10 @@ function RecipeModal({ showModal, setShowModal }) {
 		name: "",
 		time: "",
 		difficulty: "Easy",
+		image: null,
 		seasonings: [{ name: "", amount: "" }, { name: "", amount: "" }],
 		ingredients: [{ name: "", amount: "" }, { name: "", amount: "" }],
-		steps: [""],
+		steps: [{instruction: "", image: null}],
 		tags: [null, null, null, null],
 		date: null,
 		likes: 0,
@@ -206,7 +207,7 @@ function RecipeModal({ showModal, setShowModal }) {
 					<TagsField recipe={newRecipe} updateRecipe={updateRecipe} />
 				);
 			case 4:
-				return <StepsField recipe={newRecipe} setRecipe={setNewRecipe} />;
+				return <StepsField recipe={newRecipe} updateRecipe={updateRecipe} />;
 		}
 	};
 

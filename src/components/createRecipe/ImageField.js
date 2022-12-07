@@ -1,7 +1,7 @@
 import React, {useRef, useId} from "react";
 import {toast} from "react-toastify";
 
-export default function ImageField({recipe, updateRecipe}) {
+export default function ImageField({image, updateImage, required = false}) {
 
   const photoId = useId()
 
@@ -16,14 +16,20 @@ export default function ImageField({recipe, updateRecipe}) {
     reader.readAsDataURL(imageFile)
     reader.onloadend = () => {
       const imagePreview = reader.result;
-      updateRecipe({file: imageFile, preview: imagePreview}, "image");
+      updateImage({file: imageFile, preview: imagePreview});
     }
   }
+  
+  const uniqueId = () => {
+    const dateString = Date.now().toString(36);
+    const randomness = Math.random().toString(36).substr(2);
+    return dateString + randomness;
+  };
 
   return (
-    <div className="upload-image-column">
+    <div key={uniqueId()} className="upload-image-column">
       <div className="image-input-group">
-        <div className="upload-image-label">Photo</div>
+        <div className={`upload-image-label ${required? "required-field" : ""}`}>Photo</div>
         <div className="upload-image-input-container">
           <input type="file" id={photoId} onChange={handleImageChange}/>
           <label htmlFor={photoId} tabIndex="0">Upload</label>
@@ -31,8 +37,8 @@ export default function ImageField({recipe, updateRecipe}) {
         </div>
       </div>
       <div className="image-preview-area">{
-        recipe.image ?          
-          <img src={recipe.image.preview} alt="Recipe"/>        
+        image ?          
+          <img src={image.preview} alt="Recipe"/>        
           :
           <p>Image Preview Area</p>
       }</div>

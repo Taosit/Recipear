@@ -5,6 +5,7 @@
 :root {
 	--darkest-gray: #3E3E3E;
 	--dark-gray: #636363;
+	--gray: #969696;
 	--light-gray: #E3E3E3;
 	--dark-red: #8D0C0C;
 	--red: #C14D4D;
@@ -737,6 +738,11 @@ input, textarea, button, label {
 	filter: grayscale(50%);
 }
 
+.required-field::after {
+	content: " *";
+	color: red;
+}
+
 @media (height > 1000px) {
 	.recipe-modal {
 		height: 700px;
@@ -951,6 +957,59 @@ input, textarea, button, label {
 .select-tag-container input {
 	width: 100%;
 	max-width: 500px;
+}
+
+/* Steps */
+
+.recipe-steps {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+.step-header {
+	width: 100%;
+	border-bottom: var(--light-gray) 1px solid;
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.step-label, .add-step-label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--gray);
+}
+
+.add-step-label {
+	margin-left: 8px;
+}
+
+.add-step-button {
+	border: none;
+	padding: 4px 8px;
+	background-color: transparent;
+	color: var(--darkest-yellow);
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.step-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 48px;
+}
+
+.instruction-column textarea {
+	width: 100%;
+	height: calc(100% - 18px);
+	resize: none;
+}
+
+@media (max-width: 580px) {
+	.step-content {
+		grid-template-columns: 1fr;
+	}
 }
 
 /* Recipe Detail Page */
@@ -1768,7 +1827,7 @@ input[type="radio"] {
 }
 
 .submit-button {
-	width: 103px;
+	background-color: var(--yellow);
 }
 
 .button-loader {
