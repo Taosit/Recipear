@@ -29,8 +29,6 @@ function SingleRecipe() {
 	const { recipes, setRecipes, setRecipeModified, lastVisitedPage } =
 		useRecipeContext();
 	const [currentUserData, setCurrentUserData] = useState(null);
-	const [likedByCurrentUser, setLikedByCurrentUser] = useState(null);
-	const [likeCount, setLikeCount] = useState(null);
 
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -49,52 +47,16 @@ function SingleRecipe() {
 	}, [currentUserData, recipe]);
 
 	useEffect(() => {
-		if (!recipe) return;
-		setLikeCount(recipe.likes);
-	}, [recipe]);
-
-	useEffect(() => {
 		if (!loggedIn) return;
 		const getUserData = async () => {
 			const userRef = doc(db, "users", auth.currentUser.uid);
 			const userDocSnap = await getDoc(userRef);
 			if (userDocSnap.exists()) {
 				setCurrentUserData(userDocSnap.data());
-				setLikedByCurrentUser(userDocSnap.data().likedRecipes.includes(id));
 			}
 		};
 		getUserData();
 	}, [loggedIn]);
-
-	useEffect(() => {
-		if (likedByCurrentUser === null) return;
-		const updateLike = async () => {
-			const userRef = doc(db, "users", auth.currentUser.uid);
-			const userDocSnap = await getDoc(userRef);
-			if (userDocSnap.data().likedRecipes.includes(id) === likedByCurrentUser)
-				return;
-			if (likedByCurrentUser) {
-				await updateDoc(userRef, {
-					likedRecipes: arrayUnion(id),
-				});
-				await updateDoc(recipeRef, {
-					likes: increment(1),
-				});
-				setRecipeModified(true);
-				setLikeCount(prev => prev + 1);
-			} else {
-				await updateDoc(userRef, {
-					likedRecipes: arrayRemove(id),
-				});
-				await updateDoc(recipeRef, {
-					likes: increment(-1),
-				});
-				setRecipeModified(true);
-				setLikeCount(prev => prev - 1);
-			}
-		};
-		updateLike();
-	}, [likedByCurrentUser]);
 
 	const capitalize = str => {
 		return str.replace(str[0], str[0].toUpperCase());
@@ -107,10 +69,6 @@ function SingleRecipe() {
 		setRecipeModified(true);
 	};
 
-	const modifyLike = like => {
-		setLikedByCurrentUser(like);
-	};
-
 	const deleteRecipe = async id => {
 		try {
 			setRecipes(prevRecipes => {
@@ -120,21 +78,19 @@ function SingleRecipe() {
 			navigate("/recipes");
 			const recipeRef = doc(db, "recipes", id);
 			const docSnapshot = await getDoc(recipeRef);
-			if (docSnapshot.exists()) {
-				const finishedImage = docSnapshot.data().image;
-				await deleteObject(ref(storage, `images/${finishedImage.storageId}`));
-				const stepImagePromises = docSnapshot
-					.data()
-					.steps.filter(step => step.image)
-					.map(
-						async step =>
-							await deleteObject(ref(storage, `images/${step.image.storageId}`))
-					);
-				await Promise.all(stepImagePromises);
-			} else {
-				console.log("doc doesn't exist");
-			}
+			if (!docSnapshot.exists()) return;
+			const finishedImage = docSnapshot.data().image;
+			await deleteObject(ref(storage, `images/${finishedImage.storageId}`));
+			const stepImagePromises = docSnapshot
+				.data()
+				.steps.filter(step => step.image)
+				.map(
+					async step =>
+						await deleteObject(ref(storage, `images/${step.image.storageId}`))
+				);
+			await Promise.all(stepImagePromises);
 			await deleteDoc(recipeRef);
+			toast.success("Successfully deleted recipe");
 		} catch (e) {
 			console.log(e);
 		}
@@ -146,10 +102,6 @@ function SingleRecipe() {
 		await updateDoc(doc(db, "users", currentUserData.id), {
 			createdRecipes: arrayRemove(recipe.id),
 		});
-	};
-
-	const cook = () => {
-		navigate(`/recipes/${id}/cook`);
 	};
 
 	if (recipes.length === 0 || !recipe)
@@ -241,12 +193,15 @@ function SingleRecipe() {
 						<div className="recipe-name-container">
 							<h1 className="recipe-name">{capitalize(recipe.name)}</h1>
 						</div>
-						<button className="icon-button delete-button">
-							<div className="trash-icon-container">
-								<img src={trashIcon} alt="trash icon" />
-							</div>
-							<p className="delete-text">Delete Recipe</p>
-						</button>
+						{isAuthor && (
+							<button className="icon-button delete-button"
+								onClick={() => deleteARecipe(recipe.id)}>
+								<div className="trash-icon-container">
+									<img src={trashIcon} alt="trash icon" />
+								</div>
+								<p className="delete-text">Delete Recipe</p>
+							</button>
+						)}
 					</div>
 					<div className="recipe-body">
 						<RecipeInfoColumn recipe={recipe} />

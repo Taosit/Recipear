@@ -29,8 +29,8 @@ function RecipeModal({ showModal, setShowModal }) {
 		time: "",
 		difficulty: "Easy",
 		image: null,
-		seasonings: [{ name: "", amount: "" }, { name: "", amount: "" }],
-		ingredients: [{ name: "", amount: "" }, { name: "", amount: "" }],
+		seasonings: [{ ingredient: "", amount: "" }, { ingredient: "", amount: "" }],
+		ingredients: [{ ingredient: "", amount: "" }, { ingredient: "", amount: "" }],
 		steps: [{instruction: "", image: null}],
 		tags: [null, null, null, null],
 		date: null,
@@ -100,39 +100,47 @@ function RecipeModal({ showModal, setShowModal }) {
 		return { storageId: id, url };
 	};
 
-	const checkEmptyFields = () => {
-		if (!newRecipe.name) {
+	const filterInvalidFields = (recipe) => {
+		const validSeasonings = recipe.seasonings.filter(
+			seasoning => seasoning.ingredient
+		);
+		const validIngredients = recipe.ingredients.filter(
+			ingredient => ingredient.ingredient
+		);
+		const validSteps = recipe.steps.filter(
+			step => step.instruction
+		);
+		const validTags = recipe.tags.map(
+			tag => tag == "Other"? null : tag
+		);
+		return {...recipe, seasonings: validSeasonings, ingredients: validIngredients, steps: validSteps, tags: validTags};
+	}
+
+	const checkEmptyFields = (recipe) => {
+		if (!recipe.name) {
 			setStep(0);
-			return false;
-		} else if (!newRecipe.ingredients || !newRecipe.seasonings) {
+			return {isValid: false, message: "Please fill in the name field"};
+		} else if (!recipe.time) {
+			setStep(0);
+			return {isValid: false, message: "Please provide the time it takes to make the recipe"};
+		}else if (!recipe.image) {
+			setStep(0);
+			return {isValid: false, message: "Please provide an image for the recipe"};
+		}else if (!recipe.seasonings.length) {
+			setStep(1);
+			return {isValid: false, message: "Please provide at least one seasoning"};
+		} else if (!recipe.ingredients.length) {
 			setStep(2);
-			return false;
-		} else if (!newRecipe.steps[0].instruction) {
-			setStep(3);
-			return false;
-		} else if (!newRecipe.image) {
+			return {isValid: false, message: "Please provide at least one ingredient"};
+		} else if (!recipe.steps.length) {
 			setStep(4);
-			return false;
+			return {isValid: false, message: "Please provide at least one step"};
 		}
-		return true;
+		return {isValid: true};
 	};
 
-	const createRecipe = async e => {
-		e.preventDefault();
-		if (!checkEmptyFields()) {
-			toast.error("Please fill in all the fields");
-			return;
-		}
-		setShouldButtonDisable([true, true]);
-		setLoading(true);
-
-		const finalImage = await getImage(newRecipe.image.file);
-
-		const validSteps = newRecipe.steps.filter(
-			step => step.instruction && step.instruction.length !== 0
-		);
-
-		const stepsWithImagesPromise = validSteps.map(async step => {
+	const getStepPromises = async (steps) => {
+		return steps.map(async step => {
 			const timeMatchingResult = step.instruction.match(
 				/(a|one|two|three|four|five|ten|\d+)(?= min)/i
 			);
@@ -148,13 +156,30 @@ function RecipeModal({ showModal, setShowModal }) {
 			const image = await getImage(step.image.file);
 			return { ...stepCopy, image };
 		});
+	};
+
+	const createRecipe = async e => {
+		e.preventDefault();
+		console.log("creating recipe")
+		const filteredRecipe = filterInvalidFields(newRecipe);
+		const validity = checkEmptyFields(filteredRecipe);
+		console.log(validity)
+		if (!validity.isValid) {
+			toast.error(validity.message);
+			return;
+		}
+		setShouldButtonDisable([true, true]);
+		setLoading(true);
+		console.log("recipe is valid")
+		const finalImage = await getImage(filteredRecipe.image.file);
+		const stepsWithImagesPromise = await getStepPromises(filteredRecipe.steps);
 
 		Promise.all(stepsWithImagesPromise).then(async stepsWithImages => {
 			const recipeId = uuid();
 			const finalRecipe = {
-				...newRecipe,
+				...filteredRecipe,
 				steps: stepsWithImages,
-				name: newRecipe.name.toLowerCase().trim(),
+				name: filteredRecipe.name.toLowerCase().trim(),
 				image: finalImage,
 				id: recipeId,
 				date: new Date(),

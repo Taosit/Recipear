@@ -1,18 +1,23 @@
 import React from 'react'
 import starIcon from "../assets/star.svg";
+import { useRecipeContext } from '../contexts/RecipeContextProvider';
+import { useLikeRecipe } from '../hooks/useLikeRecipe';
 import IngredientList from './IngredientList';
 
 const RecipeInfoColumn = ({recipe}) => {
 
-    const tagsExist = (recipe.tags[0] && recipe.tags[0] !== 'For All' && recipe.tags[0] !== 'Other') || (recipe.tags[1] && recipe.tags[1] !== 'Other') || (recipe.tags[3] && recipe.tags[3] !== 'Other') || (recipe.tags[4] && recipe.tags[4] !== 'Other');
+    const { setRecipeModified } = useRecipeContext();
+    const { liked, toggleLike, likeCount } = useLikeRecipe(recipe);
+
+    const tagsExist = recipe.tags.some(t => t);
 
     return (
     <div className="recipe-info-column">
         <div className='big-image-container'>
-            <div className='star-count-container'>
+            <button className='star-count-container' onClick={toggleLike}>
                 <img src={starIcon} alt='star' />
-                {recipe.likes}
-            </div>
+                {likeCount}
+            </button>
             <img src={recipe.image.url} alt="recipe" />
         </div>
         <div className='recipe-info-card'>
@@ -20,25 +25,25 @@ const RecipeInfoColumn = ({recipe}) => {
             <p className='time-and-difficulty'>{recipe.time} | {recipe.difficulty}</p>
             {tagsExist && (
                 <div className='tags-container'>
-                    {recipe.tags[0] && recipe.tags[0] !== 'For All' && recipe.tags[0] !== 'Other' && (
+                    {recipe.tags[0] && (
                         <div className='recipe-tag-container'>
                             <p className='tag-label'>Protein</p>
                             <p className='tag'>{recipe.tags[0]}</p>
                         </div>
                     )}
-                    {recipe.tags[1] && recipe.tags[1] !== 'Other' && (
+                    {recipe.tags[1] && (
                         <div className='recipe-tag-container'>
                             <p className='tag-label'>Nutrition</p>
                             <p className='tag'>{recipe.tags[1]}</p>
                         </div>
                     )}
-                    {recipe.tags[3] && recipe.tags[3] !== 'Other' && (
+                    {recipe.tags[3] && (
                         <div className='recipe-tag-container'>
                             <p className='tag-label'>Region</p>
                             <p className='tag'>{recipe.tags[3]}</p>
                         </div>
                     )}
-                    {recipe.tags[4] && recipe.tags[4] !== 'Other' && (
+                    {recipe.tags[4] && (
                         <div className='recipe-tag-container'>
                             <p className='tag-label'>Flavor</p>
                             <p className='tag'>{recipe.tags[4]}</p>
