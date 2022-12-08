@@ -1,13 +1,12 @@
 import React from 'react'
-import starIcon from "../assets/star.svg";
+import filledStarIcon from "../assets/star-filled.svg";
+import emptytarIcon from "../assets/star-empty.svg";
 import { useRecipeContext } from '../contexts/RecipeContextProvider';
 import { useLikeRecipe } from '../hooks/useLikeRecipe';
 import IngredientList from './IngredientList';
 
 const RecipeInfoColumn = ({recipe}) => {
-
-    const { setRecipeModified } = useRecipeContext();
-    const { liked, toggleLike, likeCount } = useLikeRecipe(recipe);
+    const { liked, toggleLike } = useLikeRecipe(recipe);
 
     const tagsExist = recipe.tags.some(t => t);
 
@@ -15,8 +14,8 @@ const RecipeInfoColumn = ({recipe}) => {
     <div className="recipe-info-column">
         <div className='big-image-container'>
             <button className='star-count-container' onClick={toggleLike}>
-                <img src={starIcon} alt='star' />
-                {likeCount}
+                <img src={(liked === null || liked)? filledStarIcon : emptytarIcon} alt='star' />
+                {recipe.likes}
             </button>
             <img src={recipe.image.url} alt="recipe" />
         </div>

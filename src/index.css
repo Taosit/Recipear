@@ -13,11 +13,10 @@
 	--darkest-orange: #B15500;
 	--dark-orange: #E09957;
 	--light-orange: #FFE7D1;
-	--orange-light: rgba(255, 243, 103, 1);
-	--orange-lighter: rgb(255, 208, 47);
 	--orange: orange;
 	--orange-dark: #e78301;
 	--darkest-yellow: #BA940B;
+	--dark-yellow: #EAE344;
 	--yellow: #F2EF97;
 	--light-yellow: #FBF8BE;
 	--lightest-yellow: #FAF8E1; 
@@ -539,7 +538,7 @@ input, textarea, button, label {
 	height: 325px;
 	background-color: white;
 	border-radius: 0.3em;
-	border: 2px solid var(--orange-light);
+	border: 2px solid var(--light-orange);
 	display: flex;
 	justify-content: center;
 	align-items: flex-start;
@@ -559,7 +558,7 @@ input, textarea, button, label {
 .title-link {
 	font-style: normal;
 	font-size: larger;
-	margin-bottom: 0.5em;
+	margin-bottom: 4px;
 }
 
 .like-count-container {
@@ -595,9 +594,9 @@ input, textarea, button, label {
 
 .recipe-tag {
 	display: inline-block;
-	background-color: var(--orange-dark);
-	color: white;
-	margin: 0 0.2em;
+	background-color: var(--light-orange);
+	color: var(--darkest-orange);
+	margin-bottom: 8px;
 	padding: 0.2em 0.5em;
 	font-size: 0.9em;
 	border-radius: 1em;
@@ -720,6 +719,7 @@ input, textarea, button, label {
 	align-items: center;
 	gap: 8px;
 	cursor: pointer;
+	transition: 0.5s;
 }
 
 .step-button:disabled {
@@ -1833,13 +1833,18 @@ input[type="radio"] {
 }
 
 .button-loader {
-	margin: 0 auto;
-	border: 3px solid rgba(255, 238, 47, 0.8);
+	border: 3px solid var(--dark-yellow);
 	border-top: 2px solid transparent;
 	border-radius: 50%;
 	width: 15px;
 	height: 15px;
 	animation: spin 2s linear infinite;
+}
+
+.button-loader-placeholder {
+	width: 18px;
+	height: 20px;
+	background-color: transparent;
 }
 
 @keyframes spin {

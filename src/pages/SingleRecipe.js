@@ -26,7 +26,7 @@ import RecipeInfoColumn from "../components/RecipeInfoColumn";
 import RecipeStepColumn from "../components/RecipeStepColumn";
 
 function SingleRecipe() {
-	const { recipes, setRecipes, setRecipeModified, lastVisitedPage } =
+	const { recipes, dispatch, setRecipeModified, lastVisitedPage } =
 		useRecipeContext();
 	const [currentUserData, setCurrentUserData] = useState(null);
 
@@ -71,10 +71,7 @@ function SingleRecipe() {
 
 	const deleteRecipe = async id => {
 		try {
-			setRecipes(prevRecipes => {
-				const newRecipes = prevRecipes.filter(r => r.id !== id);
-				return newRecipes;
-			});
+			dispatch({ type: "DELETE_RECIPE", payload: id });
 			navigate("/recipes");
 			const recipeRef = doc(db, "recipes", id);
 			const docSnapshot = await getDoc(recipeRef);

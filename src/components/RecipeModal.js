@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Compressor from "compressorjs";
-import { useRecipeContext } from "../contexts/RecipeContextProvider";
+import { ACTIONS, useRecipeContext } from "../contexts/RecipeContextProvider";
 import { v4 as uuid } from "uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
@@ -37,10 +37,9 @@ function RecipeModal({ showModal, setShowModal }) {
 		likes: 0,
 	};
 	const [newRecipe, setNewRecipe] = useState(emptyRecipe);
-	const { setRecipes } = useRecipeContext();
+	const { dispatch } = useRecipeContext();
 	const [step, setStep] = useState(0);
 	const [loading, setLoading] = useState(false);
-	const [shouldButtonDisable, setShouldButtonDisable] = useState([false, false]);
 
 	const isMounted = useRef(true);
 	const auth = getAuth();
@@ -168,7 +167,6 @@ function RecipeModal({ showModal, setShowModal }) {
 			toast.error(validity.message);
 			return;
 		}
-		setShouldButtonDisable([true, true]);
 		setLoading(true);
 		console.log("recipe is valid")
 		const finalImage = await getImage(filteredRecipe.image.file);
@@ -185,7 +183,7 @@ function RecipeModal({ showModal, setShowModal }) {
 				date: new Date(),
 			};
 			console.log(finalRecipe);
-			setRecipes(prev => [...prev, finalRecipe]);
+			dispatch({ type: ACTIONS.ADD_RECIPE, payload: finalRecipe });
 			await setDoc(doc(db, "recipes", recipeId), finalRecipe);
 			await addRecipeRefToUser(recipeId);
 			toast.success("Successfully added a new recipe");
@@ -198,7 +196,6 @@ function RecipeModal({ showModal, setShowModal }) {
 		setStep(0);
 		setShowModal(false);
 		setNewRecipe(emptyRecipe);
-		setShouldButtonDisable([false, false]);
 	};
 
 	const showField = () => {
@@ -257,7 +254,7 @@ function RecipeModal({ showModal, setShowModal }) {
 					<form className="recipe-form">
 						<ProgressBar step={step} />
 						<div className="create-recipe-container">{showField()}</div>
-						<StepButtons step={step} prevStep={prevStep} nextStep={nextStep} shouldButtonDisable={shouldButtonDisable} loading={loading}/>
+						<StepButtons step={step} prevStep={prevStep} nextStep={nextStep} loading={loading}/>
 					</form>
 				</div>
 			</div>
