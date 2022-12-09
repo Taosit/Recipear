@@ -11,7 +11,7 @@ import mealIcon from "../assets/meal.svg";
 import addIcon from "../assets/add.svg";
 import RecipeModal from "../components/RecipeModal";
 
-export default function Profile({}) {
+export default function Profile() {
 	const auth = getAuth();
 
 	const navigate = useNavigate();
@@ -66,6 +66,8 @@ export default function Profile({}) {
 										src={changeName ? doneIcon : editIcon}
 										alt={changeName ? "Done" : "Edit"}
 										className="edit-name-icon"
+										tabIndex="0"
+										onKeyDown={e => e.key === "Enter" && updateUserName()}
 										onClick={updateUserName}
 									/>
 								</div>
@@ -84,6 +86,8 @@ export default function Profile({}) {
 					<div className="profile-cards">
 						<div
 							className="category-card"
+							tabIndex="0"
+							onKeyDown={e => e.key === "Enter" && navigate("/my-recipes")}
 							onClick={() => navigate("/my-recipes")}
 						>
 							<h2 className="category-card-title">My Recipes</h2>
@@ -93,6 +97,8 @@ export default function Profile({}) {
 						</div>
 						<div
 							className="category-card"
+							tabIndex="0"
+							onKeyDown={e => e.key === "Enter" && navigate("/liked-recipes")}
 							onClick={() => navigate("/liked-recipes")}
 						>
 							<h2 className="category-card-title">Liked Recipes</h2>
@@ -104,12 +110,14 @@ export default function Profile({}) {
 					<div className="add-button-container">
 						<div
 							className="create-recipe-button"
+							tabIndex="0"
+							onKeyDown={e => e.key === "Enter" && setShowModal(true)}
 							onClick={() => setShowModal(true)}
 						>
-							<div className="create-icon-container">
+							<p className="create-recipe">Create New Recipe</p>
+							<div className="create-icon">
 								<img src={addIcon} alt="Add" />
 							</div>
-							<p className="create-recipe">Create New Recipe</p>
 						</div>
 					</div>
 				</div>

@@ -39,13 +39,16 @@ export default function Cover({
 							voiceCommandActive ? "active" : "not-active"
 						}`}
 					>
-						<label htmlFor="activate" className="voice-option">
+						<label htmlFor="activate" 
+						tabIndex="0"
+						onKeyDown={e => e.key === "Enter" && setVoiceCommandActive(true)}
+						className="voice-option">
 							Yes
 						</label>
 						<input
-							type="radio"
+							type="radio"							
 							id="activate"
-							name="voice-command-option"
+							name="voice-command-option"							
 							onClick={() => setVoiceCommandActive(true)}
 						/>
 					</span>
@@ -54,13 +57,17 @@ export default function Cover({
 							!voiceCommandActive ? "active" : "not-active"
 						}`}
 					>
-						<label htmlFor="not-activate" className="voice-option">
+						<label htmlFor="not-activate" 
+						role="button"
+						tabIndex="0"
+						onKeyDown={e => e.key === "Enter" && setVoiceCommandActive(false)}
+						className="voice-option">
 							No
 						</label>
 						<input
-							type="radio"
+							type="radio"							
 							id="not-activate"
-							name="voice-command-option"
+							name="voice-command-option"							
 							onClick={() => setVoiceCommandActive(false)}
 						/>
 					</span>
@@ -73,6 +80,8 @@ export default function Cover({
 						onMouseEnter={showHint}
 						src={infoIcon}
 						alt="info"
+						tabIndex="0"
+						onKeyDown={e => e.key === "Enter" && setDisplayHint(!displayHint)}
 						onMouseLeave={hideHint}
 					/>
 				</div>

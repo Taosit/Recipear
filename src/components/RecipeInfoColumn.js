@@ -1,19 +1,27 @@
 import React from 'react'
 import filledStarIcon from "../assets/star-filled.svg";
 import emptytarIcon from "../assets/star-empty.svg";
-import { useRecipeContext } from '../contexts/RecipeContextProvider';
 import { useLikeRecipe } from '../hooks/useLikeRecipe';
 import IngredientList from './IngredientList';
+import { toast } from "react-toastify";
+import { getAuth } from 'firebase/auth';
 
 const RecipeInfoColumn = ({recipe}) => {
     const { liked, toggleLike } = useLikeRecipe(recipe);
 
+    const auth = getAuth();
+
     const tagsExist = recipe.tags.some(t => t);
+
+    const clickSave = () => {
+        if (auth.currentUser) toggleLike()      
+        else toast.error("You must be logged in to save a recipe");    
+    }
 
     return (
     <div className="recipe-info-column">
         <div className='big-image-container'>
-            <button className='star-count-container' onClick={toggleLike}>
+            <button className='star-count-container' onClick={clickSave}>
                 <img src={(liked === null || liked)? filledStarIcon : emptytarIcon} alt='star' />
                 {recipe.likes}
             </button>

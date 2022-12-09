@@ -180,12 +180,14 @@ function SingleRecipe() {
 		<div className="single-recipe-container">
 			<div className="container">
 				<div className="single-recipe">
-					<p
+					<span
 						className="link back-link"
+						tabIndex="0"
+						onKeyDown={e => e.key === "Enter" && navigate(lastVisitedPage)}
 						onClick={() => navigate(lastVisitedPage)}
 					>
 						Back
-					</p>
+					</span>
 					<div className="recipe-header-container">
 						<div className="recipe-name-container">
 							<h1 className="recipe-name">{capitalize(recipe.name)}</h1>

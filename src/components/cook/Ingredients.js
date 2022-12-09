@@ -29,14 +29,14 @@ export default function Ingredients({recipe, nextStep, previousStep, voiceComman
       </div>
       </div>
         <div className="navigate-buttons">
-          <button className="button-orange" onClick={previousStep}>Prev</button>
+          <button className="border-button" onClick={previousStep}>Prev</button>
           <VoiceCommand voiceCommandActive={voiceCommandActive}
                         setVoiceCommandActive={setVoiceCommandActive}
                         recipe={recipe}
                         previousStep={previousStep}
                         nextStep={nextStep}
           />
-          <button className="button-orange" onClick={nextStep}>Next</button>
+          <button className="border-button" onClick={nextStep}>Next</button>
         </div>
     </div>
   )

@@ -49,7 +49,7 @@ function Home() {
 		return str.replace(str[0], str[0].toUpperCase());
 	};
 
-	const handleHoverTagCategory = (e, tagCategory) => {
+	const handleHoverTagCategory = (tagCategory) => {
 		setTagOnHover([tagCategory, tags[tagCategory]]);
 	};
 
@@ -88,8 +88,10 @@ function Home() {
 								{Object.keys(tags).map((tagCategory, i) => (
 									<span
 										className="tag-category"
+										tabIndex="0"
 										key={i}
-										onMouseEnter={e => handleHoverTagCategory(e, tagCategory)}
+										onKeyDown={e => e.key === "Enter" && handleHoverTagCategory(tagCategory)}
+										onMouseEnter={() => handleHoverTagCategory(tagCategory)}
 									>
 										{capitalize(tagCategory)}
 									</span>
@@ -103,7 +105,9 @@ function Home() {
 									{tagOnHover[1].map((tag, i) => (
 										<span
 											className="tag-category"
+											tabIndex="0"
 											key={i}
+											onKeyDown={e => e.key === "Enter" && filterRecipeByTag(tag)}
 											onClick={() => filterRecipeByTag(tag)}
 										>
 											{tag}

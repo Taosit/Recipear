@@ -25,7 +25,9 @@ function Recipes({ recipes }) {
 			{recipes.map((recipe, index) => {
 				return (
 					<div key={uuid()} className="recipe-cell">
-						<div className="recipe-container">
+						<div className="recipe-container" 
+							tabIndex="0"
+							onKeyDown={e => e.key === "Enter" && navigate(`/recipes/${recipe.id}`)}>
 							<div className="recipe">
 								<div className="recipe-image-container">
 									<span className="like-count-container">
@@ -38,29 +40,28 @@ function Recipes({ recipes }) {
 										alt="recipe"
 									/>
 								</div>
-								<h3
-									className="link title-link"
-									onClick={() => navigate(`/recipes/${recipe.id}`)}
-								>
-									{capitalize(recipe.name)}
-								</h3>
-								{recipe.tags[0] &&
-									recipe.tags[0] !== "For All" &&
-									recipe.tags[0] !== "Other" && (
-										<span className="recipe-tag">{recipe?.tags[0]}</span>
-								)}
-								{recipe.tags[1] && recipe.tags[1] !== "Other" && (
-									<span className="recipe-tag">{recipe?.tags[1]}</span>
-								)}
-								{(!recipe.tags[0] ||
-									recipe.tags[0] === "For All" ||
-									recipe.tags[0] === "Other") &&
-									(!recipe.tags[1] || recipe.tags[1] === "Other") && (
-										<div className="margin-div"></div>
+								<div className="recipe-card-summary">
+									<h3
+										className="link title-link"
+										onClick={() => navigate(`/recipes/${recipe.id}`)}
+									>
+										{capitalize(recipe.name)}
+									</h3>
+									<div className="time-and-difficulty">{recipe.time} | {recipe.difficulty}</div>
+									{recipe.tags[0] || recipe.tags[1] && (
+										<div className="recipe-card-tags">
+											{recipe.tags[0] && (
+											<span className="recipe-tag">{recipe?.tags[0]}</span>
+										)}
+										{recipe.tags[1] && (
+											<span className="recipe-tag">{recipe?.tags[1]}</span>
+										)}
+										</div>
 									)}
-								<p className="card-ingredients">
-									{capitalize(getIngredients(recipe.ingredients))}
-								</p>
+									<p className="card-ingredients">
+										{capitalize(getIngredients(recipe.ingredients))}
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>

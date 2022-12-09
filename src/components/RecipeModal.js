@@ -29,8 +29,8 @@ function RecipeModal({ showModal, setShowModal }) {
 		time: "",
 		difficulty: "Easy",
 		image: null,
-		seasonings: [{ ingredient: "", amount: "" }, { ingredient: "", amount: "" }],
-		ingredients: [{ ingredient: "", amount: "" }, { ingredient: "", amount: "" }],
+		seasonings: [{ ingredient: "", amount: "", id: uuid() }, { ingredient: "", amount: "", id: uuid() }],
+		ingredients: [{ ingredient: "", amount: "", id: uuid() }, { ingredient: "", amount: "", id: uuid() }],
 		steps: [{instruction: "", image: null}],
 		tags: [null, null, null, null],
 		date: null,
@@ -110,7 +110,7 @@ function RecipeModal({ showModal, setShowModal }) {
 			step => step.instruction
 		);
 		const validTags = recipe.tags.map(
-			tag => tag == "Other"? null : tag
+			tag => tag === "Other"? null : tag
 		);
 		return {...recipe, seasonings: validSeasonings, ingredients: validIngredients, steps: validSteps, tags: validTags};
 	}
@@ -248,7 +248,11 @@ function RecipeModal({ showModal, setShowModal }) {
 		<>
 			<div className="overlay" hidden={!showModal}>
 				<div className="recipe-modal" hidden={!showModal}>
-					<span className="close-modal" onClick={closeModal}>
+					<span className="close-modal"
+					role="button"
+					tabIndex="0"
+					onKeyDown={e => e.key === "Enter" && closeModal()}
+					onClick={closeModal}>
 						&times;
 					</span>
 					<form className="recipe-form">

@@ -8,9 +8,13 @@ import Recipes from "../components/Recipes";
 import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import backgroundImage from "../assets/background.png";
 import backgroundImageMin from "../assets/background-min.png";
+import boxIcon from "../assets/empty-box.svg";
+import RecipeModal from "../components/RecipeModal";
 
 function UserRecipes() {
 	const { setLastVisitedPage } = useRecipeContext();
+	const [showModal, setShowModal] = useState(false);
+
 	const loaded = useProgressiveImage(backgroundImage);
 	const auth = getAuth();
 
@@ -51,27 +55,36 @@ function UserRecipes() {
 
 	if (loading)
 		return (
-			<div
-				style={{ backgroundImage: `url(${loaded || backgroundImageMin})` }}
-				className="loading-container"
-			>
+			<div className="page">
 				<div className="loader"></div>
 			</div>
 		);
 
+	if (!recipesToDisplay.length) {
+		return <div className="page">
+			<div className="container">
+				<div className="empty-state">
+					{page === "createdRecipes" && <h1 className="empty-state-title">You haven't created any recipes yet.</h1>}
+					{page === "likedRecipes" && <h1 className="empty-state-title">You haven't saved any recipes yet.</h1>}
+					<img src={boxIcon} alt="empty box" className="empty-state-icon" />
+					{page === "createdRecipes" && <button onClick={() => setShowModal(true)} className="border-button empty-state-button">Create My First Recipe</button>}
+					{page === "likedRecipes" && <button onClick={() => navigate("/recipes")} role="link" className="border-button empty-state-button">Browse Recipes</button>}
+				</div>
+			</div>
+			<RecipeModal showModal={showModal} setShowModal={setShowModal} />
+		</div>
+	}
+
 	return (
-		<div
-			style={{ backgroundImage: `url(${loaded || backgroundImageMin})` }}
-			className="user-recipes-page"
-		>
+		<div className="page">
 			<div className="container">
 				<div className="user-recipes-container">
-					<p className=" link back-link" onClick={() => navigate("/profile")}>
-						Back to Profile
-					</p>
-					{page === "createdRecipes" && <h1>My Recipes</h1>}
-					{page === "likedRecipes" && <h1>Favorite Recipes</h1>}
-					<Recipes recipes={recipesToDisplay} />
+					{page === "createdRecipes" && <h1 className="user-recipe-title">My Recipes</h1>}
+					{page === "likedRecipes" && <h1 className="user-recipe-title">Favorite Recipes</h1>}
+					<hr className="header-seperator" />
+					<div className="user-recipes">
+						<Recipes recipes={recipesToDisplay} />
+					</div>
 				</div>
 			</div>
 		</div>

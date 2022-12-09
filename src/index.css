@@ -89,6 +89,7 @@ input, textarea, button, label {
 	color: var(--darkest-yellow);
 	padding: 4px 0;
 	font-size: 16px;
+	cursor: pointer;
 }
 
 .button-orange {
@@ -141,18 +142,17 @@ input, textarea, button, label {
 .nav-container {
 	z-index: 3;
 	width: 100%;
-	background: rgb(139, 0, 0);
-	background: linear-gradient(
-		to bottom,
-		rgba(139, 0, 0, 1) 37%,
-		var(--red)
-	);
+	background: rgb(194 84 84);
 	position: fixed;
 }
 
 .nav {
 	height: 40px;
 	color: white;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: 1px;
+	text-shadow: 0 0 8px darkred;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -170,27 +170,20 @@ input, textarea, button, label {
 	display: flex;
 	align-items: flex-start;
 	margin: 0 0.5em;
-	color: white;
 	text-decoration: none;
 }
 
-.nav-right > * {
-	margin-left: 1em;
-}
-
 .nav-link {
-	font-size: 1em;
+	font-size: 16px;
 	text-decoration: none;
 	color: white;
 	height: 100%;
 	display: flex;
-	justify-content: center;
 	align-items: center;
 }
 
-.nav-link:hover,
-.nav-link:focus {
-	opacity: 0.7;
+.nav-link:first-of-type {
+	margin-right: 16px;
 }
 
 .nav-link h3 {
@@ -204,9 +197,12 @@ input, textarea, button, label {
 .show-dropdown {
 	display: flex;
 	flex-direction: column;
-	color: black;
-	box-shadow: 0 0 2px 1px rgba(153, 0, 0, 0.6);
-	border-radius: 0.1em;
+	text-shadow: none;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	background-color: white;
+	padding: 8px 0;
+	border: 1px solid var(--light-gray);
 }
 
 .hide-dropdown {
@@ -221,7 +217,7 @@ input, textarea, button, label {
 }
 
 .profile-name-container {
-	width: 130px;
+	width: 148px;
 }
 
 .user {
@@ -230,9 +226,9 @@ input, textarea, button, label {
 }
 
 .dropdown-option-container {
-	background-color: rgb(255, 252, 190);
-	width: 130px;
-	height: 30px;
+	width: 140px;
+	margin: 0 auto;
+	padding: 4px 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -244,12 +240,24 @@ input, textarea, button, label {
 	cursor: pointer;
 }
 
+.dropdown-active {
+	background-color: var(--lightest-yellow);
+	font-weight: 700;
+}
+
+.dropdown-active .dropdown-option {
+	font-weight: 700;
+}
+
+.dropdown-option-container:has(.dropdown-option:hover) {
+	background-color: var(--lightest-yellow);
+}
+
 .dropdown-option:hover {
 	font-weight: 700;
 }
 
 .log-out-button {
-	color: white;
 	cursor: pointer;
 	font-size: 1em;
 	font-weight: bold;
@@ -477,7 +485,7 @@ input, textarea, button, label {
 }
 
 .main {
-	padding-top: 3em;
+	padding-top: 96px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -496,16 +504,14 @@ input, textarea, button, label {
 .recipes {
 	width: 100%;
 	display: grid;
-	margin-top: 3em;
 	grid-gap: 20px;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 	padding-bottom: 20px;
 }
 
 .recipe-container {
 	margin: 0 auto;
-	width: min(90vw, max(300px, 65%));
-	height: 325px;
+	width: 100%;
 	background-color: white;
 	border-radius: 0.3em;
 	border: 2px solid var(--light-orange);
@@ -515,20 +521,13 @@ input, textarea, button, label {
 }
 
 .recipe {
-	margin: 0.5em;
+	margin: 20px 16px;
 }
 
 .recipe-image-container {
-	margin-top: 0.5em;
 	position: relative;
-	width: 250px;
-	height: 150px;
-}
-
-.title-link {
-	font-style: normal;
-	font-size: larger;
-	margin-bottom: 4px;
+	width: 100%;
+	aspect-ratio: 5 / 3;
 }
 
 .like-count-container {
@@ -557,31 +556,40 @@ input, textarea, button, label {
 	cursor: pointer;
 }
 
-.tag-container {
-	align-self: flex-end;
-	margin-bottom: 0.5em;
+.recipe-card-summary {
+	margin-top: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	height: 132px;
+}
+
+.title-link {
+	font-style: normal;
+	font-size: larger;
+}
+
+.recipe-card-tags {
+	display: flex;
+	gap: 8px;
 }
 
 .recipe-tag {
 	display: inline-block;
+	width: auto;
 	background-color: var(--light-orange);
 	color: var(--darkest-orange);
-	margin-bottom: 8px;
 	padding: 0.2em 0.5em;
 	font-size: 0.9em;
 	border-radius: 1em;
 	font-weight: bold;
 }
 
-.margin-div {
-	width: 100px;
-	height: 1px;
-	margin: 0;
+.recipe-card-summary:not(:has(.recipe-card-tags)) .card-ingredients {
+	margin-top: 16px;
 }
 
 .card-ingredients {
-	width: 250px;
-	margin-bottom: 0.5em;
 	overflow: hidden;
 	-webkit-line-clamp: 2;
 	display: -webkit-box;
@@ -954,6 +962,7 @@ input, textarea, button, label {
 @media (max-width: 580px) {
 	.step-content {
 		grid-template-columns: 1fr;
+		gap: 16px;
 	}
 }
 
@@ -1097,7 +1106,6 @@ input, textarea, button, label {
 
 .time-and-difficulty {
 	color: var(--dark-gray);
-	margin: 0 0 16px;
 	font-size: 14px;
 }
 
@@ -1105,6 +1113,7 @@ input, textarea, button, label {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 8px;
+	margin-top: 16px;
 }
 
 .recipe-tag-container .tag-label {
@@ -1296,7 +1305,7 @@ input, textarea, button, label {
 }
 
 .cook-page-container {
-	padding-top: 50px;
+	padding-top: 40px;
 	height: 100vh;
 	overflow-y: hidden;
 	display: flex;
@@ -1373,6 +1382,11 @@ input, textarea, button, label {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: flex-end;
+}
+
+.navigate-buttons button {
+	padding: 4px 24px;
+	font-size: 18px;
 }
 
 /* Cover page*/
@@ -1477,9 +1491,10 @@ input[type="radio"] {
 
 /* Prepare page */
 
-.recipe-container .ingredient-list h3 {
-	color: #990000;
-	text-shadow: 0 1px 2px rgba(128, 0, 0, 0.42);
+.ingredient-list h3 {
+	color: var(--dark-gray);
+	font-weight: 500;
+	margin-bottom: 8px;
 }
 
 /* Step page */
@@ -1665,8 +1680,9 @@ input[type="radio"] {
 	padding: 32px;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: center;
 	align-items: center;
+	gap: 16px;
 	background-color: var(--lightest-yellow);
 	box-shadow: 2px 4px 6px #74724B30;
 	cursor: pointer;
@@ -1681,7 +1697,6 @@ input[type="radio"] {
 }
 
 .card-icon {
-	margin-top: 1em;
 	width: 32px;
 }
 
@@ -1697,10 +1712,11 @@ input[type="radio"] {
 .create-recipe-button {
 	background-color: var(--lightest-orange);
 	width: 100%;
-	padding: 32px;
+	padding: 24px;
 	display: flex;
-	justify-content: space-evenly;
+	justify-content: center;
 	align-items: center;
+	gap: 16px;
 	border-radius: 8px;
 	font-size: 20px;
 	font-weight: 600;
@@ -1713,16 +1729,45 @@ input[type="radio"] {
 	user-select: none;
 }
 
+.create-icon {
+	width: 48px;
+}
+
+.create-icon img {
+	max-width: 100%;
+}
+
 
 /* User Recipes */
 
-.user-recipes-page {
-	padding-top: 40px;
-	height: 100vh;
-	background-color: #fcdc04;
-	background-size: cover;
-	background-position: bottom;
-	overflow-y: auto;
+.user-recipe-title{
+	font-size: 24px;
+	font-weight: 600;
+	color: var(--dark-gray);
+	margin: 32px 0 16px;
+}
+
+.user-recipes {
+	margin-top: 16px;
+}
+
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	margin-top: 32px;
+}
+
+.empty-state-title {
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--dark-gray);
+}
+
+.empty-state-button {
+	padding: 4px 16px;
 }
 
 /* ------Auth------- */
@@ -1801,39 +1846,6 @@ input[type="radio"] {
 	margin-left: auto;
 }
 
-/* Forgot password */
-
-.forgot-password-container {
-	padding-top: 2em;
-}
-
-.forgot-password-page {
-	display: flex;
-	flex-direction: column;
-}
-
-.forget-password-input-group {
-	display: flex;
-	align-items: center;
-	margin-bottom: 1em;
-}
-
-.forget-password-input-group label {
-	margin-right: 0.5em;
-}
-
-.forget-password-form {
-	margin: 3em 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.sign-in-link {
-	margin-left: auto;
-	align-self: flex-end;
-}
-
 /* Loader */
 
 .loader {
@@ -1844,10 +1856,6 @@ input[type="radio"] {
 	width: 120px;
 	height: 120px;
 	animation: spin 2s linear infinite;
-}
-
-.submit-button {
-	background-color: var(--yellow);
 }
 
 .button-loader {
@@ -1894,24 +1902,18 @@ input[type="radio"] {
 	.container {
 		width: 92%;
 	}
-	.navigate-buttons button {
-		font-size: 1.2em;
-		border-radius: 0.7em;
-		padding: 0.3em;
-		width: 70px;
+	.nav-link {
+		font-size: 14px;
+		padding: 0 8px;
 	}
-
 	.nav-right h3 {
 		font-size: 1em;
 	}
-
-	.nav-right a {
-		font-size: 0.9em;
+	.profile-name-container {
+		width: 136px;
 	}
-
-	.profile-name-container,
 	.dropdown-option-container {
-		width: 108px;
+		width: 118px;
 	}
 
 	.dropdown-option-container span {
@@ -1926,6 +1928,9 @@ input[type="radio"] {
 	}
 	.profile-cards {
 		grid-template-columns: 1fr;
+	}
+	.category-card {
+		flex-direction: row;
 	}
 }
 

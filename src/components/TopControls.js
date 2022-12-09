@@ -62,7 +62,7 @@ const TopControls = ({controlValues, setControlValues}) => {
 	};
 
   const isFiltered = () => {
-    return controlValues.searchValue || controlValues.filterValue || controlValues.sortValue;
+    return controlValues.searchValue || controlValues.filterValue;
   }
 
   const viewAllRecipes = () => {
@@ -77,10 +77,12 @@ const TopControls = ({controlValues, setControlValues}) => {
         <div
           className="search-bar"
           ref={searchBarRef}
-          onMouseEnter={() => handleHoverSearch()}
+          onMouseEnter={handleHoverSearch}
           onMouseLeave={handleLeaveSearch}
         >
-          <div className="search-image-container">
+          <div className="search-image-container" 
+          tabIndex="0" 
+          onKeyDown={e => e.key === "Enter" && handleHoverSearch()}>
             <img src={searchIcon} alt="search" />
           </div>
           {showSearch && (
@@ -93,7 +95,12 @@ const TopControls = ({controlValues, setControlValues}) => {
                 onKeyDown={e => searchByEnter(e)}
                 onChange={e => setSearchInputValue(e.target.value)}
               />
-              <div className="send-image-container">
+              <div className="send-image-container"
+                tabIndex="0"
+                onKeyDown={e => {
+                  e.key === "Enter" && search();
+                  e.key === "Tab" && setTimeout(() => handleLeaveSearch(), 500);
+                }}>
                 <img
                   src={sendIcon}
                   className="send-icon"
@@ -113,7 +120,9 @@ const TopControls = ({controlValues, setControlValues}) => {
             onMouseEnter={handleHoverSort}
             onMouseLeave={handleLeaveSort}
           >
-            <div className="search-image-container">
+            <div className="search-image-container" 
+              tabIndex="0"
+              onKeyDown={e => e.key === "Enter" && handleHoverSort()}>
               <img
                 className="sort-icon"
                 src={sortIcon}
@@ -126,6 +135,8 @@ const TopControls = ({controlValues, setControlValues}) => {
                   className={`sort-tag ${
                     controlValues.sortValue === "new" ? "sort-tag-active" : ""
                   }`}
+                  tabIndex="0"
+                  onKeyDown={e => e.key === "Enter" && sortBy("new")}
                   onClick={() => sortBy("new")}
                 >
                   New
@@ -134,6 +145,8 @@ const TopControls = ({controlValues, setControlValues}) => {
                   className={`sort-tag ${
                     controlValues.sortValue === "top" ? "sort-tag-active" : ""
                   }`}
+                  tabIndex="0"
+                  onKeyDown={e => e.key === "Enter" && sortBy("top")}
                   onClick={() => sortBy("top")}
                 >
                   Top
@@ -146,7 +159,7 @@ const TopControls = ({controlValues, setControlValues}) => {
       {isFiltered() &&
         !showSearch &&
         !showSort && (
-          <div className="all-recipes" onClick={viewAllRecipes}>
+          <div className="all-recipes" tabIndex="0" onClick={viewAllRecipes}>
             All Recipes
           </div>
         )}

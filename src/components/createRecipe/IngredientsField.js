@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuid } from "uuid";
 
 export default function IngredientsField({ type, recipe, updateRecipe }) {
 
@@ -7,7 +8,8 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 	}
 
   const addIngredient = (index) => {
-    const newIngredients = [...recipe[type].slice(0, index + 1), { name: "", amount: "" }, ...recipe[type].slice(index + 1)];
+		const id = uuid();
+    const newIngredients = [...recipe[type].slice(0, index + 1), { ingredient: "", amount: "", id }, ...recipe[type].slice(index + 1)];
     updateRecipe(newIngredients, type);
   }
 
@@ -22,7 +24,7 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 			<h1>{capitalize(type)}</h1>
 			<div className="recipe-ingredients">
 				{recipe[type].map((ingredient, index) => (
-					<div key={`${recipe.name}-${type}-${index}`} className="recipe-ingredient">
+					<div key={`${recipe.name}-${type}-${ingredient.id}`} className="recipe-ingredient">
 						<div className={`ingredient-count ${index? "" : "required-field"}`}>{capitalize(type).slice(0, type.length - 1)} {index + 1}</div>
 						<div className="ingredient-inputs-container">
 							<input

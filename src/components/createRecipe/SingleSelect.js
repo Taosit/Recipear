@@ -8,7 +8,9 @@ const SingleSelect = ({label, options, selectOption, required = false, container
         <div className='select-option-container' style={containerStyles}>
           {optionArray.map((option, i) => (
             <span key={option} style={optionStyles} className={`radio-button ${options[i][option] ? "selected-option" : ""}`}
-              onClick={(e) => e.target.tagName === "LABEL" && selectOption(option)} tabIndex="0">
+              onClick={(e) => e.target.tagName === "LABEL" && selectOption(option)} 
+              tabIndex="0"
+              onKeyDown={e => e.key === "Enter" && selectOption(option)}>
               <input type="radio" name={label} id={option} value={option}/>
               <label htmlFor={option}>{option}</label>
             </span>

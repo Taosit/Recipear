@@ -185,17 +185,32 @@ export default function VoiceCommand({
 		SpeechRecognition.stopListening();
 	};
 
+	const controlVoiceCommandWithKeyboard = e => {
+		if (e.key === "Enter") {
+			if (voiceCommandActive) disableVoiceCommand();
+			else activateVoiceCommand();
+		}
+	};
+
 	return (
 		<>
 			{voiceCommandActive ? (
-				<span className="voice-command-control" onClick={disableVoiceCommand}>
+				<span className="voice-command-control" 
+				role="button" 
+				tabIndex="0" 
+				onKeyDown={controlVoiceCommandWithKeyboard}
+				onClick={disableVoiceCommand}>
 					<span className="microphone">
 						<img src={microphoneIcon} alt="deactivate voice command" />
 					</span>
 					<span>Click to deactivate</span>
 				</span>
 			) : (
-				<span className="voice-command-control" onClick={activateVoiceCommand}>
+				<span className="voice-command-control" 
+				role="button" 
+				tabIndex="0" 
+				onKeyDown={controlVoiceCommandWithKeyboard}
+				onClick={activateVoiceCommand}>
 					<span className="microphone">
 						<img src={blockedMicrophoneIcon} alt="activate voice command" />
 					</span>
