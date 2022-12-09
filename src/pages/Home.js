@@ -30,10 +30,9 @@ function Home() {
 		if (key === "name") return recipes.filter(recipe => recipe.name === value);
 		if (key === "tags")
 			return recipes.filter(recipe => recipe.tags.includes(value));
-		console.log({ recipes });
 		if (key === "ingredients")
 			return recipes.filter(recipe => {
-				return recipe.ingredients.toLowerCase().includes(value);
+				return recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(value));
 			});
 	};
 

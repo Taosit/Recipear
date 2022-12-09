@@ -8,6 +8,7 @@ import editIcon from "../assets/edit.svg";
 import doneIcon from "../assets/done.svg";
 import cookBookIcon from "../assets/cookbook.svg";
 import mealIcon from "../assets/meal.svg";
+import addIcon from "../assets/add.svg";
 import RecipeModal from "../components/RecipeModal";
 
 export default function Profile({}) {
@@ -19,7 +20,7 @@ export default function Profile({}) {
 	const [nameField, setNameField] = useState(auth.currentUser.displayName);
 	const [showModal, setShowModal] = useState(false);
 
-	const updateRecipeName = () => {
+	const updateUserName = () => {
 		if (changeName) {
 			updateProfile(auth.currentUser, {
 				displayName: nameField,
@@ -38,30 +39,37 @@ export default function Profile({}) {
 		<div className="profile-page-container">
 			<div className="container">
 				<div className="profile-page">
-					<h1 className="profile-title">
-						Welcome, {auth.currentUser.displayName}!
-					</h1>
+					<div className="profile-header">
+						<div className="profile-title-container">
+							<h1 className="profile-title">
+								Welcome, {auth.currentUser.displayName}!
+							</h1>
+						</div>
+						<hr className="header-seperator" />
+					</div>
 					<div className="account-info-container">
-						<h3 className="account-header">Account information</h3>
+						<h2 className="account-header">Account Info</h2>
 						<div className="account-info">
 							<div className="account-input-group">
 								<label htmlFor="username">Username:</label>
-								<input
-									type="text"
-									id="username"
-									className={`profile-input ${
-										changeName ? "changing-name" : ""
-									}`}
-									value={nameField}
-									disabled={!changeName}
-									onChange={e => setNameField(e.target.value)}
-								/>
-								<img
-									src={changeName ? doneIcon : editIcon}
-									alt={changeName ? "Done" : "Edit"}
-									className="edit-name-icon"
-									onClick={updateRecipeName}
-								/>
+								<div className="account-name-input-group">
+									<input
+										type="text"
+										id="username"
+										className={`profile-input ${
+											changeName ? "changing-name" : ""
+										}`}
+										value={nameField}
+										disabled={!changeName}
+										onChange={e => setNameField(e.target.value)}
+									/>
+									<img
+										src={changeName ? doneIcon : editIcon}
+										alt={changeName ? "Done" : "Edit"}
+										className="edit-name-icon"
+										onClick={updateUserName}
+									/>
+								</div>
 							</div>
 							<div className="account-input-group">
 								<label>Email:</label>
@@ -95,12 +103,15 @@ export default function Profile({}) {
 						</div>
 					</div>
 					<div className="add-button-container">
-						<button
-							className="button-red add-button"
+						<div
+							className="create-recipe-button"
 							onClick={() => setShowModal(true)}
 						>
-							+ Add Recipe
-						</button>
+							<div className="create-icon-container">
+								<img src={addIcon} alt="Add" />
+							</div>
+							<p className="create-recipe">Create New Recipe</p>
+						</div>
 					</div>
 				</div>
 			</div>

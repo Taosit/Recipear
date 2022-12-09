@@ -76,20 +76,6 @@ input, textarea, button, label {
 	margin-bottom: 0;
 }
 
-.button-red {
-	background-color: #990000;
-	color: #ffffff;
-	border: none;
-	border-radius: 2em;
-	cursor: pointer;
-	box-shadow: inset 0 5px 15px #946363, 0 3px 5px rgba(117, 74, 0, 0.5);
-	transition: all 0.05s ease-in-out;
-	padding: 0.2em 1em;
-	margin: 0.5em;
-	font-size: larger;
-	font-weight: 600;
-}
-
 .button-orange {
 	background-color: var(--orange);
 	color: white;
@@ -106,18 +92,9 @@ input, textarea, button, label {
 	font-weight: bold;
 }
 
-.button-red:hover {
-	box-shadow: inset 0 5px 15px 2px #947171, 0 3px 5px rgba(117, 74, 0, 0.5);
-}
-
 .button-orange:hover {
 	box-shadow: inset 0 -5px 15px -4px var(--orange-dark),
 		0 3px 5px 2px rgba(117, 74, 0, 0.5);
-}
-
-.button-red:active {
-	transform: translateY(2px);
-	box-shadow: inset 0 5px 15px #946363, 0 1px 5px rgba(117, 74, 0, 0.5);
 }
 
 .button-orange:active {
@@ -128,14 +105,6 @@ input, textarea, button, label {
 .button-orange:disabled {
 	/* filter: brightness(1.1); */
 	opacity: 0.7;
-}
-
-#image-input {
-	display: none;
-}
-
-.image-input {
-	display: none;
 }
 
 .container {
@@ -493,30 +462,9 @@ input, textarea, button, label {
 	height: 100vh;
 }
 
-.add-button-container {
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.add-button {
-	margin: 2em;
-	align-self: center;
-	padding: 0.8em 2em;
-	border-radius: 2em;
-}
-
-.add-button:active {
-	transform: translateY(3px);
-	box-shadow: inset 0 5px 15px #946363, 0 0 5px rgba(117, 74, 0, 0.5);
-}
-
 .overlay {
 	z-index: 10;
-	position: absolute;
+	position: fixed;
 	top: -3px;
 	height: 100vh;
 	width: 100vw;
@@ -603,18 +551,6 @@ input, textarea, button, label {
 	font-weight: bold;
 }
 
-.tag1 {
-	background-color: white;
-	border: 2px solid #ea6229;
-	color: #ea6229;
-}
-
-.tag2 {
-	background-color: white;
-	border: 2px solid #fd075d;
-	color: #fd075d;
-}
-
 .margin-div {
 	width: 100px;
 	height: 1px;
@@ -676,6 +612,7 @@ input, textarea, button, label {
 	flex-direction: column;
 	gap: 16px;
 	overflow-y: auto;
+	overscroll-behavior: contain;
 }
 
 .progress-bar {
@@ -849,11 +786,6 @@ input, textarea, button, label {
 	color: white;
 }
 
-.create-recipe-button {
-	margin: 1em;
-	padding: 0.5em 2em;
-}
-
 /* Add Recipe Form */
 
 .create-recipe-container h1 {
@@ -976,14 +908,10 @@ input, textarea, button, label {
 	justify-content: space-between;
 }
 
-.step-label, .add-step-label {
+.step-label {
 	font-size: 14px;
 	font-weight: 600;
 	color: var(--gray);
-}
-
-.add-step-label {
-	margin-left: 8px;
 }
 
 .add-step-button {
@@ -1186,7 +1114,7 @@ input, textarea, button, label {
 	.ingredients-and-seasonings {
 		grid-template-columns: 1fr;
 	}
-  }
+}
 
 .ingredient-items-container {
 	margin-top: 8px;
@@ -1614,61 +1542,84 @@ input[type="radio"] {
 
 .profile-page-container {
 	padding-top: 40px;
-	height: 100vh;
-	overflow-y: hidden;
-	background: linear-gradient(180deg, white 30%, #c1ff6b88 100%);
 }
 
 .profile-page {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	width: min(450px, 100%);
+	width: min(500px, 100%);
 	margin: 0 auto;
-	height: calc(100vh - 40px);
+	padding-bottom: 24px;
+}
+
+.profile-header {
+	margin-top: 32px;
+}
+
+.profile-title-container {
+	display: inline-block;
+	padding: 8px 0;
+	background-image: url("./assets/heading-background.svg");
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 25% 50%;
+	margin-bottom: 8px;
 }
 
 .profile-title {
-	margin: 24px;
-	text-align: center;
+	display: inline-block;
+	font-weight: 600;
+}
+
+.header-seperator {
+	border: none;
+	height: 1px;
+	background-color: var(--light-gray);
 }
 
 .account-info-container {
 	background-color: white;
 	border-radius: 0.5em;
-	box-shadow: 2px 3px 5px 3px rgba(255, 165, 0, 0.32);
-	padding: 1em;
+	border: 1px solid var(--light-gray);
+	box-shadow: 0 4px 4px rgba(99, 99, 99, 0.25);
+	padding: 24px;
 	width: 100%;
-	margin: 0 auto;
+	margin: 16px auto;
 }
 
 .account-header {
-	margin-top: 0;
+	margin-bottom: 16px;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--dark-gray);
 }
 
 .account-info {
 	display: flex;
 	flex-direction: column;
+	gap: 16px;
 }
 
 .account-input-group {
 	display: flex;
-	margin: 0.3em 0;
-	align-items: center;
+	flex-direction: column;
 }
 
 .account-info label {
+	font-size: 14px;
 	width: 100px;
-	flex-shrink: 0;
 }
 
 .account-info .profile-input {
-	border: 2px solid white;
-	font-size: 1em;
-	border-radius: 1em;
-	padding: 0.2em 0.5em;
-	background-color: #fff8d7;
+	margin-top: 4px;
+	border: none;
+	font-size: 16px;
+	border-radius: 100px;
+	padding: 4px 8px;
+	background-color: var(--lightest-orange);
 	width: 100%;
+}
+
+.account-name-input-group {
+	display: flex;
 }
 
 .account-info .changing-name {
@@ -1676,9 +1627,9 @@ input[type="radio"] {
 }
 
 .edit-name-icon {
-	width: 28px;
-	height: 28px;
-	margin: 0 0.5em;
+	width: 30px;
+	height: 30px;
+	margin: 0 8px;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
@@ -1688,31 +1639,29 @@ input[type="radio"] {
 }
 
 .profile-cards {
-	margin-top: 2em;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	gap: 1em;
+	gap: 16px;
 }
 
 .category-card {
-	border-radius: 0.5em;
-	padding: 1em;
-	padding-top: 1.2em;
-	cursor: pointer;
-	color: white;
-	text-shadow: 1px 2px 2px rgb(191, 124, 0);
+	border-radius: 8px;
+	padding: 32px;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: space-evenly;
 	align-items: center;
-	background-color: orange;
-	box-shadow: inset 3px 6px 5px 2px rgb(255, 192, 74),
-		1px 3px 3px rgb(191, 124, 0);
+	background-color: var(--lightest-yellow);
+	box-shadow: 2px 4px 6px #74724B30;
+	cursor: pointer;
 }
 
 .category-card-title {
 	margin: 0;
-	font-size: 1em;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--dark-gray);
+	user-select: none;
 }
 
 .card-icon {
@@ -1723,6 +1672,32 @@ input[type="radio"] {
 .card-icon img {
 	max-width: 100%;
 }
+
+.add-button-container {
+	width: 100%;
+	margin: 16px 0;
+}
+
+.create-recipe-button {
+	background-color: var(--lightest-orange);
+	width: 100%;
+	padding: 32px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	border-radius: 8px;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--dark-gray);
+	box-shadow: 2px 4px 6px #99928C30;
+	cursor: pointer;
+}
+
+.create-recipe-button p {
+	user-select: none;
+}
+
+
 /* User Recipes */
 
 .user-recipes-page {
