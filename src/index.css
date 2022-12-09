@@ -63,6 +63,12 @@ input, textarea, button, label {
 	outline-color: orange;
 }
 
+.page {
+	padding-top: 40px;
+	min-height: 100vh;
+	padding-bottom: 24px;
+}
+
 .link {
 	text-decoration: none;
 	color: #990000;
@@ -74,6 +80,15 @@ input, textarea, button, label {
 	cursor: pointer;
 	background-color: rgba(0, 0, 0, 0);
 	margin-bottom: 0;
+}
+
+.border-button {
+	border: 1px solid var(--darkest-yellow);
+	border-radius: 4px;
+	background-color: var(--light-yellow);
+	color: var(--darkest-yellow);
+	padding: 4px 0;
+	font-size: 16px;
 }
 
 .button-orange {
@@ -111,6 +126,13 @@ input, textarea, button, label {
 	margin: 0 auto;
 	width: 80%;
 	max-width: 1000px;
+	position: relative;
+}
+
+.narrow-container {
+	margin: 0 auto;
+	width: 90%;
+	max-width: 500px;
 	position: relative;
 }
 
@@ -644,12 +666,6 @@ input, textarea, button, label {
 }
 
 .step-button {
-	border: 1px solid var(--darkest-yellow);
-	border-radius: 4px;
-	background-color: var(--light-yellow);
-	color: var(--darkest-yellow);
-	padding: 4px 0;
-	font-size: 16px;
 	width: max(30%, 120px);
 	display: flex;
 	justify-content: center;
@@ -1711,35 +1727,42 @@ input[type="radio"] {
 
 /* ------Auth------- */
 
+.auth-title {
+	font-size: 24px;
+	font-weight: 600;
+	color: var(--darkest-gray);
+	margin: 32px 0 16px;
+}
+
 .auth-form {
-	padding-top: 3em;
+	width: 100%;
+	max-width: 500px;
+	margin: 0 auto;
+	border: 1px solid var(--light-gray);
+	border-radius: 8px;
+	box-shadow: 2px 4px 6px #99928C30;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	padding: 24px;
 }
 
 .fields {
-	margin-top: 2em;
-}
-
-.auth-input-group {
 	display: flex;
-	align-items: center;
-	margin: 0.3em 0;
-	font-size: 1em;
+	flex-direction: column;
+	gap: 16px;
 }
 
 .auth-input-group label {
-	width: 90px;
-	flex-shrink: 0;
+	display: block;
+	font-size: 14px;
 }
 
 .auth-input-group input,
 .forget-password-input-group input {
-	font-size: 1em;
-	width: 250px;
-	border-radius: 1em;
-	padding: 0.2em 0.5em;
+	font-size: 16px;
+	width: 100%;
+	border-radius: 4px;
+	padding: 4px 8px;
 }
 
 .password-input-div {
@@ -1756,6 +1779,26 @@ input[type="radio"] {
 
 #password {
 	padding-right: 2em;
+}
+
+.auth-button {
+	margin-top: 16px;
+	width: 120px;
+	align-self: center;
+}
+
+.bottom-link-container {
+	margin-top: 16px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.bottom-link {
+	color: var(--darkest-yellow)
+}
+
+.bottom-link:only-of-type {
+	margin-left: auto;
 }
 
 /* Forgot password */

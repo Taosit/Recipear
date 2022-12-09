@@ -42,34 +42,37 @@ function SignIn() {
   }
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
-      <h2>Sign In</h2>
-      <div className="fields">
-        <div className="auth-input-group">
-          <label htmlFor="email">Email:</label>
-          <input type="text" id="email" onChange={(e) => updateRecipe(e)}/>
-        </div>
-        <div className="auth-input-group">
-          <label htmlFor="password">Password:</label>
-          <div className="password-input-div">
-            <input type={showPassword ? "text" : "password"} id="password" onChange={(e) => updateRecipe(e)}/>
-            <img src={showPassword ? showIcon : hideIcon} alt={showPassword ? "Password visible" : "Password invisible"}
-                 onClick={() => setShowPassword(prev => !prev)} className="password-icon"
-            />
+    <div className="page">
+      <div className="narrow-container">
+        <h1 className="auth-title">Log In</h1>
+        <form onSubmit={(e) => handleSubmit(e)} className="auth-form">
+          <div className="fields">
+            <div className="auth-input-group">
+              <label htmlFor="email">Email:</label>
+              <input type="text" id="email" onChange={(e) => updateRecipe(e)}/>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="password">Password:</label>
+              <div className="password-input-div">
+                <input type={showPassword ? "text" : "password"} id="password" onChange={(e) => updateRecipe(e)}/>
+                <img src={showPassword ? showIcon : hideIcon} alt={showPassword ? "Password visible" : "Password invisible"}
+                    onClick={() => setShowPassword(prev => !prev)} className="password-icon"
+                />
+              </div>
+            </div>
           </div>
-        </div>
+          <div className="bottom-link-container">
+            <Link className="bottom-link" to="/sign-up" >
+              Sign Up
+            </Link>
+            <Link className="bottom-link" to="/forgot-password" >
+              Forgot Password
+            </Link>
+          </div>
+          <button className="border-button auth-button" type="submit">Log In</button>
+        </form>
       </div>
-      <hr/>
-      <button className="button-orange" type="submit">Sign In</button>
-      <hr/>
-      <Link className="link" to="/sign-up" >
-        Sign Up Instead
-      </Link>
-      <hr/>
-      <Link className="link" to="/forgot-password" >
-        Forgot Password
-      </Link>
-    </form>
+    </div>
   );
 }
 

@@ -8,7 +8,7 @@ const StepButtons = ({step, prevStep, nextStep, loading}) => {
       <button
         onClick={e => prevStep(e)}
         disabled={step === 0 || loading}
-        className="step-button"
+        className="border-button step-button"
       >
         <img src={chevronLeft} alt="chevron left" />
         <span>Previous</span>
@@ -16,7 +16,7 @@ const StepButtons = ({step, prevStep, nextStep, loading}) => {
       <button
         onClick={e => nextStep(e)}
         disabled={loading}
-        className={`step-button`}
+        className="border-button step-button"
       >
         {step !== 4 ? (
           <>

@@ -23,21 +23,26 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="forgot-password-container">
-      <div className="container">
-        <div className="forgot-password-page">
-          <h2 className="forget-password-title">Forgot password</h2>
-          <form className="forget-password-form" onSubmit={onSubmit}>
-            <div className="forget-password-input-group">
-              <label htmlFor="forget-password-email">Email:</label>
-              <input type="text" className="forget-password-email" id="forget-password-email" value={email}
-                     onChange={(e) => onChange(e)}
-              />
-            </div>
-            <hr/>
-            <button className="link">Send reset link</button>
-          </form>
-        </div>
+    <div className="page">
+      <div className="narrow-container">
+      <h1 className="auth-title">Forgot password</h1>
+        <form className="auth-form" onSubmit={onSubmit}>
+          <div className="auth-input-group">
+            <label htmlFor="forget-password-email">Email:</label>
+            <input type="text" className="forget-password-email" id="forget-password-email" value={email}
+                    onChange={(e) => onChange(e)}
+            />
+          </div>
+          <div className="bottom-link-container">
+            <Link className="bottom-link" to="/sign-in" >
+              Log In
+            </Link>
+            <Link className="bottom-link" to="/sign-up" >
+              Sign Up
+            </Link>
+          </div>
+          <button className="border-button auth-button">Send reset link</button>
+        </form>
       </div>
     </div>
   )

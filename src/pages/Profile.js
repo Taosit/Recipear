@@ -36,10 +36,9 @@ export default function Profile({}) {
 	};
 
 	return (
-		<div className="profile-page-container">
-			<div className="container">
-				<div className="profile-page">
-					<div className="profile-header">
+		<div className="page">
+			<div className="narrow-container">
+				<div className="profile-header">
 						<div className="profile-title-container">
 							<h1 className="profile-title">
 								Welcome, {auth.currentUser.displayName}!
@@ -114,7 +113,6 @@ export default function Profile({}) {
 						</div>
 					</div>
 				</div>
-			</div>
 			<RecipeModal showModal={showModal} setShowModal={setShowModal} />
 		</div>
 	);

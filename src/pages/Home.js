@@ -1,61 +1,49 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import Recipes from "../components/Recipes";
+import TopControls from "../components/TopControls";
 import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import { useProgressiveImage } from "../hooks/useProgressiveImage";
-import searchIcon from "../assets/search.svg";
-import sortIcon from "../assets/sort.svg";
-import sendIcon from "../assets/send.svg";
 import backgroundImage from "../assets/background.png";
 import backgroundImageMin from "../assets/background-min.png";
 
 function Home() {
 	const { tags, recipes, loading, setLastVisitedPage } = useRecipeContext();
 	const [tagOnHover, setTagOnHover] = useState(null);
-	const [showSearch, setShowSearch] = useState(false);
-	const [searchInputValue, setSearchInputValue] = useState("");
-	const [filterValue, setFilterValue] = useState([]);
-	const [showSort, setShowSort] = useState(false);
-	const [sortValue, setSortValue] = useState("");
+	const [controlValues, setControlValues] = useState({filterValue: "", searchValue: "", sortValue: ""})
 	const loaded = useProgressiveImage(backgroundImage);
 
-	const searchBarRef = useRef();
-	const sortBarRef = useRef();
 	const filterContainer = useRef();
 
 	const currentRoute = useLocation();
 	setLastVisitedPage(currentRoute.pathname);
 
-	const filterRecipes = ({ key, value }) => {
-		if (key === "name") return recipes.filter(recipe => recipe.name === value);
-		if (key === "tags")
-			return recipes.filter(recipe => recipe.tags.includes(value));
-		if (key === "ingredients")
-			return recipes.filter(recipe => {
-				return recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(value));
-			});
-	};
-
-	const sortRecipes = recipes => {
-		if (sortValue === "top") {
-			recipes.sort((a, b) => b.likes - a.likes);
-		} else {
-			recipes.sort((a, b) => b.date - a.date);
-		}
-		return recipes;
-	};
-
+	const sortRecipes = useCallback(
+		recipes => {
+			if (controlValues.sortValue === "top") {
+				recipes.sort((a, b) => b.likes - a.likes);
+			} else {
+				recipes.sort((a, b) => b.date - a.date);
+			}
+			return recipes;
+		},
+		[controlValues],
+	)
+	
 	let filteredAndSortedRecipes = useMemo(() => {
-		if (filterValue.length === 0 && !sortValue) return recipes;
+		if (!controlValues.filterValue && !controlValues.searchValue && !controlValues.sortValue) return recipes;
 		let filteredRecipes = recipes;
-		if (filterValue.length !== 0) {
-			filteredRecipes = filterValue.reduce((resultingRecipes, filterTerm) => {
-				return [...resultingRecipes, ...filterRecipes(filterTerm)];
-			}, []);
+		if (controlValues.filterValue) {
+			filteredRecipes = filteredRecipes.filter(recipe => recipe.tags.includes(controlValues.filterValue));
 		}
-		if (!sortValue) return filteredRecipes;
-		return sortRecipes(filteredRecipes);
-	}, [filterValue, sortValue, recipes]);
+		if (controlValues.searchValue) {
+			filteredRecipes = filteredRecipes.filter(recipe => recipe.name.toLowerCase().includes(controlValues.searchValue) || recipe.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(controlValues.searchValue)));
+		}
+		if (controlValues.sortValue) {
+			filteredRecipes = sortRecipes(filteredRecipes);
+		}
+		return filteredRecipes;
+	}, [controlValues, recipes, sortRecipes]);
 
 	const capitalize = str => {
 		return str.replace(str[0], str[0].toUpperCase());
@@ -73,68 +61,8 @@ function Home() {
 		setTagOnHover(null);
 	};
 
-	const handleHoverSearch = () => {
-		if (!showSearch) {
-			searchBarRef.current.classList.add("search-bar-full-width");
-			setShowSearch(true);
-		}
-	};
-
-	const handleLeaveSearch = () => {
-		if (!searchInputValue) {
-			setShowSearch(false);
-			searchBarRef.current.classList.remove("search-bar-full-width");
-		}
-	};
-
 	const filterRecipeByTag = async tag => {
-		setFilterValue([{ key: "tags", value: tag }]);
-	};
-
-	const search = async () => {
-		if (!searchInputValue) return;
-		const formattedSearchValue = searchInputValue.toLowerCase().trim();
-		const singularValue = formattedSearchValue.replaceAll(
-			/([^\s]+?)(es|e|s)\b$/g,
-			"$1"
-		);
-		setFilterValue([
-			{ key: "name", value: formattedSearchValue },
-			{ key: "ingredients", value: singularValue },
-		]);
-		setSearchInputValue("");
-		setShowSearch(false);
-		searchBarRef.current.classList.remove("search-bar-full-width");
-	};
-
-	const searchByEnter = async e => {
-		if (e.key === "Enter") {
-			e.preventDefault();
-			await search();
-		}
-	};
-
-	const handleHoverSort = () => {
-		setShowSort(true);
-		sortBarRef.current.classList.add("sort-bar-full-width");
-	};
-
-	const handleLeaveSort = () => {
-		setShowSort(false);
-		sortBarRef.current.classList.remove("sort-bar-full-width");
-	};
-
-	const sortBy = sortKey => {
-		setSortValue(sortKey);
-		setShowSort(false);
-		sortBarRef.current.classList.remove("sort-bar-full-width");
-	};
-
-	const viewAllRecipes = () => {
-		setFilterValue([]);
-		setSortValue("");
-		setShowSearch(false);
-		setSearchInputValue("");
+		setControlValues(prev => ({...prev, filterValue: tag}));
 	};
 
 	if (loading)
@@ -183,85 +111,7 @@ function Home() {
 									))}
 								</div>
 							) : (
-								<div className="top-icon-container">
-									<div className="search-container">
-										<div
-											className="search-bar"
-											ref={searchBarRef}
-											onMouseEnter={() => handleHoverSearch()}
-											onMouseLeave={handleLeaveSearch}
-										>
-											<div className="search-image-container">
-												<img src={searchIcon} alt="search" />
-											</div>
-											{showSearch && (
-												<>
-													<input
-														className="search-input"
-														type="text"
-														value={searchInputValue}
-														placeholder="Search recipe or ingredient"
-														onKeyDown={e => searchByEnter(e)}
-														onChange={e => setSearchInputValue(e.target.value)}
-													/>
-													<div className="send-image-container">
-														<img
-															src={sendIcon}
-															className="send-icon"
-															alt="send"
-															onClick={search}
-														/>
-													</div>
-												</>
-											)}
-										</div>
-									</div>
-									{!showSearch && (
-										<div className="sort-container">
-											<div
-												className="sort-bar"
-												ref={sortBarRef}
-												onMouseEnter={handleHoverSort}
-												onMouseLeave={handleLeaveSort}
-											>
-												<div className="search-image-container">
-													<img
-														className="sort-icon"
-														src={sortIcon}
-														alt="sort"
-													/>
-												</div>
-												{showSort && (
-													<div className="sort-item-container">
-														<span
-															className={`sort-tag ${
-																sortValue === "new" ? "sort-tag-active" : ""
-															}`}
-															onClick={() => sortBy("new")}
-														>
-															New
-														</span>
-														<span
-															className={`sort-tag ${
-																sortValue === "top" ? "sort-tag-active" : ""
-															}`}
-															onClick={() => sortBy("top")}
-														>
-															Top
-														</span>
-													</div>
-												)}
-											</div>
-										</div>
-									)}
-									{filteredAndSortedRecipes.length < recipes.length &&
-										!showSearch &&
-										!showSort && (
-											<div className="all-recipes" onClick={viewAllRecipes}>
-												All Recipes
-											</div>
-										)}
-								</div>
+								<TopControls controlValues={controlValues} setControlValues={setControlValues} />
 							)}
 						</div>
 					</div>
