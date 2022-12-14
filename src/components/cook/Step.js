@@ -35,25 +35,36 @@ export default function Step({
           <img src={timerIcon} alt="timer"/>
           <p className="time-value">{currentStep.time} mins</p>
         </span>}
-            <span className="set-timer" onClick={showTimerInput}>Set timer</span>
+            <span className="set-timer" 
+            role="button" 
+            tabIndex="0" 
+            onKeyDown={e => e.key === "Enter" && showTimerInput()}
+            onClick={showTimerInput}>Set timer</span>
         </span>
         :
         !timers[stepIndex].timer ?
           <span className="timer-input-span">
             <input type="number" ref={timeRef}
                  defaultValue={currentStep.time? currentStep.time : 1} className="timer-input"/> mins
-            <span className="set-timer" onClick={() => startTimer(timeRef.current.value)}>OK</span>
+            <span className="set-timer" 
+              role="button" 
+              tabIndex="0" 
+              onKeyDown={e => e.key === "Enter" && startTimer(timeRef.current.value)}
+              onClick={() => startTimer(timeRef.current.value)}>OK</span>
           </span>
           :
           <Timer timers={timers} setTimers={setTimers} stepIndex={stepIndex} voiceCommandActive={voiceCommandActive} />
       }
       <p className="step-instruction">{currentStep.instruction}</p>
-      {currentStep.image && <div className="step-image-container">
-        <img className="cook-step-image" src={currentStep.image.url} alt="current step"/>
-      </div>}
+      {currentStep.image && (
+      <div className="step-image-space">
+        <div className="step-image-container">
+          <img className="cook-step-image" src={currentStep.image.url} alt="current step"/>
+        </div>
+      </div>)}
       </div>
       <div className="navigate-buttons">
-        <button className="button-orange" onClick={previousStep}>Prev</button>
+        <button className="border-button" onClick={previousStep}>Prev</button>
         <VoiceCommand voiceCommandActive={voiceCommandActive}
                       setVoiceCommandActive={setVoiceCommandActive}
                       recipe={recipe}
@@ -65,9 +76,9 @@ export default function Step({
                       nextStep={nextStep}
         />
         {progress <= recipe.steps.length ?
-          <button className="button-orange" onClick={nextStep}>Next</button>
+          <button className="border-button" onClick={nextStep}>Next</button>
           :
-          <button className="button-orange" onClick={finishCooking}>Done</button>
+          <button className="border-button" onClick={finishCooking}>Done</button>
         }
       </div>
     </div>

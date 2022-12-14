@@ -18,15 +18,19 @@ export default function Ingredients({recipe, nextStep, previousStep, voiceComman
 
   return (
     <div className="card-grid">
-    <div className="cook-card-body">
-      <p className="subtitle">{recipe.name}</p>
-      <h2 className="cook-title">Prepare</h2>
-      <div className="ingredient-list">
-        <h3>Ingredients</h3>
-        <p>{getIngredients(recipe.ingredients)}</p>
-        <h3>Seasonings</h3>
-        <p>{getIngredients(recipe.seasonings)}</p>
-      </div>
+      <div className="cook-card-body">
+        <p className="subtitle">{recipe.name}</p>
+        <h2 className="cook-title">Prepare</h2>
+        <div className="ingredient-list">
+          <div>
+            <h3>Ingredients</h3>
+            <p>{getIngredients(recipe.ingredients)}</p>
+          </div>
+          <div>
+            <h3>Seasonings</h3>
+            <p>{getIngredients(recipe.seasonings)}</p>
+          </div>
+        </div>
       </div>
         <div className="navigate-buttons">
           <button className="border-button" onClick={previousStep}>Prev</button>

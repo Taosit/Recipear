@@ -5,7 +5,7 @@ export default function CommandHint({ infoIconPos }) {
 		infoIconPos.x + 250 > window.innerWidth
 			? window.innerWidth / 2 - 125
 			: infoIconPos.x + 30;
-	const offsetHeight = infoIconPos.y - 415;
+	const offsetHeight = infoIconPos.y - 360;
 
 	const styles = {
 		top: `${offsetHeight}px`,
@@ -26,7 +26,7 @@ export default function CommandHint({ infoIconPos }) {
 					<b>Timer ... minutes (for ...)</b>: set a timer of x minutes
 				</li>
 				<li>
-					<b>Remove timer</b>: set the timer for the current step
+					<b>Turn off timer</b>: turn off the timer for the current step
 				</li>
 				<li>
 					<b>Stop listening</b>: disable voice command

@@ -65,6 +65,16 @@ function Home() {
 		setControlValues(prev => ({...prev, filterValue: tag}));
 	};
 
+	const handleTabTag = (e, tag, i) => {
+		if (e.key === "Enter") {
+			filterRecipeByTag(tag);
+		} else if (e.key === "Tab") {
+			if (i === tags[tagOnHover[0]].length - 1) {
+				setTagOnHover(null);
+			}
+		}
+	};
+
 	if (loading)
 		return (
 			<div
@@ -90,6 +100,7 @@ function Home() {
 										className="tag-category"
 										tabIndex="0"
 										key={i}
+										role="button"
 										onKeyDown={e => e.key === "Enter" && handleHoverTagCategory(tagCategory)}
 										onMouseEnter={() => handleHoverTagCategory(tagCategory)}
 									>
@@ -106,8 +117,9 @@ function Home() {
 										<span
 											className="tag-category"
 											tabIndex="0"
+											role="button"
 											key={i}
-											onKeyDown={e => e.key === "Enter" && filterRecipeByTag(tag)}
+											onKeyDown={e => handleTabTag(e, tag, i)}
 											onClick={() => filterRecipeByTag(tag)}
 										>
 											{tag}

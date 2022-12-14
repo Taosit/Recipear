@@ -1,6 +1,5 @@
 import React from 'react'
-import { useParams, useNavigate, Link } from "react-router-dom";
-import pencilIcon from "../assets/edit.svg";
+import { useParams, useNavigate } from "react-router-dom";
 import cookIcon from "../assets/cook.svg";
 
 const RecipeStepColumn = ({recipe}) => {
@@ -15,7 +14,6 @@ const RecipeStepColumn = ({recipe}) => {
     <div className="recipe-info-column">
       <div className='recipe-steps-header'>
         <h3 className='underlined-heading'>Steps</h3>
-        <img src={pencilIcon} alt="pencil" className='pencil-image' />
         <button className="icon-button cook-button" onClick={cook}>
           <div className="cook-icon-container">
             <img src={cookIcon} alt="cook" />

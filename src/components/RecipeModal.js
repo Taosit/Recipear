@@ -247,7 +247,7 @@ function RecipeModal({ showModal, setShowModal }) {
 	return (
 		<>
 			<div className="overlay" hidden={!showModal}>
-				<div className="recipe-modal" hidden={!showModal}>
+				<div className="modal" hidden={!showModal}>
 					<span className="close-modal"
 					role="button"
 					tabIndex="0"

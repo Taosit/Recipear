@@ -10,11 +10,10 @@
 	--dark-red: #8D0C0C;
 	--red: #C14D4D;
 	--lightest-orange: #FFF3E8;
-	--darkest-orange: #B15500;
-	--dark-orange: #E09957;
 	--light-orange: #FFE7D1;
 	--orange: orange;
-	--orange-dark: #e78301;
+	--dark-orange: #E09957;
+	--darkest-orange: #B15500;
 	--darkest-yellow: #BA940B;
 	--dark-yellow: #EAE344;
 	--yellow: #F2EF97;
@@ -71,56 +70,23 @@ input, textarea, button, label {
 
 .link {
 	text-decoration: none;
-	color: #990000;
-	font-weight: bold;
-	font-style: italic;
+	color: var(--dark-red);
+	font-weight: 600;
 	border: none;
 	font-size: 1em;
 	font-family: Montserrat;
 	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0);
 	margin-bottom: 0;
 }
 
 .border-button {
-	border: 1px solid var(--darkest-yellow);
+	border: 1px solid var(--dark-yellow);
 	border-radius: 4px;
 	background-color: var(--light-yellow);
 	color: var(--darkest-yellow);
 	padding: 4px 0;
 	font-size: 16px;
 	cursor: pointer;
-}
-
-.button-orange {
-	background-color: var(--orange);
-	color: white;
-	text-shadow: 1px 2px 2px #885a00;
-	border: none;
-	border-radius: 2em;
-	cursor: pointer;
-	box-shadow: inset 0 -5px 15px var(--orange-dark),
-		0 3px 5px rgba(117, 74, 0, 0.5);
-	transition: all 0.05s ease-in-out;
-	padding: 0.2em 1em;
-	margin: 0.5em;
-	font-size: larger;
-	font-weight: bold;
-}
-
-.button-orange:hover {
-	box-shadow: inset 0 -5px 15px -4px var(--orange-dark),
-		0 3px 5px 2px rgba(117, 74, 0, 0.5);
-}
-
-.button-orange:active {
-	transform: translateY(2px);
-	box-shadow: inset 0 5px 15px #d59e49, 0 1px 5px rgba(117, 74, 0, 0.5);
-}
-
-.button-orange:disabled {
-	/* filter: brightness(1.1); */
-	opacity: 0.7;
 }
 
 .container {
@@ -376,7 +342,7 @@ input, textarea, button, label {
 }
 
 .sort-tag {
-	background-color: var(--orange-dark);
+	background-color: var(--orange);
 	opacity: 0.7;
 	font-weight: 600;
 	border-radius: 1em;
@@ -602,7 +568,7 @@ input, textarea, button, label {
 
 /* --------------Add Recipe--------------- */
 
-.recipe-modal {
+.modal {
 	z-index: 10;
 	position: absolute;
 	width: min(750px, 95%);
@@ -628,11 +594,11 @@ input, textarea, button, label {
 
 .close-modal {
 	position: absolute;
-    right: 10px;
-    top: -5px;
-    cursor: pointer;
-    font-size: 48px;
-    color: #a3a3a3;
+	right: 10px;
+	top: -5px;
+	cursor: pointer;
+	font-size: 48px;
+	color: #a3a3a3;
 }
 
 .create-recipe-container {
@@ -705,7 +671,7 @@ input, textarea, button, label {
 }
 
 @media (height > 1000px) {
-	.recipe-modal {
+	.modal {
 		height: 700px;
 	}
 }
@@ -853,7 +819,7 @@ input, textarea, button, label {
 	.column-left {
 		margin-bottom: 0;
 	}
-	.recipe-modal {
+	.modal {
 		height: 80%;
 	}
 }
@@ -979,6 +945,7 @@ input, textarea, button, label {
 }
 
 .back-link {
+	display: inline-block;
 	margin-top: 16px;
 }
 
@@ -1188,12 +1155,8 @@ input, textarea, button, label {
 	align-items: center;
 }
 
-.pencil-image {
-	width: 28px;
-	height: 28px;
-	margin-left: 8px;
-	margin-right: auto;
-	cursor: pointer;
+.cook-button {
+	margin-left: auto;
 }
 
 .icon-button .cook-text {
@@ -1293,7 +1256,7 @@ input, textarea, button, label {
 
 /* Page template */
 
-.cook-page-container::before {
+.cook-page-overlay::before {
 	content: "";
 	position: absolute;
 	inset: 0;
@@ -1304,7 +1267,7 @@ input, textarea, button, label {
 	filter: blur(4px);
 }
 
-.cook-page-container {
+.cook-page-overlay {
 	padding-top: 40px;
 	height: 100vh;
 	overflow-y: hidden;
@@ -1314,16 +1277,9 @@ input, textarea, button, label {
 }
 
 .cook-page {
-	margin: 0 auto;
-	min-height: 50vh;
-	background-color: rgb(255, 254, 247);
-	padding: 1em;
-	width: min(500px, 90%);
-	border-radius: 0.5em;
-	box-shadow: 0 0 15px 5px rgba(255, 165, 0, 0.6);
-	position: relative;
+	height: 100%;
+	padding: 16px;
 	display: flex;
-	text-align: center;
 }
 
 .cook-card-body {
@@ -1331,29 +1287,28 @@ input, textarea, button, label {
 	flex-direction: column;
 	align-items: center;
 	flex-grow: 1;
+	overflow-y: auto;
 }
 
 .card-grid {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
+	max-width: 600px;
+	margin: 0 auto;
 }
 
 .cancel-cooking {
 	position: absolute;
-	top: 12px;
-	right: 20px;
-	color: #990000;
-	font-weight: bold;
+	font-size: 48px;
+	top: 0;
+	right: 16px;
+	color: var(--red);
 	cursor: pointer;
 }
 
-.cancel-cooking:focus,
-.cancel-cooking:hover {
-	text-decoration: underline;
-}
-
 .voice-command-control {
+	text-align: center;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -1391,6 +1346,19 @@ input, textarea, button, label {
 
 /* Cover page*/
 
+.cover-page-body {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.cover-page-top {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
 .subtitle {
 	margin-bottom: 0;
 	text-transform: uppercase;
@@ -1398,11 +1366,20 @@ input, textarea, button, label {
 }
 
 .cook-title {
-	margin: 0.3em 0;
+	color: var(--darkest-gray);
+	margin: 6px 0;
+}
+
+.cover-image-space {
+	display: flex;
+	flex-grow: 1;
+	justify-content: center;
+	align-items: center;
 }
 
 .cook-image-container {
 	width: 70%;
+	max-width: 300px;
 	aspect-ratio: 5 / 3;
 	align-self: center;
 	margin: 0 auto;
@@ -1418,21 +1395,23 @@ input, textarea, button, label {
 .radio-button-groups {
 	display: flex;
 	justify-content: center;
+	margin-top: 8px;
 }
 
 .voice-command-question {
+	flex-grow: 0.5;
 	width: 70%;
 	margin: 0 auto;
 }
 
 .radio-button-group {
-	margin: 0 1em;
-	padding: 0.2em 0.4em;
-	border: 2px solid orange;
-	border-radius: 1em;
+	margin: 0 16px;
+	padding: 4px 8px;
+	border: 1px solid var(--dark-yellow);
+	border-radius: 16px;
 	cursor: pointer;
-	color: orange;
-	font-weight: bold;
+	color: var(--darkest-yellow);
+	font-weight: 500;
 }
 
 .hint-container {
@@ -1459,8 +1438,7 @@ input, textarea, button, label {
 }
 
 .active {
-	background-color: orange;
-	color: white;
+	background-color: var(--light-yellow);
 }
 
 .voice-option {
@@ -1489,12 +1467,31 @@ input[type="radio"] {
 	width: 32px;
 }
 
+.cover-page-button {
+	margin: 8px;
+	padding: 4px 16px;
+	font-size: 20px;
+	font-weight: 500;
+}
+
 /* Prepare page */
+
+.cook-card-body .ingredient-list {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	overflow-y: auto;
+	justify-content: space-around;
+}
 
 .ingredient-list h3 {
 	color: var(--dark-gray);
 	font-weight: 500;
 	margin-bottom: 8px;
+}
+
+.ingredient-list > * {
+
 }
 
 /* Step page */
@@ -1506,6 +1503,16 @@ input[type="radio"] {
 	margin-bottom: 0.3em;
 }
 
+.time-span {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.time-span img {
+	width: 28px;
+}
+
 .time-value {
 	margin: 0;
 }
@@ -1514,19 +1521,19 @@ input[type="radio"] {
 	margin: 0 0.5em;
 	padding: 0.2em 0.5em;
 	border-radius: 1em;
-	border: 2px solid orange;
-	color: orange;
-	font-weight: bold;
+	border: 2px solid var(--dark-orange);
+	color: var(--dark-orange);
+	font-weight: 600;
 	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
 .set-timer:hover {
-	background-color: orange;
-	color: white;
+	background-color: var(--lightest-orange);
 }
 
 .step-number {
-	color: #ff6a00;
+	color: var(--dark-orange);
 }
 
 .timer-input-span {
@@ -1552,14 +1559,22 @@ input[type="radio"] {
 }
 
 .step-instruction {
-	margin-top: 0;
+	margin-top: 8px;
+	display: flex;
+	flex-grow: 1;
+	flex-shrink: 0;
+	overflow-y: auto;
+}
+
+.step-image-space {
+	flex-grow: 1;
 }
 
 .step-image-container {
-	width: 30%;
+	width: 70%;
+	max-width: 300px;
 	aspect-ratio: 5/3;
-	align-self: center;
-	margin: 0.2em 0;
+	margin: 0.2em auto;
 }
 
 .cook-step-image {
@@ -1651,10 +1666,6 @@ input[type="radio"] {
 
 .account-name-input-group {
 	display: flex;
-}
-
-.account-info .changing-name {
-	border: 2px solid var(--orange-dark);
 }
 
 .edit-name-icon {

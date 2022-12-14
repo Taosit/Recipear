@@ -57,13 +57,13 @@ function Cook() {
   }
 
   return (
-    <div className="cook-page-container">
-      <div className="cook-page">
+    <div className="cook-page-overlay">
+      <div className="modal">
         <span className="cancel-cooking"
         tabIndex="0"
         onKeyDown={e => e.key === "Enter" && cancelCooking()}
-        onClick={cancelCooking}>Cancel</span>
-        {recipeContent()}
+        onClick={cancelCooking}>&times;</span>
+        <div className="cook-page">{recipeContent()}</div>
       </div>
     </div>
   );

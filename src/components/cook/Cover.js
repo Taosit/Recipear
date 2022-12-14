@@ -26,10 +26,14 @@ export default function Cover({
 
 	return (
 		<div className="cover-page-body">
-			<p className="subtitle">{recipe.name}</p>
-			<h2 className="cook-title">Get ready to cook</h2>
-			<div className="cook-image-container">
-				<img className="cook-image" src={recipe.image.url} alt="recipe" />
+			<div className="cover-page-top">
+				<p className="subtitle">{recipe.name}</p>
+				<h2 className="cook-title">Get ready to cook</h2>
+				<div className="cover-image-space">
+					<div className="cook-image-container">
+						<img className="cook-image" src={recipe.image.url} alt="recipe" />
+					</div>
+				</div>
 			</div>
 			<div className="voice-command-question">
 				<p>Would you like to activate voice command?</p>
@@ -93,7 +97,7 @@ export default function Cover({
 			</div>
 			<div>
 				<button
-					className="button-orange cover-page-button"
+					className="border-button cover-page-button"
 					onClick={startCooking}
 				>
 					Start Cooking

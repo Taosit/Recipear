@@ -27,7 +27,7 @@ export default function VoiceCommand({
 			callback: (time, task) => setTimer(time, task),
 		},
 		{
-			command: ["Remove timer"],
+			command: ["Remove timer", "Turn off timer"],
 			callback: () => removeTimer(),
 		},
 		{
@@ -63,7 +63,6 @@ export default function VoiceCommand({
 
 	const speak = text => {
 		SpeechRecognition.stopListening();
-		console.log(text);
 		var msg = new SpeechSynthesisUtterance(text);
 		window.speechSynthesis.speak(msg);
 		msg.onend = function () {
@@ -105,6 +104,10 @@ export default function VoiceCommand({
 	console.log(transcript);
 
 	const setTimer = (time, task = "") => {
+		if (timers === undefined) {
+			speak("You can't set a timer on this page");
+			return;
+		}
 		if (isNaN(parseInt(time))) {
 			speak("please say it again");
 			return;
@@ -136,7 +139,7 @@ export default function VoiceCommand({
 				i === stepIndex ? { ...t, timer: null, timerInUse: false } : t
 			)
 		);
-		speak("Timer removed");
+		speak("Timer is turned off");
 	};
 
 	const goToPreviousPage = () => {

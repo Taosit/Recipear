@@ -87,6 +87,7 @@ function Navbar({ auth }) {
 								<div
 									className="nav-item-container profile-name-container"
 									tabIndex="0"
+									role="navigation"
 									onKeyDown={handleTab}
 									ref={profileNameRef}
 									onMouseLeave={e => checkLeaveProfileName(e)}
@@ -112,6 +113,7 @@ function Navbar({ auth }) {
 									<div className={`dropdown-option-container ${tab === 1 ? "dropdown-active" : ""}`}>
 										<span
 											className="dropdown-option"
+											role="navigation"
 											onClick={() => navigateTo("/profile")}
 										>
 											Profile
@@ -120,6 +122,7 @@ function Navbar({ auth }) {
 									<div className={`dropdown-option-container ${tab === 2 ? "dropdown-active" : ""}`}>
 										<span
 											className="dropdown-option"
+											role="navigation"
 											onClick={() => navigateTo("/my-recipes")}
 										>
 											My Recipes
@@ -128,6 +131,7 @@ function Navbar({ auth }) {
 									<div className={`dropdown-option-container ${tab === 3 ? "dropdown-active" : ""}`}>
 										<span
 											className="dropdown-option"
+											role="navigation"
 											onClick={() => navigateTo("/liked-recipes")}
 										>
 											Liked Recipes
@@ -139,6 +143,7 @@ function Navbar({ auth }) {
 								<a
 									className="log-out-button"
 									type="button"
+									onKeyDown={e => e.key === "Enter" && logOutUser()}
 									onClick={logOutUser}
 								>
 									Log Out

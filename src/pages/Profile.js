@@ -87,6 +87,7 @@ export default function Profile() {
 						<div
 							className="category-card"
 							tabIndex="0"
+							role="button"
 							onKeyDown={e => e.key === "Enter" && navigate("/my-recipes")}
 							onClick={() => navigate("/my-recipes")}
 						>
@@ -98,6 +99,7 @@ export default function Profile() {
 						<div
 							className="category-card"
 							tabIndex="0"
+							role="button"
 							onKeyDown={e => e.key === "Enter" && navigate("/liked-recipes")}
 							onClick={() => navigate("/liked-recipes")}
 						>
@@ -111,6 +113,7 @@ export default function Profile() {
 						<div
 							className="create-recipe-button"
 							tabIndex="0"
+							role="button"
 							onKeyDown={e => e.key === "Enter" && setShowModal(true)}
 							onClick={() => setShowModal(true)}
 						>

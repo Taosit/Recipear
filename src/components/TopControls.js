@@ -82,6 +82,7 @@ const TopControls = ({controlValues, setControlValues}) => {
         >
           <div className="search-image-container" 
           tabIndex="0" 
+          role="button"
           onKeyDown={e => e.key === "Enter" && handleHoverSearch()}>
             <img src={searchIcon} alt="search" />
           </div>
@@ -97,6 +98,7 @@ const TopControls = ({controlValues, setControlValues}) => {
               />
               <div className="send-image-container"
                 tabIndex="0"
+                role="button"
                 onKeyDown={e => {
                   e.key === "Enter" && search();
                   e.key === "Tab" && setTimeout(() => handleLeaveSearch(), 500);
@@ -122,6 +124,7 @@ const TopControls = ({controlValues, setControlValues}) => {
           >
             <div className="search-image-container" 
               tabIndex="0"
+              role="button"
               onKeyDown={e => e.key === "Enter" && handleHoverSort()}>
               <img
                 className="sort-icon"
@@ -136,6 +139,7 @@ const TopControls = ({controlValues, setControlValues}) => {
                     controlValues.sortValue === "new" ? "sort-tag-active" : ""
                   }`}
                   tabIndex="0"
+                  role="button"
                   onKeyDown={e => e.key === "Enter" && sortBy("new")}
                   onClick={() => sortBy("new")}
                 >
@@ -146,6 +150,7 @@ const TopControls = ({controlValues, setControlValues}) => {
                     controlValues.sortValue === "top" ? "sort-tag-active" : ""
                   }`}
                   tabIndex="0"
+                  role="button"
                   onKeyDown={e => e.key === "Enter" && sortBy("top")}
                   onClick={() => sortBy("top")}
                 >
@@ -159,7 +164,10 @@ const TopControls = ({controlValues, setControlValues}) => {
       {isFiltered() &&
         !showSearch &&
         !showSort && (
-          <div className="all-recipes" tabIndex="0" onClick={viewAllRecipes}>
+          <div className="all-recipes" 
+          tabIndex="0" 
+          onKeyDown={e => e.key === "Enter" && viewAllRecipes()}
+          onClick={viewAllRecipes}>
             All Recipes
           </div>
         )}
