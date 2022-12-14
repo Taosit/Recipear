@@ -13,8 +13,9 @@ import ProgressBar from "./createRecipe/ProgressBar";
 import StepButtons from "./createRecipe/StepButtons";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
+import FocusTrap from 'focus-trap-react';
 
-function RecipeModal({ showModal, setShowModal }) {
+function RecipeModal({ setShowModal }) {
 	const integerMatch = {
 		a: 1,
 		one: 1,
@@ -205,7 +206,6 @@ function RecipeModal({ showModal, setShowModal }) {
 					<OverviewField
 						recipe={newRecipe}
 						updateRecipe={updateRecipe}
-						showModal={showModal}
 					/>
 				);
 			case 1:
@@ -246,21 +246,23 @@ function RecipeModal({ showModal, setShowModal }) {
 
 	return (
 		<>
-			<div className="overlay" hidden={!showModal}>
-				<div className="modal" hidden={!showModal}>
-					<span className="close-modal"
-					role="button"
-					tabIndex="0"
-					onKeyDown={e => e.key === "Enter" && closeModal()}
-					onClick={closeModal}>
-						&times;
-					</span>
-					<form className="recipe-form">
-						<ProgressBar step={step} />
-						<div className="create-recipe-container">{showField()}</div>
-						<StepButtons step={step} prevStep={prevStep} nextStep={nextStep} loading={loading}/>
-					</form>
-				</div>
+			<div className="overlay">
+				<FocusTrap>
+					<div className="modal">
+						<span className="close-modal"
+						role="button"
+						tabIndex="0"
+						onKeyDown={e => e.key === "Enter" && closeModal()}
+						onClick={closeModal}>
+							&times;
+						</span>
+						<form className="recipe-form">
+							<ProgressBar step={step} />
+							<div className="create-recipe-container">{showField()}</div>
+							<StepButtons step={step} prevStep={prevStep} nextStep={nextStep} loading={loading}/>
+						</form>
+					</div>
+				</FocusTrap>
 			</div>
 		</>
 	);

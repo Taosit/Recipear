@@ -139,16 +139,14 @@ function Navbar({ auth }) {
 									</div>
 								</div>
 							</div>
-							<div className="nav-item-container" tabIndex="0">
-								<a
+							<button
 									className="log-out-button"
 									type="button"
-									onKeyDown={e => e.key === "Enter" && logOutUser()}
+									onKeyDown={e => console.log(e.key) || e.key === "Enter" && logOutUser()}
 									onClick={logOutUser}
 								>
 									Log Out
-								</a>
-							</div>
+								</button>
 						</div>
 					) : (
 						<div className="nav-right">

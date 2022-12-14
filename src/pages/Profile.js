@@ -124,7 +124,7 @@ export default function Profile() {
 						</div>
 					</div>
 				</div>
-			<RecipeModal showModal={showModal} setShowModal={setShowModal} />
+			{showModal && <RecipeModal setShowModal={setShowModal} />}
 		</div>
 	);
 }

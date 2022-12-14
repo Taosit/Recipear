@@ -224,6 +224,11 @@ input, textarea, button, label {
 }
 
 .log-out-button {
+	height: 100%;
+	background-color: transparent;
+	color: white;
+	text-shadow: 0 0 8px darkred;
+	border: none;
 	cursor: pointer;
 	font-size: 1em;
 	font-weight: bold;

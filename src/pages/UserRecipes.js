@@ -71,7 +71,7 @@ function UserRecipes() {
 					{page === "likedRecipes" && <button onClick={() => navigate("/recipes")} role="link" className="border-button empty-state-button">Browse Recipes</button>}
 				</div>
 			</div>
-			<RecipeModal showModal={showModal} setShowModal={setShowModal} />
+			{showModal && <RecipeModal setShowModal={setShowModal} />}
 		</div>
 	}
 
