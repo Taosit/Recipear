@@ -145,7 +145,7 @@ function Navbar({ auth }) {
 									onKeyDown={e => console.log(e.key) || e.key === "Enter" && logOutUser()}
 									onClick={logOutUser}
 								>
-									Log Out
+									Logout
 								</button>
 						</div>
 					) : (
