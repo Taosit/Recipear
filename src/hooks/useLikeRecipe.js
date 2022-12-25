@@ -48,14 +48,15 @@ export function useLikeRecipe(recipe) {
 		}			
 	};
 
-    useEffect(() => {		
-		updateLike();
-	}, [liked]);
-
-    const toggleLike = () => {
+  useEffect(() => {
 		if (!auth.currentUser) return;
-        setLiked(prev => !prev);
-    }
-  
-    return {liked, toggleLike }
+		updateLike();
+	}, [liked, auth.currentUser]);
+
+	const toggleLike = () => {
+	if (!auth.currentUser) return;
+			setLiked(prev => !prev);
+	}
+
+	return {liked, toggleLike }
   }

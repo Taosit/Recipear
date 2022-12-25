@@ -23,7 +23,7 @@ import RecipeStepColumn from "../components/RecipeStepColumn";
 import RecipeModal from "../components/RecipeModal";
 
 function SingleRecipe() {
-	const { recipes, dispatch, setRecipeModified, lastVisitedPage } =
+	const { recipes, dispatch, lastVisitedPage } =
 		useRecipeContext();
 	const [currentUserData, setCurrentUserData] = useState(null);
 	const [showModal, setShowModal] = useState(false);
@@ -56,13 +56,6 @@ function SingleRecipe() {
 
 	const capitalize = str => {
 		return str.replace(str[0], str[0].toUpperCase());
-	};
-
-	const addStep = async () => {
-		await updateDoc(recipeRef, {
-			steps: [...recipe.steps, { instruction: "" }],
-		});
-		setRecipeModified(true);
 	};
 
 	const deleteRecipe = async id => {

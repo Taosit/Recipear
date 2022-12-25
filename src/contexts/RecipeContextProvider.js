@@ -54,7 +54,6 @@ const reducer = (state, action) => {
 const RecipeContextProvider = ({children}) => {
   const [lastVisitedPage, setLastVisitedPage] = useState("/recipes")
   const [loading, setLoading] = useState(false)
-  const [recipeModified, setRecipeModified] = useState(true)
   const [state, dispatch] = useReducer(reducer, [])
 
   useEffect(() => {
@@ -73,8 +72,6 @@ const RecipeContextProvider = ({children}) => {
       setLoading,
       recipes: state,
       dispatch,
-      recipeModified,
-      setRecipeModified,
       lastVisitedPage,
       setLastVisitedPage,
     }}

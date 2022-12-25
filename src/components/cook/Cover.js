@@ -10,7 +10,6 @@ export default function Cover({
 }) {
 	const [displayHint, setDisplayHint] = useState(false);
 	const infoIconRef = useRef();
-	const coverPage = useRef();
 
 	const startCooking = () => {
 		nextStep();
@@ -24,8 +23,15 @@ export default function Cover({
 		setDisplayHint(false);
 	};
 
+	const handleClick = e => {
+		if (e.target.closest(".info-icon")) return;
+		if (!displayHint) return;
+		if (e.target.closest(".hint-container")) return;
+		hideHint();
+	}
+
 	return (
-		<div className="cover-page-body">
+		<div className="cover-page-body" onClick={handleClick}>
 			<div className="cover-page-top">
 				<p className="subtitle">{recipe.name}</p>
 				<h2 className="cook-title">Get ready to cook</h2>
@@ -82,8 +88,10 @@ export default function Cover({
 						ref={infoIconRef}
 						onTouchStart={displayHint ? hideHint : showHint}
 						onMouseEnter={showHint}
+						onClick={e => e.stopPropagation()}
 						src={infoIcon}
 						alt="info"
+						className="info-icon"
 						tabIndex="0"
 						onKeyDown={e => e.key === "Enter" && setDisplayHint(!displayHint)}
 						onMouseLeave={hideHint}

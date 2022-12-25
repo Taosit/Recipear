@@ -1310,7 +1310,7 @@ input, textarea, button, label {
 
 .cook-page-overlay::before {
 	content: "";
-	position: absolute;
+	position: fixed;
 	inset: 0;
 	background-image: url("./assets/background-min.png");
 	background-size: cover;

@@ -92,7 +92,7 @@ export default function VoiceCommand({
 	}, [listening]);
 
 	if (
-		!browserSupportsSpeechRecognition
+		!browserSupportsSpeechRecognition || !browserSupportsContinuousListening
 	) {
 		return (
 			<div className="no-support">
