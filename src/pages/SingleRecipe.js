@@ -8,27 +8,25 @@ import {
 	doc,
 	getDoc,
 	updateDoc,
-	arrayUnion,
 	arrayRemove,
-	increment,
 	deleteDoc,
 } from "firebase/firestore";
 import {
 	deleteObject,
-	getDownloadURL,
 	ref,
-	uploadBytes,
 } from "firebase/storage";
 import { toast } from "react-toastify";
-import { v4 as uuid } from "uuid";
 import trashIcon from "../assets/trash.svg";
+import editIcon from "../assets/edit.svg";
 import RecipeInfoColumn from "../components/RecipeInfoColumn";
 import RecipeStepColumn from "../components/RecipeStepColumn";
+import RecipeModal from "../components/RecipeModal";
 
 function SingleRecipe() {
 	const { recipes, dispatch, setRecipeModified, lastVisitedPage } =
 		useRecipeContext();
 	const [currentUserData, setCurrentUserData] = useState(null);
+	const [showModal, setShowModal] = useState(false);
 
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -38,8 +36,6 @@ function SingleRecipe() {
 
 	const { loggedIn } = useAuthStatus();
 	const auth = getAuth();
-
-	const overlayRef = useRef();
 
 	const isAuthor = useMemo(() => {
 		if (!currentUserData || !recipe) return false;
@@ -108,74 +104,6 @@ function SingleRecipe() {
 			</div>
 		);
 
-	const showImageOverlay = () => {
-		if (!isAuthor) return;
-		overlayRef.current.classList.add("show-big-image-overlay");
-	};
-
-	const hideImageOverlay = () => {
-		if (!isAuthor) return;
-		overlayRef.current.classList.remove("show-big-image-overlay");
-	};
-
-	const updateImage = async (e, index) => {
-		const imageFile = e.target.files[0];
-		const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-		if (!imageFile || !ALLOWED_TYPES.includes(imageFile.type)) {
-			toast.error("Please upload a png, jpeg or jpg file");
-			return;
-		}
-		const id = uuid();
-		const imgRef = ref(storage, `images/${id}`);
-		await uploadBytes(imgRef, imageFile);
-		const url = await getDownloadURL(imgRef);
-		let imageToDelete;
-		if (!index) {
-			imageToDelete = recipe.image.storageId;
-			await updateDoc(recipeRef, { image: { storageId: id, url } });
-		} else {
-			imageToDelete = recipe.steps[index].image.storageId;
-			const updatedSteps = recipe.steps.map((step, i) => {
-				if (index !== i) return step;
-				return { ...step, image: { storageId: id, url } };
-			});
-			await updateDoc(recipeRef, { steps: updatedSteps });
-		}
-		setRecipeModified(true);
-		await deleteObject(ref(storage, `images/${imageToDelete}`));
-	};
-
-	const removeImage = async index => {
-		const imageToDelete = recipe.steps[index].image.storageId;
-		const updatedSteps = recipe.steps.map((step, i) => {
-			if (index !== i) return step;
-			return { ...step, image: null };
-		});
-		await updateDoc(recipeRef, { steps: updatedSteps });
-		setRecipeModified(true);
-		await deleteObject(ref(storage, `images/${imageToDelete}`));
-	};
-
-	const addImage = async (e, index) => {
-		console.log("add image", { index });
-		const imageFile = e.target.files[0];
-		const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
-		if (!imageFile || !ALLOWED_TYPES.includes(imageFile.type)) {
-			toast.error("Please upload a png, jpeg or jpg file");
-			return;
-		}
-		const id = uuid();
-		const imgRef = ref(storage, `images/${id}`);
-		await uploadBytes(imgRef, imageFile);
-		const url = await getDownloadURL(imgRef);
-		const updatedSteps = recipe.steps.map((step, i) => {
-			if (index !== i) return step;
-			return { ...step, image: { storageId: id, url } };
-		});
-		await updateDoc(recipeRef, { steps: updatedSteps });
-		setRecipeModified(true);
-	};
-
 	return (
 		<div className="single-recipe-container">
 			<div className="container">
@@ -192,15 +120,22 @@ function SingleRecipe() {
 						<div className="recipe-name-container">
 							<h1 className="recipe-name">{capitalize(recipe.name)}</h1>
 						</div>
-						{isAuthor && (
-							<button className="icon-button delete-button"
+						{isAuthor && (<div className="recipe-top-buttons">
+							<button className="icon-button column"
+								onClick={() => setShowModal(true)}>
+									<div className="edit-icon-container">
+									<img src={editIcon} alt="pen and paper" />
+								</div>
+								<p className="edit-text">Edit</p>
+							</button>
+							<button className="icon-button column"
 								onClick={() => deleteARecipe(recipe.id)}>
 								<div className="trash-icon-container">
 									<img src={trashIcon} alt="trash icon" />
 								</div>
-								<p className="delete-text">Delete Recipe</p>
+								<p className="delete-text">Delete</p>
 							</button>
-						)}
+						</div>)}
 					</div>
 					<div className="recipe-body">
 						<RecipeInfoColumn recipe={recipe} />
@@ -208,6 +143,7 @@ function SingleRecipe() {
 					</div>
 				</div>
 			</div>
+			{showModal && <RecipeModal recipe={recipe} setShowModal={setShowModal} />}
 		</div>
 	);
 }

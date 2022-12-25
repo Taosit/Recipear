@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from "react";
-import {useRecipeContext} from "../../contexts/RecipeContextProvider";
 import SingleSelect from "./SingleSelect";
+import {tags as specifiedTags} from "../../constants";
 
 export default function TagsField({recipe, updateRecipe}) {
-  const {tags: specifiedTags} = useRecipeContext()
   const tagCategories = Object.keys(specifiedTags)
 
-  const initialTags = Object.keys(specifiedTags).reduce((acc, tag) => {
-    return {...acc, [tag]: [...specifiedTags[tag], "Other"].map(tag => ({[tag]: false}))}
+  const initialTags = Object.keys(specifiedTags).reduce((acc, tag, i) => {
+    return {...acc, [tag]: [...specifiedTags[tag], "Other"].map((tag) => ({[tag]: recipe.tags[i] === tag}))}
   }, {})
 
   const [tags, setTags] = useState(initialTags)
@@ -45,6 +44,7 @@ export default function TagsField({recipe, updateRecipe}) {
     display: "grid", 
     gridTemplateColumns: "1fr 1fr 1fr 1fr"
   }
+
 
   return (
     <>

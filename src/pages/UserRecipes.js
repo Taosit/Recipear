@@ -7,9 +7,9 @@ import { db } from "../firebase.config";
 import Recipes from "../components/Recipes";
 import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import backgroundImage from "../assets/background.png";
-import backgroundImageMin from "../assets/background-min.png";
 import boxIcon from "../assets/empty-box.svg";
 import RecipeModal from "../components/RecipeModal";
+import { emptyRecipe } from "../constants";
 
 function UserRecipes() {
 	const { setLastVisitedPage } = useRecipeContext();
@@ -71,7 +71,7 @@ function UserRecipes() {
 					{page === "likedRecipes" && <button onClick={() => navigate("/recipes")} role="link" className="border-button empty-state-button">Browse Recipes</button>}
 				</div>
 			</div>
-			{showModal && <RecipeModal setShowModal={setShowModal} />}
+			{showModal && <RecipeModal recipe={emptyRecipe} setShowModal={setShowModal} />}
 		</div>
 	}
 

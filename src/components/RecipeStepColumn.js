@@ -14,7 +14,7 @@ const RecipeStepColumn = ({recipe}) => {
     <div className="recipe-info-column">
       <div className='recipe-steps-header'>
         <h3 className='underlined-heading'>Steps</h3>
-        <button className="icon-button cook-button" onClick={cook}>
+        <button className="icon-button cook-button row" onClick={cook}>
           <div className="cook-icon-container">
             <img src={cookIcon} alt="cook" />
           </div>

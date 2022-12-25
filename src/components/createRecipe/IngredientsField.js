@@ -23,7 +23,7 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 		<>
 			<h1>{capitalize(type)}</h1>
 			<div className="recipe-ingredients">
-				{recipe[type].map((ingredient, index) => (
+				{recipe[type].map((ingredient, index) => ( 
 					<div key={`${recipe.name}-${type}-${ingredient.id}`} className="recipe-ingredient">
 						<div className={`ingredient-count ${index? "" : "required-field"}`}>{capitalize(type).slice(0, type.length - 1)} {index + 1}</div>
 						<div className="ingredient-inputs-container">
@@ -31,7 +31,7 @@ export default function IngredientsField({ type, recipe, updateRecipe }) {
 								type="text"
 								name="ingredient"
                 placeholder={index? "" : type === "ingredients" ? "chicken" : "salt"}
-								value={ingredient.name}
+								value={ingredient.ingredient}
 								onChange={(e) => handleChange(e, index)} />
 							<input
 								type="text"

@@ -3,7 +3,18 @@ import ImageField from "./ImageField";
 import SingleSelect from "./SingleSelect";
 
 export default function OverviewField({ recipe, updateRecipe }) {
-  const [options, setOptions] = useState([{Easy: true}, {Medium: false}, {Hard: false}]);
+
+  const getInitialOptions = () => {
+    const options = ["Easy", "Medium", "Hard"];
+    if (!recipe.difficulty) return [{Easy: true}, {Medium: false}, {Hard: false}];
+    return options.map(option => {
+      if (option === recipe.difficulty) {
+        return {[option]: true}
+      }
+      return {[option]: false}
+    })
+  }
+  const [options, setOptions] = useState(getInitialOptions());
 
   const selectDifficulty = (option) => {
     setOptions(prev => prev.map(prevOption => {

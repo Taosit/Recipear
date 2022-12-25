@@ -15,7 +15,7 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { toast } from "react-toastify";
 import FocusTrap from 'focus-trap-react';
 
-function RecipeModal({ setShowModal }) {
+function RecipeModal({ recipe, setShowModal }) {
 	const integerMatch = {
 		a: 1,
 		one: 1,
@@ -25,19 +25,8 @@ function RecipeModal({ setShowModal }) {
 		five: 5,
 		ten: 10,
 	};
-	const emptyRecipe = {
-		name: "",
-		time: "",
-		difficulty: "Easy",
-		image: null,
-		seasonings: [{ ingredient: "", amount: "", id: uuid() }, { ingredient: "", amount: "", id: uuid() }],
-		ingredients: [{ ingredient: "", amount: "", id: uuid() }, { ingredient: "", amount: "", id: uuid() }],
-		steps: [{instruction: "", image: null}],
-		tags: [null, null, null, null],
-		date: null,
-		likes: 0,
-	};
-	const [newRecipe, setNewRecipe] = useState(emptyRecipe);
+	
+	const [newRecipe, setNewRecipe] = useState(recipe);
 	const { dispatch } = useRecipeContext();
 	const [step, setStep] = useState(0);
 	const [loading, setLoading] = useState(false);
@@ -153,41 +142,47 @@ function RecipeModal({ setShowModal }) {
 				}
 			}
 			if (!step.image) return stepCopy;
-			const image = await getImage(step.image.file);
+			const image = step.image.file? await getImage(step.image.file) : step.image;
 			return { ...stepCopy, image };
 		});
 	};
 
+	const addRecipe = async (finalRecipe) => {
+		dispatch({ type: ACTIONS.ADD_RECIPE, payload: finalRecipe });
+		await setDoc(doc(db, "recipes", recipe.id), finalRecipe);
+		await addRecipeRefToUser(recipe.id);
+		toast.success("Successfully added a new recipe");
+	};
+
+	const editRecipe = async (finalRecipe) => {
+		dispatch({ type: ACTIONS.UPDATE_RECIPE, payload: finalRecipe });
+		await setDoc(doc(db, "recipes", recipe.id), finalRecipe);
+		toast.success("Successfully updated the recipe");
+	};
+
 	const createRecipe = async e => {
 		e.preventDefault();
-		console.log("creating recipe")
 		const filteredRecipe = filterInvalidFields(newRecipe);
 		const validity = checkEmptyFields(filteredRecipe);
-		console.log(validity)
 		if (!validity.isValid) {
 			toast.error(validity.message);
 			return;
 		}
 		setLoading(true);
 		console.log("recipe is valid")
-		const finalImage = await getImage(filteredRecipe.image.file);
+		const finalImage = filteredRecipe.image.file? await getImage(filteredRecipe.image.file) : filteredRecipe.image;
 		const stepsWithImagesPromise = await getStepPromises(filteredRecipe.steps);
 
 		Promise.all(stepsWithImagesPromise).then(async stepsWithImages => {
-			const recipeId = uuid();
 			const finalRecipe = {
 				...filteredRecipe,
 				steps: stepsWithImages,
 				name: filteredRecipe.name.toLowerCase().trim(),
 				image: finalImage,
-				id: recipeId,
-				date: new Date(),
 			};
 			console.log(finalRecipe);
-			dispatch({ type: ACTIONS.ADD_RECIPE, payload: finalRecipe });
-			await setDoc(doc(db, "recipes", recipeId), finalRecipe);
-			await addRecipeRefToUser(recipeId);
-			toast.success("Successfully added a new recipe");
+			if (!recipe.name) await addRecipe(finalRecipe);
+			else await editRecipe(finalRecipe);
 			setLoading(false);
 			closeModal();
 		});
@@ -196,7 +191,6 @@ function RecipeModal({ setShowModal }) {
 	const closeModal = () => {
 		setStep(0);
 		setShowModal(false);
-		setNewRecipe(emptyRecipe);
 	};
 
 	const showField = () => {

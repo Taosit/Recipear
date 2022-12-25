@@ -34,12 +34,12 @@ export default function ImageField({image, updateImage, required = false}) {
         <div className="upload-image-input-container">
           <input type="file" id={photoId} onChange={handleImageChange}/>
           <label htmlFor={photoId} tabIndex="0">Upload</label>
-          <span className="upload-image-text-holder">{image?.name}</span>
+          <span className="upload-image-text-holder">{image? (image.name || "recipe_image") : ""}</span>
         </div>
       </div>
       <div className="image-preview-area">{
         image ?          
-          <img src={image.preview} alt="Recipe"/>        
+          <img src={image.preview || image.url} alt="Recipe"/>        
           :
           <p>Image Preview Area</p>
       }</div>

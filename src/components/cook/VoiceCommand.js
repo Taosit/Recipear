@@ -4,6 +4,7 @@ import SpeechRecognition, {
 } from "react-speech-recognition";
 import blockedMicrophoneIcon from "../../assets/microphone-block.svg";
 import microphoneIcon from "../../assets/microphone.svg";
+import sadFace from "../../assets/sad-face.svg";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function VoiceCommand({
@@ -91,10 +92,14 @@ export default function VoiceCommand({
 	}, [listening]);
 
 	if (
-		!browserSupportsSpeechRecognition ||
-		!browserSupportsContinuousListening
+		!browserSupportsSpeechRecognition
 	) {
-		return <span>Browser doesn't support speech recognition.</span>;
+		return (
+			<div className="no-support">
+				<img src={sadFace} alt="sad face" />
+				<p>No Browser Support</p>
+			</div>
+		);
 	}
 
 	// if (!isMicrophoneAvailable) {

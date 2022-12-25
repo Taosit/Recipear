@@ -14,6 +14,7 @@ export const ACTIONS = {
   DELETE_RECIPE: "DELETE_RECIPE",
   LIKE_RECIPE: "LIKE_RECIPE",
   UNLIKE_RECIPE: "UNLIKE_RECIPE",
+  UPDATE_RECIPE: "UPDATE_RECIPE",
 }
 
 const reducer = (state, action) => {
@@ -22,6 +23,13 @@ const reducer = (state, action) => {
       return action.payload
     case ACTIONS.ADD_RECIPE:
       return [...state, action.payload]
+    case ACTIONS.UPDATE_RECIPE:
+      return state.map(recipe => {
+        if (recipe.id === action.payload.id) {
+          return action.payload
+        }
+        return recipe
+      })
     case ACTIONS.DELETE_RECIPE:
       return state.filter(recipe => recipe.id !== action.payload)
     case ACTIONS.LIKE_RECIPE:
@@ -49,14 +57,6 @@ const RecipeContextProvider = ({children}) => {
   const [recipeModified, setRecipeModified] = useState(true)
   const [state, dispatch] = useReducer(reducer, [])
 
-  const tags = {
-    protein: ["Meat", "Seafood", "Vege"],
-    nutrition: ["Low-carb", "High-protein", "High-fiber"],
-    meal: ["Breakfast", "Main", "Desert"],
-    region: ["Asian", "Arabian", "European"],
-    flavor: ["Spicy", "Sour", "Sweet"],
-  }
-
   useEffect(() => {
     setLoading(true)
     getDocs(collection(db, "recipes")).then(snapshot => {
@@ -73,7 +73,6 @@ const RecipeContextProvider = ({children}) => {
       setLoading,
       recipes: state,
       dispatch,
-      tags,
       recipeModified,
       setRecipeModified,
       lastVisitedPage,

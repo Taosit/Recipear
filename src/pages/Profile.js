@@ -10,6 +10,7 @@ import cookBookIcon from "../assets/cookbook.svg";
 import mealIcon from "../assets/meal.svg";
 import addIcon from "../assets/add.svg";
 import RecipeModal from "../components/RecipeModal";
+import { emptyRecipe } from "../constants";
 
 export default function Profile() {
 	const auth = getAuth();
@@ -124,7 +125,7 @@ export default function Profile() {
 						</div>
 					</div>
 				</div>
-			{showModal && <RecipeModal setShowModal={setShowModal} />}
+			{showModal && <RecipeModal recipe={emptyRecipe} setShowModal={setShowModal} />}
 		</div>
 	);
 }

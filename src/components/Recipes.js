@@ -22,7 +22,7 @@ function Recipes({ recipes }) {
 
 	return (
 		<div className="recipes">
-			{recipes.map((recipe, index) => {
+			{recipes.map((recipe) => {
 				return (
 					<div key={uuid()} className="recipe-cell">
 						<div className="recipe-container" 
@@ -42,20 +42,20 @@ function Recipes({ recipes }) {
 								</div>
 								<div className="recipe-card-summary">
 									<h3
-										className="link title-link"
-										onClick={() => navigate(`/recipes/${recipe.id}`)}
-									>
-										{capitalize(recipe.name)}
-									</h3>
+											className="link title-link"
+											onClick={() => navigate(`/recipes/${recipe.id}`)}
+										>
+											{capitalize(recipe.name)}
+										</h3>
 									<div className="time-and-difficulty">{recipe.time} | {recipe.difficulty}</div>
-									{recipe.tags[0] || recipe.tags[1] && (
+									{(recipe.tags[1] || recipe.tags[3]) && (
 										<div className="recipe-card-tags">
-											{recipe.tags[0] && (
-											<span className="recipe-tag">{recipe?.tags[0]}</span>
-										)}
-										{recipe.tags[1] && (
-											<span className="recipe-tag">{recipe?.tags[1]}</span>
-										)}
+											{recipe.tags[1] && (
+												<span className="recipe-tag">{recipe?.tags[1]}</span>
+											)}
+											{recipe.tags[3] && (
+												<span className="recipe-tag">{recipe?.tags[3]}</span>
+											)}
 										</div>
 									)}
 									<p className="card-ingredients">

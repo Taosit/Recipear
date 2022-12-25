@@ -6,9 +6,10 @@ import { useRecipeContext } from "../contexts/RecipeContextProvider";
 import { useProgressiveImage } from "../hooks/useProgressiveImage";
 import backgroundImage from "../assets/background.png";
 import backgroundImageMin from "../assets/background-min.png";
+import { tags } from "../constants"
 
 function Home() {
-	const { tags, recipes, loading, setLastVisitedPage } = useRecipeContext();
+	const { recipes, loading, setLastVisitedPage } = useRecipeContext();
 	const [tagOnHover, setTagOnHover] = useState(null);
 	const [controlValues, setControlValues] = useState({filterValue: "", searchValue: "", sortValue: ""})
 	const loaded = useProgressiveImage(backgroundImage);
