@@ -698,6 +698,9 @@ input, textarea, button, label {
 	.progress-bar {
 		margin-top: 44px;
 	}
+	.modal {
+		top: 70px;
+	}
 }
 
 /* Upload Image */
@@ -1135,6 +1138,12 @@ input, textarea, button, label {
 }
 
 @container (max-width: 400px) {
+	.ingredients-and-seasonings {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (width < 580px) {
 	.ingredients-and-seasonings {
 		grid-template-columns: 1fr;
 	}

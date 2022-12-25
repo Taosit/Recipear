@@ -64,7 +64,7 @@ function SignUp() {
             </div>
             <div className="auth-input-group">
               <label htmlFor="email">Email:</label>
-              <input type="text" id="email" onChange={(e) => updateRecipe(e)}/>
+              <input type="email" id="email" onChange={(e) => updateRecipe(e)}/>
             </div>
             <div className="auth-input-group">
               <label htmlFor="password">Password:</label>
