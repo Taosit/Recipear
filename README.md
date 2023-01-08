@@ -2,7 +2,7 @@
 
 Search, follow, create and save recipes.
 
-Live on [https://recipe-app-with-speech-recognition.netlify.app/](https://recipe-app-with-speech-recognition.netlify.app//).
+Live on [https://recipear.netlify.app/](https://recipear.netlify.app/).
 
 ## Features
 
