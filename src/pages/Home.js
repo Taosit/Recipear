@@ -79,7 +79,6 @@ function Home() {
 	if (loading)
 		return (
 			<div
-				style={{ backgroundImage: `url(${loaded || backgroundImageMin})` }}
 				className="loading-container"
 			>
 				<div className="loader"></div>
@@ -136,7 +135,7 @@ function Home() {
 			</div>
 			<div
 				className="main-container"
-				style={{ backgroundImage: `url(${loaded || backgroundImageMin})` }}
+				style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2)), url(${loaded || backgroundImageMin})` }}
 				onTouchStart={() => setTagOnHover(null)}
 			>
 				<div className="container">

@@ -104,7 +104,7 @@ input, textarea, button, label {
 .nav-container {
 	z-index: 3;
 	width: 100%;
-	background: rgb(194 84 84);
+	background: rgb(199 67 67);
 	position: fixed;
 }
 
@@ -233,9 +233,7 @@ input, textarea, button, label {
 /* All Recipes */
 
 .loading-container {
-	background-color: #fcdc04;
-	background-size: cover;
-	background-position: bottom;
+	background-color: var(--dark-yellow);
 	overflow-y: auto;
 	min-height: 100vh;
 	display: flex;
@@ -244,7 +242,7 @@ input, textarea, button, label {
 }
 
 .main-container {
-	background-color: #fcdc04;
+	background-color: var(--dark-yellow);
 	background-size: cover;
 	background-position: bottom;
 	overflow-y: auto;
@@ -1312,7 +1310,7 @@ input, textarea, button, label {
 	content: "";
 	position: fixed;
 	inset: 0;
-	background-image: url("./assets/background-min.png");
+	background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("./assets/background-min.png"), linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 	background-size: cover;
 	background-position: bottom;
 	opacity: 0.5;

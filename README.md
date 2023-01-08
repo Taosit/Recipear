@@ -1,4 +1,4 @@
-# Recipe App
+# Recipear
 
 Search, follow, create and save recipes.
 
